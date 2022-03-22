@@ -4,22 +4,22 @@ import (
 	"fmt"
 
 	module "github.com/lesserfish/GoAme/Modules"
-	core "github.com/lesserfish/GoAme/Modules/Core"
-	jmdict "github.com/lesserfish/GoAme/Modules/JMDict"
 )
 
 var modules []module.Module
 
 func main() {
-	Configure()
-	core.Demo()
-	mod, err := jmdict.Initialize(jmdict.InitOptions{"/home/lesserfish/Documents/tmp/godemo/JMdict.xml"})
+	keymap := make(map[string]string)
+	keymap["pascual"] = "victor"
+	keymap["nombre"] = "pedro"
+
+	input := "El @{nombre} del pascual es @{pascual}"
+
+	out, err := module.RenderString(input, keymap)
 
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println("Loaded dictionary!")
+		fmt.Println(out)
 	}
-
-	modules = append(modules, mod)
 }

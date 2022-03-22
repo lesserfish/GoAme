@@ -1,6 +1,7 @@
 package jmdict
 
 import (
+	"errors"
 	"fmt"
 
 	module "github.com/lesserfish/GoAme/Modules"
@@ -23,5 +24,30 @@ func Initialize(options InitOptions) (module.Module, error) {
 	return *newParser, err
 }
 func (parser Parser) Demo() {
-	fmt.Println("Hello from JMdict from ", parser.DictionaryPath)
+	entry, err := FindEntry(&parser.dictionary, "食べる", "")
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Print((entry))
+	}
+}
+func (parser Parser) Render(input module.Input, card *module.Card) error {
+	if len(input) < 1 {
+		return errors.New("No input given to JMdict module!")
+	}
+
+	kanji := input[0]
+	kana := ""
+
+	if len(input) > 1 {
+		kana = input[1]
+	}
+
+	_, err := FindEntry(&parser.dictionary, kanji, kana)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

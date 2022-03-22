@@ -24,7 +24,7 @@ func main() {
 		fmt.Println(out)
 	}
 
-	mod, err := jmdict.Initialize(jmdict.InitOptions{"./Repository/Vocabulary/JMdict_e_examp.xml"})
+	mod, err := jmdict.Initialize(jmdict.InitOptions{"./Repository/Vocabulary/JMdict_e_examp.xml", ""})
 	mod.Demo()
 	if err != nil {
 		fmt.Println(err)

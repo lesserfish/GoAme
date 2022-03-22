@@ -3,7 +3,6 @@ package jmdict
 import (
 	"encoding/xml"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 )
@@ -143,7 +142,25 @@ func LoadDictionary(parser *Parser) (err error) {
 
 	return nil
 }
+func LoadFormatter(parser *Parser) (err error) {
+	FormatterPath := parser.FormatterPath
 
+	xmlFile, err := os.Open(FormatterPath)
+
+	if err != nil {
+		return err
+	}
+
+	byteData, _ := ioutil.ReadAll(xmlFile)
+
+	err = xml.Unmarshal(byteData, &parser.formatter)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 func FindEntry(dict *JMdict, kanji string, kana string) (out Entry, err error) {
 
 	err = errors.New("Failed to find entry in dictionary.")
@@ -190,17 +207,8 @@ entry_search:
 
 	return out, err
 }
-func CleanEntry(entry *Entry) (out error) {
-	order := RegexOrder{}
-	v, err := xml.MarshalIndent(order, "", "")
-
-	fmt.Println(err)
-	file, _ := os.Create("./template.xml")
-
-	file.WriteString(string(v))
-
+func CleanEntry(entry *Entry, order *RegexOrder) (out error) {
 	return out
-
 }
 
 func KeymapFromEntry(entry *Entry) (out map[string]string, err error) {

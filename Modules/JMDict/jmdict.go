@@ -9,10 +9,13 @@ import (
 
 type Parser struct {
 	DictionaryPath string
+	FormatterPath  string
 	dictionary     JMdict
+	formatter      RegexOrder
 }
 type InitOptions struct {
 	DictionaryPath string
+	FormatterPath  string
 }
 
 func Initialize(options InitOptions) (out module.Module, err error) {
@@ -21,9 +24,21 @@ func Initialize(options InitOptions) (out module.Module, err error) {
 
 	err = LoadDictionary(newParser)
 
+	if err != nil {
+		return out, err
+	}
+
+	if options.FormatterPath != "" {
+		err = LoadFormatter(newParser)
+
+		if err != nil {
+			return out, err
+		}
+
+	}
 	out = *newParser
 
-	return out, err
+	return out, nil
 }
 func (parser Parser) Demo() {
 	entry, err := FindEntry(&parser.dictionary, "食べる", "")
@@ -32,8 +47,6 @@ func (parser Parser) Demo() {
 	} else {
 		fmt.Print((entry))
 	}
-
-	CleanEntry(&entry)
 }
 func (parser Parser) Render(input module.Input, card *module.Card) error {
 	if len(input) < 1 {
@@ -53,7 +66,7 @@ func (parser Parser) Render(input module.Input, card *module.Card) error {
 		return err
 	}
 
-	err = CleanEntry(&entry)
+	err = CleanEntry(&entry, &parser.formatter)
 
 	if err != nil {
 		return err

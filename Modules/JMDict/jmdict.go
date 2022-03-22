@@ -15,13 +15,15 @@ type InitOptions struct {
 	DictionaryPath string
 }
 
-func Initialize(options InitOptions) (module.Module, error) {
+func Initialize(options InitOptions) (out module.Module, err error) {
 	newParser := new(Parser)
 	newParser.DictionaryPath = options.DictionaryPath
 
-	err := LoadDictionary(newParser)
+	err = LoadDictionary(newParser)
 
-	return *newParser, err
+	out = *newParser
+
+	return out, err
 }
 func (parser Parser) Demo() {
 	entry, err := FindEntry(&parser.dictionary, "食べる", "")
@@ -30,6 +32,8 @@ func (parser Parser) Demo() {
 	} else {
 		fmt.Print((entry))
 	}
+
+	CleanEntry(&entry)
 }
 func (parser Parser) Render(input module.Input, card *module.Card) error {
 	if len(input) < 1 {

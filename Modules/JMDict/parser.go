@@ -3,6 +3,7 @@ package jmdict
 import (
 	"encoding/xml"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 )
@@ -61,6 +62,64 @@ type Entry struct {
 			Text    string `xml:",chardata"`
 			UpdDate string `xml:"upd_date"`
 			UpdDetl string `xml:"upd_detl"`
+		} `xml:"audit"`
+	} `xml:"info"`
+}
+
+type RegexInstance struct {
+	Operations []struct {
+		Find    string `xml:"find"`
+		Replace string `xml:"replace"`
+	} `xml:"operation"`
+}
+type RegexOrder struct {
+	Text   RegexInstance `xml:",chardata"`
+	EntSeq RegexInstance `xml:"ent_seq"`
+	REle   struct {
+		Text      RegexInstance `xml:",chardata"`
+		Reb       RegexInstance `xml:"reb"`
+		ReRestr   RegexInstance `xml:"re_restr"`
+		RePri     RegexInstance `xml:"re_pri"`
+		ReNokanji RegexInstance `xml:"re_nokanji"`
+		ReInf     RegexInstance `xml:"re_inf"`
+	} `xml:"r_ele"`
+	Sense struct {
+		Text  RegexInstance `xml:",chardata"`
+		Pos   RegexInstance `xml:"pos"`
+		Gloss struct {
+			Text RegexInstance `xml:",chardata"`
+			Lang RegexInstance `xml:"lang"`
+		} `xml:"gloss"`
+		Example struct {
+			Text   RegexInstance `xml:",chardata"`
+			ExSrce struct {
+				Text      RegexInstance `xml:",chardata"`
+				ExsrcType RegexInstance `xml:"exsrc_type"`
+			} `xml:"ex_srce"`
+			ExText RegexInstance `xml:"ex_text"`
+			ExSent struct {
+				Text RegexInstance `xml:",chardata"`
+				Lang RegexInstance `xml:"lang"`
+			} `xml:"ex_sent"`
+		} `xml:"example"`
+		Xref  RegexInstance `xml:"xref"`
+		Ant   RegexInstance `xml:"ant"`
+		Misc  RegexInstance `xml:"misc"`
+		Dial  RegexInstance `xml:"dial"`
+		Stagr RegexInstance `xml:"stagr"`
+	} `xml:"sense"`
+	KEle struct {
+		Text  RegexInstance `xml:",chardata"`
+		Keb   RegexInstance `xml:"keb"`
+		KePri RegexInstance `xml:"ke_pri"`
+		KeInf RegexInstance `xml:"ke_inf"`
+	} `xml:"k_ele"`
+	Info struct {
+		Text  RegexInstance `xml:",chardata"`
+		Audit struct {
+			Text    RegexInstance `xml:",chardata"`
+			UpdDate RegexInstance `xml:"upd_date"`
+			UpdDetl RegexInstance `xml:"upd_detl"`
 		} `xml:"audit"`
 	} `xml:"info"`
 }
@@ -132,7 +191,16 @@ entry_search:
 	return out, err
 }
 func CleanEntry(entry *Entry) (out error) {
+	order := RegexOrder{}
+	v, err := xml.MarshalIndent(order, "", "")
+
+	fmt.Println(err)
+	file, _ := os.Create("./template.xml")
+
+	file.WriteString(string(v))
+
 	return out
+
 }
 
 func KeymapFromEntry(entry *Entry) (out map[string]string, err error) {

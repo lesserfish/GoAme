@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RegexOrder>
+   <ent_seq>
+      <operation>
+         <find />
+         <replace />
+      </operation>
+   </ent_seq>
+   <r_ele>
+      <reb>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </reb>
+      <re_restr>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </re_restr>
+      <re_pri>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </re_pri>
+      <re_nokanji>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </re_nokanji>
+      <re_inf>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </re_inf>
+   </r_ele>
+   <sense>
+      <pos>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </pos>
+      <gloss>
+         <lang>
+            <operation>
+               <find />
+               <replace />
+            </operation>
+         </lang>
+      </gloss>
+      <example>
+         <ex_srce>
+            <exsrc_type>
+               <operation>
+                  <find />
+                  <replace />
+               </operation>
+            </exsrc_type>
+         </ex_srce>
+         <ex_text>
+            <operation>
+               <find />
+               <replace />
+            </operation>
+         </ex_text>
+         <ex_sent>
+            <lang>
+               <operation>
+                  <find />
+                  <replace />
+               </operation>
+            </lang>
+         </ex_sent>
+      </example>
+      <xref>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </xref>
+      <ant>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </ant>
+      <misc>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </misc>
+      <dial>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </dial>
+      <stagr>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </stagr>
+   </sense>
+   <k_ele>
+      <keb>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </keb>
+      <ke_pri>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </ke_pri>
+      <ke_inf>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </ke_inf>
+   </k_ele>
+   <info>
+      <audit>
+         <upd_date>
+            <operation>
+               <find />
+               <replace />
+            </operation>
+         </upd_date>
+         <upd_detl>
+            <operation>
+               <find />
+               <replace />
+            </operation>
+         </upd_detl>
+      </audit>
+   </info>
+</RegexOrder><?xml version="1.0" encoding="UTF-8"?>
+<RegexOrder>
+   <ent_seq>
+      <operation>
+         <find />
+         <replace />
+      </operation>
+   </ent_seq>
+   <r_ele>
+      <reb>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </reb>
+      <re_restr>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </re_restr>
+      <re_pri>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </re_pri>
+      <re_nokanji>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </re_nokanji>
+      <re_inf>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </re_inf>
+   </r_ele>
+   <sense>
+      <pos>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </pos>
+      <gloss>
+         <lang>
+            <operation>
+               <find />
+               <replace />
+            </operation>
+         </lang>
+      </gloss>
+      <example>
+         <ex_srce>
+            <exsrc_type>
+               <operation>
+                  <find />
+                  <replace />
+               </operation>
+            </exsrc_type>
+         </ex_srce>
+         <ex_text>
+            <operation>
+               <find />
+               <replace />
+            </operation>
+         </ex_text>
+         <ex_sent>
+            <lang>
+               <operation>
+                  <find />
+                  <replace />
+               </operation>
+            </lang>
+         </ex_sent>
+      </example>
+      <xref>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </xref>
+      <ant>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </ant>
+      <misc>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </misc>
+      <dial>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </dial>
+      <stagr>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </stagr>
+   </sense>
+   <k_ele>
+      <keb>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </keb>
+      <ke_pri>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </ke_pri>
+      <ke_inf>
+         <operation>
+            <find />
+            <replace />
+         </operation>
+      </ke_inf>
+   </k_ele>
+   <info>
+      <audit>
+         <upd_date>
+            <operation>
+               <find />
+               <replace />
+            </operation>
+         </upd_date>
+         <upd_detl>
+            <operation>
+               <find />
+               <replace />
+            </operation>
+         </upd_detl>
+      </audit>
+   </info>
+</RegexOrder>

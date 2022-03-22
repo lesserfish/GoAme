@@ -1,0 +1,1 @@
+Documentation: https://mocobeta.github.io/janome/en/

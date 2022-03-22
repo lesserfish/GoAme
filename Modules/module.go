@@ -13,8 +13,8 @@ type Module interface {
 	Render(Input, *Card) error
 }
 
-func (card Card) Render(vars map[string]string) {
-
+func (card Card) Render(vars map[string]string) (out error) {
+	return out
 }
 
 func RenderString(input string, keymap map[string]string) (string, error) {

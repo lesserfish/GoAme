@@ -43,7 +43,25 @@ func (parser Parser) Render(input module.Input, card *module.Card) error {
 		kana = input[1]
 	}
 
-	_, err := FindEntry(&parser.dictionary, kanji, kana)
+	entry, err := FindEntry(&parser.dictionary, kanji, kana)
+
+	if err != nil {
+		return err
+	}
+
+	err = CleanEntry(&entry)
+
+	if err != nil {
+		return err
+	}
+
+	keymap, err := KeymapFromEntry(&entry)
+
+	if err != nil {
+		return err
+	}
+
+	err = card.Render(keymap)
 
 	if err != nil {
 		return err

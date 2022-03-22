@@ -31,6 +31,18 @@ type Entry struct {
 			Text string `xml:",chardata"`
 			Lang string `xml:"lang,attr"`
 		} `xml:"gloss"`
+		Example []struct {
+			Text   string `xml:",chardata"`
+			ExSrce struct {
+				Text      string `xml:",chardata"`
+				ExsrcType string `xml:"exsrc_type,attr"`
+			} `xml:"ex_srce"`
+			ExText string `xml:"ex_text"`
+			ExSent []struct {
+				Text string `xml:",chardata"`
+				Lang string `xml:"lang,attr"`
+			} `xml:"ex_sent"`
+		} `xml:"example"`
 		Xref  []string `xml:"xref"`
 		Ant   string   `xml:"ant"`
 		Misc  string   `xml:"misc"`
@@ -118,6 +130,9 @@ entry_search:
 	}
 
 	return out, err
+}
+func CleanEntry(entry *Entry) (out error) {
+	return out
 }
 
 func KeymapFromEntry(entry *Entry) (out map[string]string, err error) {

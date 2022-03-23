@@ -3,6 +3,7 @@ package jmdict
 import (
 	"encoding/xml"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"regexp"
@@ -65,12 +66,13 @@ type Entry struct {
 		} `xml:"audit"`
 	} `xml:"info"`
 }
-
+type Operation struct {
+	Find    string `xml:"find"`
+	Replace string `xml:"replace"`
+}
 type RegexFormatter struct {
-	Operations []struct {
-		Find    string `xml:"find"`
-		Replace string `xml:"replace"`
-	} `xml:"operations"`
+	Pri []Operation `xml:"pri"`
+	Pos []Operation `xml:"pos"`
 }
 
 func LoadDictionary(parser *Parser) (err error) {
@@ -90,11 +92,12 @@ func LoadDictionary(parser *Parser) (err error) {
 		return err
 	}
 
+	fmt.Println("Dictionary loaded!")
 	return nil
 }
 func LoadFormatter(parser *Parser) (err error) {
 	FormatterPath := parser.FormatterPath
-
+	fmt.Println(FormatterPath)
 	xmlFile, err := os.Open(FormatterPath)
 
 	if err != nil {
@@ -158,25 +161,40 @@ entry_search:
 	return out, err
 }
 func CleanEntry(entry *Entry, order *RegexFormatter) (out error) {
-	for _, instruction := range order.Operations {
-		regex, err := regexp.Compile(instruction.Find)
-
-		if err != nil {
-			continue
+	for releid, rele := range entry.REle {
+		for repriid, repri := range rele.RePri {
+			for _, instruction := range order.Pri {
+				regex := regexp.MustCompile(instruction.Find)
+				newstring := regex.ReplaceAllString(repri, instruction.Replace)
+				entry.REle[releid].RePri[repriid] = newstring
+			}
 		}
-		CleanFields(entry, regex)
 	}
+
+	for keleid, kele := range entry.KEle {
+		for kepriid, kepri := range kele.KePri {
+			for _, instruction := range order.Pri {
+				regex := regexp.MustCompile(instruction.Find)
+				newstring := regex.ReplaceAllString(kepri, instruction.Replace)
+				entry.REle[keleid].RePri[kepriid] = newstring
+			}
+		}
+	}
+
+	for senseid, sense := range entry.Sense {
+		for posid, pos := range sense.Pos {
+			for _, instruction := range order.Pos {
+				regex := regexp.MustCompile(instruction.Find)
+				newstring := regex.ReplaceAllString(pos, instruction.Replace)
+				entry.Sense[senseid].Pos[posid] = newstring
+			}
+		}
+	}
+
 	return out
 }
 
-func CleanFields(entry *Entry, regex *regexp.Regexp) {
-	entry.Text
-	entry.EntSeq
-	for _, rele := range entry.REle {
-
-	}
-}
-
 func KeymapFromEntry(entry *Entry) (out map[string]string, err error) {
+	out = make(map[string]string)
 	return out, err
 }

@@ -24,17 +24,16 @@ func main() {
 		fmt.Println(out)
 	}
 
-	mod, err := jmdict.Initialize(jmdict.InitOptions{"./Repository/Vocabulary/JMdict_e_examp.xml", ""})
-	mod.Demo()
+	init := jmdict.InitOptions{}
+	init.DictionaryPath = "./Repository/Vocabulary/JMdict_e_examp.xml"
+	init.FormatterPath = "./Repository/Regex/vocab_cleaner.xml"
+
+	mod, err := jmdict.Initialize(init)
+
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	card := module.Card{}
-	kin := []string{"食べる"}
-
-	e := mod.Render(kin, &card)
-
-	fmt.Println(e)
+	mod.Demo()
 }

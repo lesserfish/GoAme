@@ -21,6 +21,7 @@ type InitOptions struct {
 func Initialize(options InitOptions) (out module.Module, err error) {
 	newParser := new(Parser)
 	newParser.DictionaryPath = options.DictionaryPath
+	newParser.FormatterPath = options.FormatterPath
 
 	err = LoadDictionary(newParser)
 
@@ -41,12 +42,13 @@ func Initialize(options InitOptions) (out module.Module, err error) {
 	return out, nil
 }
 func (parser Parser) Demo() {
-	entry, err := FindEntry(&parser.dictionary, "脇", "")
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Print((entry))
-	}
+	entry, _ := FindEntry(&parser.dictionary, "食べる", "")
+
+	fmt.Println(entry)
+	fmt.Println("Cleaning!")
+	CleanEntry(&entry, &parser.formatter)
+	fmt.Println(entry)
+
 }
 func (parser Parser) Render(input module.Input, card *module.Card) error {
 	if len(input) < 1 {

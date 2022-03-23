@@ -1,0 +1,14 @@
+<RegexFormatter>
+    <pri>
+        <find>a</find>
+        <replace>f</replace>
+    </pri>
+    <pos>
+        <find>a</find>
+        <replace>b</replace>
+    </pos>
+    <pos>
+        <find>v</find>
+        <replace>k</replace>
+    </pos>
+</RegexFormatter>

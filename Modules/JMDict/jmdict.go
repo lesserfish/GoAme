@@ -41,7 +41,7 @@ func Initialize(options InitOptions) (out module.Module, err error) {
 	return out, nil
 }
 func (parser Parser) Demo() {
-	entry, err := FindEntry(&parser.dictionary, "食べる", "")
+	entry, err := FindEntry(&parser.dictionary, "脇", "")
 	if err != nil {
 		fmt.Println(err)
 	} else {

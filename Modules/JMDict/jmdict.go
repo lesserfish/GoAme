@@ -11,7 +11,7 @@ type Parser struct {
 	DictionaryPath string
 	FormatterPath  string
 	dictionary     JMdict
-	formatter      RegexOrder
+	formatter      RegexFormatter
 }
 type InitOptions struct {
 	DictionaryPath string

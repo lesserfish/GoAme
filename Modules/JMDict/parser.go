@@ -164,12 +164,17 @@ func CleanEntry(entry *Entry, order *RegexFormatter) (out error) {
 		if err != nil {
 			continue
 		}
+		CleanFields(entry, regex)
 	}
 	return out
 }
 
-func CleanFields(entry *Entry, regex) {
-	
+func CleanFields(entry *Entry, regex *regexp.Regexp) {
+	entry.Text
+	entry.EntSeq
+	for _, rele := range entry.REle {
+
+	}
 }
 
 func KeymapFromEntry(entry *Entry) (out map[string]string, err error) {

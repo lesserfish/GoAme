@@ -10,20 +10,6 @@ import (
 var modules []module.Module
 
 func main() {
-	keymap := make(map[string]string)
-	keymap["pascual"] = "victor"
-	keymap["nombre"] = "pedro"
-
-	input := "El @{nombre} del pascual es @{pascual}"
-
-	out, err := module.RenderString(input, keymap)
-
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println(out)
-	}
-
 	init := jmdict.InitOptions{}
 	init.DictionaryPath = "./Repository/Vocabulary/JMdict_e_examp.xml"
 	init.FormatterPath = "./Tools/POLXML/out.xml"
@@ -34,6 +20,14 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+	card := module.Card{[]string{"@{Kanji}", "@{Kanji}<br>@{Kana}<br><br>@{Sense}"}, "test"}
+	input := module.Input{"警察"}
 
-	mod.Demo()
+	err = mod.Render(input, &card)
+
+	if err != nil {
+		fmt.Println((err))
+	}
+
+	fmt.Println(card)
 }

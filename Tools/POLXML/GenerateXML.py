@@ -2,6 +2,7 @@ import xml.etree.cElementTree as ET
 
 root = ET.Element("RegexFormatter")
 raw_file = "raw.txt"
+out_file = "out.xml"
 
 file = open(raw_file, "r")
 while line := file.readline():
@@ -22,4 +23,4 @@ ET.SubElement(f, "find").text = ";"
 ET.SubElement(f, "replace").text = ""
 
 tree = ET.ElementTree(root)
-tree.write("out.xml")
+tree.write(out_file)

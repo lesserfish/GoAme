@@ -6,15 +6,32 @@ type Input []string
 
 type Card struct {
 	Fields []string
-	Tag    []string
+	Tag    string
 }
 type Module interface {
 	Demo()
 	Render(Input, *Card) error
 }
 
-func (card Card) Render(vars map[string]string) (out error) {
-	return out
+func (card Card) Render(keymap map[string]string) error {
+	for id, field := range card.Fields {
+
+		rendered, err := RenderString(field, keymap)
+		if err != nil {
+			return err
+		}
+
+		card.Fields[id] = rendered
+	}
+
+	tag, err := RenderString(card.Tag, keymap)
+	if err != nil {
+		return err
+	}
+
+	card.Tag = tag
+
+	return nil
 }
 
 func RenderString(input string, keymap map[string]string) (string, error) {

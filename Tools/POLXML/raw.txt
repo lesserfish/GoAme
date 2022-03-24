@@ -1,0 +1,92 @@
+<!ENTITY adj-f "noun or verb acting prenominally">
+<!ENTITY adj-i "adjective (keiyoushi)">
+<!ENTITY adj-ix "adjective (keiyoushi) - yoi/ii class">
+<!ENTITY adj-kari "'kari' adjective (archaic)">
+<!ENTITY adj-ku "'ku' adjective (archaic)">
+<!ENTITY adj-na "adjectival nouns or quasi-adjectives (keiyodoshi)">
+<!ENTITY adj-nari "archaic/formal form of na-adjective">
+<!ENTITY adj-no "nouns which may take the genitive case particle 'no'">
+<!ENTITY adj-pn "pre-noun adjectival (rentaishi)">
+<!ENTITY adj-shiku "'shiku' adjective (archaic)">
+<!ENTITY adj-t "'taru' adjective">
+<!ENTITY adv "adverb (fukushi)">
+<!ENTITY adv-to "adverb taking the 'to' particle">
+<!ENTITY aux "auxiliary">
+<!ENTITY aux-adj "auxiliary adjective">
+<!ENTITY aux-v "auxiliary verb">
+<!ENTITY conj "conjunction">
+<!ENTITY cop "copula">
+<!ENTITY ctr "counter">
+<!ENTITY exp "expressions (phrases, clauses, etc.)">
+<!ENTITY int "interjection (kandoushi)">
+<!ENTITY n "noun (common) (futsuumeishi)">
+<!ENTITY n-adv "adverbial noun (fukushitekimeishi)">
+<!ENTITY n-pr "proper noun">
+<!ENTITY n-pref "noun, used as a prefix">
+<!ENTITY n-suf "noun, used as a suffix">
+<!ENTITY n-t "noun (temporal) (jisoumeishi)">
+<!ENTITY num "numeric">
+<!ENTITY pn "pronoun">
+<!ENTITY pref "prefix">
+<!ENTITY prt "particle">
+<!ENTITY suf "suffix">
+<!ENTITY unc "unclassified">
+<!ENTITY v-unspec "verb unspecified">
+<!ENTITY v1 "Ichidan verb">
+<!ENTITY v1-s "Ichidan verb - kureru special class">
+<!ENTITY v2a-s "Nidan verb with 'u' ending (archaic)">
+<!ENTITY v2b-k "Nidan verb (upper class) with 'bu' ending (archaic)">
+<!ENTITY v2b-s "Nidan verb (lower class) with 'bu' ending (archaic)">
+<!ENTITY v2d-k "Nidan verb (upper class) with 'dzu' ending (archaic)">
+<!ENTITY v2d-s "Nidan verb (lower class) with 'dzu' ending (archaic)">
+<!ENTITY v2g-k "Nidan verb (upper class) with 'gu' ending (archaic)">
+<!ENTITY v2g-s "Nidan verb (lower class) with 'gu' ending (archaic)">
+<!ENTITY v2h-k "Nidan verb (upper class) with 'hu/fu' ending (archaic)">
+<!ENTITY v2h-s "Nidan verb (lower class) with 'hu/fu' ending (archaic)">
+<!ENTITY v2k-k "Nidan verb (upper class) with 'ku' ending (archaic)">
+<!ENTITY v2k-s "Nidan verb (lower class) with 'ku' ending (archaic)">
+<!ENTITY v2m-k "Nidan verb (upper class) with 'mu' ending (archaic)">
+<!ENTITY v2m-s "Nidan verb (lower class) with 'mu' ending (archaic)">
+<!ENTITY v2n-s "Nidan verb (lower class) with 'nu' ending (archaic)">
+<!ENTITY v2r-k "Nidan verb (upper class) with 'ru' ending (archaic)">
+<!ENTITY v2r-s "Nidan verb (lower class) with 'ru' ending (archaic)">
+<!ENTITY v2s-s "Nidan verb (lower class) with 'su' ending (archaic)">
+<!ENTITY v2t-k "Nidan verb (upper class) with 'tsu' ending (archaic)">
+<!ENTITY v2t-s "Nidan verb (lower class) with 'tsu' ending (archaic)">
+<!ENTITY v2w-s "Nidan verb (lower class) with 'u' ending and 'we' conjugation (archaic)">
+<!ENTITY v2y-k "Nidan verb (upper class) with 'yu' ending (archaic)">
+<!ENTITY v2y-s "Nidan verb (lower class) with 'yu' ending (archaic)">
+<!ENTITY v2z-s "Nidan verb (lower class) with 'zu' ending (archaic)">
+<!ENTITY v4b "Yodan verb with 'bu' ending (archaic)">
+<!ENTITY v4g "Yodan verb with 'gu' ending (archaic)">
+<!ENTITY v4h "Yodan verb with 'hu/fu' ending (archaic)">
+<!ENTITY v4k "Yodan verb with 'ku' ending (archaic)">
+<!ENTITY v4m "Yodan verb with 'mu' ending (archaic)">
+<!ENTITY v4n "Yodan verb with 'nu' ending (archaic)">
+<!ENTITY v4r "Yodan verb with 'ru' ending (archaic)">
+<!ENTITY v4s "Yodan verb with 'su' ending (archaic)">
+<!ENTITY v4t "Yodan verb with 'tsu' ending (archaic)">
+<!ENTITY v5aru "Godan verb - -aru special class">
+<!ENTITY v5b "Godan verb with 'bu' ending">
+<!ENTITY v5g "Godan verb with 'gu' ending">
+<!ENTITY v5k "Godan verb with 'ku' ending">
+<!ENTITY v5k-s "Godan verb - Iku/Yuku special class">
+<!ENTITY v5m "Godan verb with 'mu' ending">
+<!ENTITY v5n "Godan verb with 'nu' ending">
+<!ENTITY v5r "Godan verb with 'ru' ending">
+<!ENTITY v5r-i "Godan verb with 'ru' ending (irregular verb)">
+<!ENTITY v5s "Godan verb with 'su' ending">
+<!ENTITY v5t "Godan verb with 'tsu' ending">
+<!ENTITY v5u "Godan verb with 'u' ending">
+<!ENTITY v5u-s "Godan verb with 'u' ending (special class)">
+<!ENTITY v5uru "Godan verb - Uru old class verb (old form of Eru)">
+<!ENTITY vi "intransitive verb">
+<!ENTITY vk "Kuru verb - special class">
+<!ENTITY vn "irregular nu verb">
+<!ENTITY vr "irregular ru verb, plain form ends with -ri">
+<!ENTITY vs "noun or participle which takes the aux. verb suru">
+<!ENTITY vs-c "su verb - precursor to the modern suru">
+<!ENTITY vs-i "suru verb - included">
+<!ENTITY vs-s "suru verb - special class">
+<!ENTITY vt "transitive verb">
+<!ENTITY vz "Ichidan verb - zuru verb (alternative form of -jiru verbs)">

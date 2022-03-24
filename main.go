@@ -26,7 +26,7 @@ func main() {
 
 	init := jmdict.InitOptions{}
 	init.DictionaryPath = "./Repository/Vocabulary/JMdict_e_examp.xml"
-	init.FormatterPath = "./Repository/Regex/vocab_cleaner.xml"
+	init.FormatterPath = "./Tools/POLXML/out.xml"
 
 	mod, err := jmdict.Initialize(init)
 

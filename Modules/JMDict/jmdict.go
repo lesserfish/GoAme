@@ -42,7 +42,8 @@ func Initialize(options InitOptions) (out module.Module, err error) {
 	return out, nil
 }
 func (parser Parser) Demo() {
-	entry, _ := FindEntry(&parser.dictionary, "食べる", "")
+	entry, _ := FindEntry(&parser.dictionary, "警察", "")
+	CleanEntry(&entry, &parser.formatter)
 	km, _ := KeymapFromEntry(&entry)
 
 	fmt.Println(km)

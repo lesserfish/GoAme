@@ -1,8 +1,4 @@
 <RegexFormatter>
-    <pri>
-        <find>a</find>
-        <replace>f</replace>
-    </pri>
     <pos>
         <find>a</find>
         <replace>b</replace>

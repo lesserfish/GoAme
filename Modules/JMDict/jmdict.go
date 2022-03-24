@@ -43,11 +43,9 @@ func Initialize(options InitOptions) (out module.Module, err error) {
 }
 func (parser Parser) Demo() {
 	entry, _ := FindEntry(&parser.dictionary, "食べる", "")
+	km, _ := KeymapFromEntry(&entry)
 
-	fmt.Println(entry)
-	fmt.Println("Cleaning!")
-	CleanEntry(&entry, &parser.formatter)
-	fmt.Println(entry)
+	fmt.Println(km)
 
 }
 func (parser Parser) Render(input module.Input, card *module.Card) error {

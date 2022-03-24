@@ -71,7 +71,6 @@ type Operation struct {
 	Replace string `xml:"replace"`
 }
 type RegexFormatter struct {
-	Pri []Operation `xml:"pri"`
 	Pos []Operation `xml:"pos"`
 }
 
@@ -161,26 +160,6 @@ entry_search:
 	return out, err
 }
 func CleanEntry(entry *Entry, order *RegexFormatter) (out error) {
-	for releid, rele := range entry.REle {
-		for repriid, repri := range rele.RePri {
-			for _, instruction := range order.Pri {
-				regex := regexp.MustCompile(instruction.Find)
-				newstring := regex.ReplaceAllString(repri, instruction.Replace)
-				entry.REle[releid].RePri[repriid] = newstring
-			}
-		}
-	}
-
-	for keleid, kele := range entry.KEle {
-		for kepriid, kepri := range kele.KePri {
-			for _, instruction := range order.Pri {
-				regex := regexp.MustCompile(instruction.Find)
-				newstring := regex.ReplaceAllString(kepri, instruction.Replace)
-				entry.REle[keleid].RePri[kepriid] = newstring
-			}
-		}
-	}
-
 	for senseid, sense := range entry.Sense {
 		for posid, pos := range sense.Pos {
 			for _, instruction := range order.Pos {
@@ -196,5 +175,54 @@ func CleanEntry(entry *Entry, order *RegexFormatter) (out error) {
 
 func KeymapFromEntry(entry *Entry) (out map[string]string, err error) {
 	out = make(map[string]string)
+
+	Kanji := ""
+	for _, kele := range entry.KEle {
+		Kanji += "<div class='Kele'>"
+		for _, keb := range kele.Keb {
+			Kanji += "<div class='Keb'>"
+			Kanji += keb
+			Kanji += "</div>"
+		}
+		Kanji += "</div>"
+	}
+	Kana := ""
+	for _, rele := range entry.REle {
+		Kana += "<div class='Rele'>"
+		for _, reb := range rele.Reb {
+			Kana += "<div class='Reb'>"
+			Kana += reb
+			Kana += "</div>"
+		}
+		Kana += "</div>"
+	}
+	Sense := ""
+	for _, sense := range entry.Sense {
+		Sense += "<div class='Sense'>"
+		for _, pos := range sense.Pos {
+			Sense += "<div class='pos'>"
+			Sense += pos
+			Sense += "</div>"
+		}
+		for _, gloss := range sense.Gloss {
+			Sense += "<div class='gloss'>"
+			Sense += gloss.Text
+			Sense += "<div class='</div>'>"
+		}
+		for _, example := range sense.Example {
+			Sense += "<div class='example'>"
+			for _, lang := range example.ExSent {
+				Sense += "<div class='lang " + lang.Lang + "'>"
+				Sense += lang.Text
+				Sense += "</div>"
+			}
+			Sense += "</div>"
+		}
+		Sense += "</div>"
+	}
+	out["Kana"] = Kana
+	out["Kanji"] = Kanji
+	out["Sense"] = Sense
+
 	return out, err
 }

@@ -10,6 +10,7 @@ import (
 var modules []module.Module
 
 func main() {
+
 	init := jmdict.InitOptions{}
 	init.DictionaryPath = "./Repository/Vocabulary/JMdict_e_examp.xml"
 	init.FormatterPath = "./Tools/POLXML/out.xml"

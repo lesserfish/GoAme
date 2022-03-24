@@ -1,7 +1,5 @@
 package module
 
-import "errors"
-
 type Input []string
 
 type Card struct {
@@ -13,28 +11,19 @@ type Module interface {
 	Render(Input, *Card) error
 }
 
-func (card Card) Render(keymap map[string]string) error {
+func (card Card) Render(keymap map[string]string) {
 	for id, field := range card.Fields {
 
-		rendered, err := RenderString(field, keymap)
-		if err != nil {
-			return err
-		}
-
+		rendered := RenderString(field, keymap)
 		card.Fields[id] = rendered
 	}
 
-	tag, err := RenderString(card.Tag, keymap)
-	if err != nil {
-		return err
-	}
+	tag := RenderString(card.Tag, keymap)
 
 	card.Tag = tag
-
-	return nil
 }
 
-func RenderString(input string, keymap map[string]string) (string, error) {
+func RenderString(input string, keymap map[string]string) string {
 	for i, c := range input {
 		if c == '}' {
 			end := i
@@ -56,8 +45,7 @@ func RenderString(input string, keymap map[string]string) (string, error) {
 					value, ok := keymap[key]
 
 					if !ok {
-						err_string := "Failed to find variable " + key + " in map"
-						return input, errors.New(err_string)
+						value = ""
 					}
 
 					translation := lowsegment + value + highsegment
@@ -67,5 +55,5 @@ func RenderString(input string, keymap map[string]string) (string, error) {
 		}
 	}
 
-	return input, nil
+	return input
 }

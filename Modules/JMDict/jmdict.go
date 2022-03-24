@@ -79,7 +79,7 @@ func (parser Parser) Render(input module.Input, card *module.Card) error {
 		return err
 	}
 
-	err = card.Render(keymap)
+	card.Render(keymap)
 
 	if err != nil {
 		return err

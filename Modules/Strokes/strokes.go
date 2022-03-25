@@ -104,6 +104,17 @@ func (strokeModule StrokeModule) Render(input module.Input, card *module.Card) (
 		ANDAS = "ANDAS" + ANDAS + ".gif"
 		JIS = JIS + ".gif"
 
+		ANDASFP := strokeModule.Path + "/" + ANDAS
+		JISFP := strokeModule.Path + "/" + JIS
+
+		ANDASstat, err := os.Stat(ANDASFP)
+		if err != nil || !ANDASstat.Mode().IsRegular() {
+			ANDAS = ""
+		}
+		JISstat, err := os.Stat(JISFP)
+		if err != nil || !JISstat.Mode().IsRegular() {
+			JIS = ""
+		}
 		if strokeModule.PreferJIS && JIS != "" {
 			currentstroke.IdealPath = JIS
 		} else if JIS != "" && ANDAS == "" {

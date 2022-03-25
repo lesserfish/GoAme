@@ -14,6 +14,7 @@ import (
 type InitOptions struct {
 	DBPath  string
 	Shuffle bool
+	Seed    int64
 }
 
 type Example struct {
@@ -23,6 +24,7 @@ type Example struct {
 type ExampleModule struct {
 	DB      *sql.DB
 	Shuffle bool
+	Seed    int64
 }
 
 func Initialize(options InitOptions) (out module.Module, err error) {
@@ -34,6 +36,7 @@ func Initialize(options InitOptions) (out module.Module, err error) {
 
 	newModule.DB = db
 	newModule.Shuffle = options.Shuffle
+	newModule.Seed = options.Seed
 
 	fmt.Println("Examples loaded!")
 	return newModule, err
@@ -112,6 +115,7 @@ func (exampleModule ExampleModule) Render(input module.Input, card *module.Card)
 		}
 	}
 
+	rand.Seed()
 	if exampleModule.Shuffle && len(examples) > 1 {
 		rand.Shuffle(len(examples), func(i, j int) {
 			examples[i], examples[j] = examples[j], examples[i]

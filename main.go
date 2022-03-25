@@ -18,7 +18,7 @@ func main() {
 		fmt.Println(err)
 	}
 
-	exmod, err := examples.Initialize(examples.InitOptions{"Database/Sentences.db", true})
+	exmod, err := examples.Initialize(examples.InitOptions{"Database/Sentences.db", true, 0})
 
 	if err != nil {
 		fmt.Println(err)

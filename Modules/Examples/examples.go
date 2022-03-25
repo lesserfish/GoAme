@@ -119,7 +119,7 @@ func (exampleModule ExampleModule) Render(input module.Input, card *module.Card)
 		}
 	}
 
-	rand.Seed()
+	rand.Seed(exampleModule.Seed)
 	if exampleModule.Shuffle && len(examples) > 1 {
 		rand.Shuffle(len(examples), func(i, j int) {
 			examples[i], examples[j] = examples[j], examples[i]

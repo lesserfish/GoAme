@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"strconv"
 	"strings"
+	"time"
 
 	module "github.com/lesserfish/GoAme/Modules"
 	_ "github.com/mattn/go-sqlite3"
@@ -37,6 +38,9 @@ func Initialize(options InitOptions) (out module.Module, err error) {
 	newModule.DB = db
 	newModule.Shuffle = options.Shuffle
 	newModule.Seed = options.Seed
+	if options.Seed == 0 {
+		newModule.Seed = time.Now().UnixMicro()
+	}
 
 	fmt.Println("Examples loaded!")
 	return newModule, err

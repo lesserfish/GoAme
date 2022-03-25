@@ -7,7 +7,7 @@ import (
 	module "github.com/lesserfish/GoAme/Modules"
 )
 
-type Parser struct {
+type JMdictModule struct {
 	DictionaryPath string
 	FormatterPath  string
 	dictionary     JMdict
@@ -19,29 +19,32 @@ type InitOptions struct {
 }
 
 func Initialize(options InitOptions) (out module.Module, err error) {
-	newParser := new(Parser)
-	newParser.DictionaryPath = options.DictionaryPath
-	newParser.FormatterPath = options.FormatterPath
+	newModule := new(JMdictModule)
+	newModule.DictionaryPath = options.DictionaryPath
+	newModule.FormatterPath = options.FormatterPath
 
-	err = LoadDictionary(newParser)
+	err = LoadDictionary(newModule)
 
 	if err != nil {
 		return out, err
 	}
 
 	if options.FormatterPath != "" {
-		err = LoadFormatter(newParser)
+		err = LoadFormatter(newModule)
 
 		if err != nil {
 			return out, err
 		}
 
 	}
-	out = *newParser
+	out = *newModule
 
 	return out, nil
 }
-func (parser Parser) Demo() {
+func (parser JMdictModule) Close() {
+
+}
+func (parser JMdictModule) Demo() {
 	entry, _ := FindEntry(&parser.dictionary, "警察", "")
 	CleanEntry(&entry, &parser.formatter)
 	km, _ := KeymapFromEntry(&entry)
@@ -49,16 +52,16 @@ func (parser Parser) Demo() {
 	fmt.Println(km)
 
 }
-func (parser Parser) Render(input module.Input, card *module.Card) error {
+func (parser JMdictModule) Render(input module.Input, card *module.Card) error {
 	if len(input) < 1 {
 		return errors.New("No input given to JMdict module!")
 	}
 
-	kanji := input[0]
+	kanji := input["kanji"]
 	kana := ""
 
 	if len(input) > 1 {
-		kana = input[1]
+		kana = input["kana"]
 	}
 
 	entry, err := FindEntry(&parser.dictionary, kanji, kana)
@@ -79,11 +82,14 @@ func (parser Parser) Render(input module.Input, card *module.Card) error {
 		return err
 	}
 
-	card.Render(keymap)
+	card.Render(keymap, false)
 
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+func (parser JMdictModule) CSS(card *module.Card) {
+
 }

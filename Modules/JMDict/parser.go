@@ -75,7 +75,7 @@ type RegexFormatter struct {
 	Pos     []Operation `xml:"pos"`
 }
 
-func LoadDictionary(parser *Parser) (err error) {
+func LoadDictionary(parser *JMdictModule) (err error) {
 	DictionaryPath := parser.DictionaryPath
 
 	xmlFile, err := os.Open(DictionaryPath)
@@ -95,9 +95,8 @@ func LoadDictionary(parser *Parser) (err error) {
 	fmt.Println("Dictionary loaded!")
 	return nil
 }
-func LoadFormatter(parser *Parser) (err error) {
+func LoadFormatter(parser *JMdictModule) (err error) {
 	FormatterPath := parser.FormatterPath
-	fmt.Println(FormatterPath)
 	xmlFile, err := os.Open(FormatterPath)
 
 	if err != nil {
@@ -111,7 +110,7 @@ func LoadFormatter(parser *Parser) (err error) {
 	if err != nil {
 		return err
 	}
-
+	fmt.Println("Formatter loaded!")
 	return nil
 }
 func FindEntry(dict *JMdict, kanji string, kana string) (out Entry, err error) {

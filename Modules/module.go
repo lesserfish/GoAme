@@ -1,6 +1,6 @@
 package module
 
-type Input []string
+type Input map[string]string
 
 type Card struct {
 	Fields []string
@@ -9,21 +9,23 @@ type Card struct {
 type Module interface {
 	Demo()
 	Render(Input, *Card) error
+	CSS(*Card)
+	Close()
 }
 
-func (card Card) Render(keymap map[string]string) {
+func (card Card) Render(keymap map[string]string, clear_unused bool) {
 	for id, field := range card.Fields {
 
-		rendered := RenderString(field, keymap)
+		rendered := RenderString(field, keymap, clear_unused)
 		card.Fields[id] = rendered
 	}
 
-	tag := RenderString(card.Tag, keymap)
+	tag := RenderString(card.Tag, keymap, clear_unused)
 
 	card.Tag = tag
 }
 
-func RenderString(input string, keymap map[string]string) string {
+func RenderString(input string, keymap map[string]string, clear_unused bool) string {
 	for i, c := range input {
 		if c == '}' {
 			end := i
@@ -45,11 +47,14 @@ func RenderString(input string, keymap map[string]string) string {
 					value, ok := keymap[key]
 
 					if !ok {
+						if !clear_unused {
+							break
+						}
 						value = ""
 					}
 
 					translation := lowsegment + value + highsegment
-					return RenderString(translation, keymap)
+					return RenderString(translation, keymap, clear_unused)
 				}
 			}
 		}

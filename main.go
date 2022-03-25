@@ -24,7 +24,7 @@ func main() {
 		fmt.Println(err)
 	}
 
-	card := module.Card{[]string{"@{Kanji}", "@{Kana} @{Sense} <h2>Examples:</h2> @{Example_0} @{Example_1} @{Example_2}"}, ""}
+	card := module.Card{[]string{"@{Kanji}", "@{Kana} @{Sense} <h2>Examples:</h2> @{Example_1} @{Example_1_ENG} @{Example_1_JP}"}, ""}
 	input := module.Input{"kanji": "警察"}
 
 	err = jsmod.Render(input, &card)

@@ -137,8 +137,15 @@ func KeymapFromEntry(examples []Example) (out map[string]string) {
 	out["Example"] = canonicalvalue
 	for id, ex := range examples {
 		key := "Example_" + strconv.Itoa(id)
-		value := "<div class = 'rexample' id = '" + strconv.Itoa(id) + "'><div class = 'JP'</div>" + ex.JP + "<div class = 'ENG'>" + ex.ENG + "</div></div>"
+		value := "<div class = 'rexample' id = '" + strconv.Itoa(id) + "'><div class = 'JP'>" + ex.JP + "</div><div class = 'ENG'>" + ex.ENG + "</div></div>"
 		out[key] = value
+		key = "Example_" + strconv.Itoa(id) + "_JP"
+		value = "<div class = 'rexample' id = '" + strconv.Itoa(id) + "'><div class = 'JP'>" + ex.JP + "</div></div>"
+		out[key] = value
+		key = "Example_" + strconv.Itoa(id) + "_ENG"
+		value = "<div class = 'rexample' id = '" + strconv.Itoa(id) + "'><div class = 'ENG'>" + ex.ENG + "</div></div>"
+		out[key] = value
+
 	}
 	return out
 }

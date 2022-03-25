@@ -17,7 +17,7 @@ type InitOptions struct {
 	FormatterPath  string
 }
 
-func Initialize(options InitOptions) (out module.Module, err error) {
+func Initialize(options InitOptions) (out module.Module, err error, outModule *JMdictModule) {
 	newModule := new(JMdictModule)
 	newModule.DictionaryPath = options.DictionaryPath
 	newModule.FormatterPath = options.FormatterPath
@@ -25,20 +25,20 @@ func Initialize(options InitOptions) (out module.Module, err error) {
 	err = LoadDictionary(newModule)
 
 	if err != nil {
-		return out, err
+		return out, err, newModule
 	}
 
 	if options.FormatterPath != "" {
 		err = LoadFormatter(newModule)
 
 		if err != nil {
-			return out, err
+			return out, err, newModule
 		}
 
 	}
 	out = *newModule
 
-	return out, nil
+	return out, nil, newModule
 }
 func (parser JMdictModule) Close() {
 

@@ -4,36 +4,23 @@ import (
 	"fmt"
 
 	module "github.com/lesserfish/GoAme/Modules"
-	examples "github.com/lesserfish/GoAme/Modules/Examples"
-	jmdict "github.com/lesserfish/GoAme/Modules/JMDict"
+	kanjidic "github.com/lesserfish/GoAme/Modules/Kanjidic"
 )
 
 var modules []module.Module
 
 func main() {
 
-	jsmod, err := jmdict.Initialize(jmdict.InitOptions{"Repository/Vocabulary/JMdict_e_examp.xml", "Tools/POLXML/out.xml"})
+	mod, err := kanjidic.Initialize(kanjidic.InitOptions{"Repository/Kanji/kanjidic2.xml"})
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	exmod, err := examples.Initialize(examples.InitOptions{"Database/Sentences.db", true, 1212})
+	card := module.Card{[]string{"@{kanjiinfo}"}, ""}
+	input := module.Input{"literal": "警察"}
 
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	card := module.Card{[]string{"@{KanjiWord}", "@{KanaWord} @{Sense} <h2>Examples:</h2> @{Example_1} @{Example_1_ENG} @{Example_1_JP}"}, ""}
-	input := module.Input{"kanjiword": "警察"}
-
-	err = jsmod.Render(input, &card)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	err = exmod.Render(input, &card)
+	err = mod.Render(input, &card)
 
 	if err != nil {
 		fmt.Println(err)

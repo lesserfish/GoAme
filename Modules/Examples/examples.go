@@ -53,7 +53,7 @@ func (exampleModule ExampleModule) Demo() {
 
 }
 func (exampleModule ExampleModule) Render(input module.Input, card *module.Card) (err error) {
-	Kanji := input["kanji"]
+	Kanji := input["kanjiword"]
 
 	tx, err := exampleModule.DB.Begin()
 
@@ -136,6 +136,7 @@ func (ExampleModule ExampleModule) CSS(card *module.Card) {
 }
 
 func KeymapFromEntry(examples []Example) (out map[string]string) {
+	fmt.Println(examples)
 	out = make(map[string]string)
 	if len(examples) == 0 {
 		return out

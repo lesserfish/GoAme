@@ -127,7 +127,7 @@ func (exampleModule ExampleModule) Render(input module.Input, card *module.Card)
 	}
 	keymap := KeymapFromEntry(examples)
 
-	card.Render(keymap, false)
+	card.Parse(keymap, false)
 
 	return nil
 }

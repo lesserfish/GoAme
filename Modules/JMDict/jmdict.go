@@ -82,7 +82,7 @@ func (parser JMdictModule) Render(input module.Input, card *module.Card) error {
 		return err
 	}
 
-	card.Render(keymap, false)
+	card.Parse(keymap, false)
 
 	if err != nil {
 		return err

@@ -53,7 +53,7 @@ func (parser Kanjidic_Module) Render(input module.Input, card *module.Card) erro
 		return err
 	}
 
-	card.Render(keymap, false)
+	card.Parse(keymap, false)
 
 	if err != nil {
 		return err

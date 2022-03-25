@@ -93,7 +93,7 @@ func LoadDictionary(parser *Kanjidic_Module) (err error) {
 
 	byteData, _ := ioutil.ReadAll(xmlFile)
 
-	err = xml.Unmarshal(byteData, &parser.dictionary)
+	err = xml.Unmarshal(byteData, &parser.Dictionary)
 
 	if err != nil {
 		return err

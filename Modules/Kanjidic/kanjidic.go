@@ -8,25 +8,25 @@ import (
 
 type Kanjidic_Module struct {
 	DictionaryPath string
-	dictionary     Kanjidic
+	Dictionary     Kanjidic
 }
 type InitOptions struct {
 	DictionaryPath string
 }
 
-func Initialize(options InitOptions) (out module.Module, err error) {
+func Initialize(options InitOptions) (out module.Module, err error, kmod *Kanjidic_Module) {
 	newModule := new(Kanjidic_Module)
 	newModule.DictionaryPath = options.DictionaryPath
 
 	err = LoadDictionary(newModule)
 
 	if err != nil {
-		return out, err
+		return out, err, newModule
 	}
 
 	out = *newModule
 
-	return out, nil
+	return out, nil, newModule
 }
 func (parser Kanjidic_Module) Close() {
 
@@ -41,7 +41,7 @@ func (parser Kanjidic_Module) Render(input module.Input, card *module.Card) erro
 
 	literal := input["literal"]
 
-	entry, err := FindEntry(&parser.dictionary, literal)
+	entry, err := FindEntry(&parser.Dictionary, literal)
 
 	if err != nil {
 		return err

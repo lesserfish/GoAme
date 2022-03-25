@@ -35,7 +35,7 @@ func (parser Kanjidic_Module) Demo() {
 
 }
 func (parser Kanjidic_Module) Render(input module.Input, card *module.Card) error {
-	if len(input) < 1 {
+	if input["literal"] == "" {
 		return errors.New("No input given to Kanjidic module!")
 	}
 

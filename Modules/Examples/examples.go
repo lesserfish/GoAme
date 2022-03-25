@@ -53,7 +53,11 @@ func (exampleModule ExampleModule) Demo() {
 
 }
 func (exampleModule ExampleModule) Render(input module.Input, card *module.Card) (err error) {
-	Kanji := input["kanjiword"]
+	Word := input["kanjiword"]
+
+	if Word == "" {
+		Word = input["kanaword"]
+	}
 
 	tx, err := exampleModule.DB.Begin()
 
@@ -69,7 +73,7 @@ func (exampleModule ExampleModule) Render(input module.Input, card *module.Card)
 
 	defer idp.Close()
 
-	rowid, err := idp.Query(Kanji)
+	rowid, err := idp.Query(Word)
 
 	if err != nil {
 		return err
@@ -136,8 +140,15 @@ func (ExampleModule ExampleModule) CSS(card *module.Card) {
 }
 
 func KeymapFromEntry(examples []Example) (out map[string]string) {
-	fmt.Println(examples)
 	out = make(map[string]string)
+
+	out["Example"] = ""
+	for i := 0; i < 100; i++ {
+		out["Example_"+strconv.Itoa(i)] = ""
+		out["Example_"+strconv.Itoa(i)+"_ENG"] = ""
+		out["Example_"+strconv.Itoa(i)+"_JP"] = ""
+	}
+
 	if len(examples) == 0 {
 		return out
 	}

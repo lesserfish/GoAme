@@ -2,7 +2,6 @@ package jmdict
 
 import (
 	"errors"
-	"fmt"
 
 	module "github.com/lesserfish/GoAme/Modules"
 )
@@ -45,26 +44,26 @@ func (parser JMdictModule) Close() {
 
 }
 func (parser JMdictModule) Demo() {
-	entry, _ := FindEntry(&parser.dictionary, "警察", "")
-	CleanEntry(&entry, &parser.formatter)
-	km, _ := KeymapFromEntry(&entry)
-
-	fmt.Println(km)
-
 }
 func (parser JMdictModule) Render(input module.Input, card *module.Card) error {
-	if len(input) < 1 {
-		return errors.New("No input given to JMdict module!")
+	ignore_kanji := false
+	ignore_kana := false
+
+	if input["kanjiword"] == "" {
+		ignore_kanji = true
+	}
+	if input["kanaword"] == "" {
+		ignore_kana = true
+	}
+
+	if ignore_kana && ignore_kanji {
+		return errors.New("No input given to JMdic module!")
 	}
 
 	kanji := input["kanjiword"]
-	kana := ""
+	kana := input["kanaword"]
 
-	if len(input) > 1 {
-		kana = input["kanaword"]
-	}
-
-	entry, err := FindEntry(&parser.dictionary, kanji, kana)
+	entry, err := FindEntry(&parser.dictionary, kanji, kana, ignore_kanji, ignore_kana)
 
 	if err != nil {
 		return err

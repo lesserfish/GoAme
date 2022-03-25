@@ -113,30 +113,32 @@ func LoadFormatter(parser *JMdictModule) (err error) {
 	fmt.Println("Formatter loaded!")
 	return nil
 }
-func FindEntry(dict *JMdict, kanji string, kana string) (out Entry, err error) {
+func FindEntry(dict *JMdict, kanji string, kana string, ignore_kanji bool, ignore_kana bool) (out Entry, err error) {
 
 	err = errors.New("Failed to find entry in dictionary.")
-
-	search_kana := false
-	if kana != "" {
-		search_kana = true
-	}
 
 entry_search:
 	for _, entry := range dict.Entries {
 		match_kanji := false
 		match_kana := false
 
-	kanji_search:
-		for _, kele := range entry.KEle {
-			for _, keb := range kele.Keb {
-				if keb == kanji {
-					match_kanji = true
-					break kanji_search
+		if ignore_kanji {
+			match_kanji = true
+		} else {
+		kanji_search:
+			for _, kele := range entry.KEle {
+				for _, keb := range kele.Keb {
+					if keb == kanji {
+						match_kanji = true
+						break kanji_search
+					}
 				}
 			}
 		}
-		if search_kana {
+
+		if ignore_kana {
+			match_kana = true
+		} else {
 		kana_search:
 			for _, rele := range entry.REle {
 				for _, reb := range rele.Reb {
@@ -146,8 +148,6 @@ entry_search:
 					}
 				}
 			}
-		} else {
-			match_kana = true
 		}
 
 		if match_kanji && match_kana {

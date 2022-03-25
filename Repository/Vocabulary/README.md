@@ -1,3 +1,4 @@
+COPY OF: https://www.edrdg.org/
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <HTML>
 <HEAD>
@@ -58,11 +59,11 @@ The major ongoing projects of the Group are:
 </P>
 <UL>
 <LI><P ALIGN="JUSTIFY">the 
- <a HREF="jmdict/edict_doc.html">JMdict/EDICT Japanese-English Electronic Dictionary database. </a>
+ <a href="https://www.edrdg.org/jmdict/edict_doc.html">JMdict/EDICT Japanese-English Electronic Dictionary database. </a>
 </P>
 </LI>
 <LI><P ALIGN="JUSTIFY">the 
- <a HREF="enamdict/enamdict_doc.html">ENAMDICT/JMnedict Japanese Proper Names Electronic Dictionary database. </a>
+ <a href="https://www.edrdg.org/enamdict/enamdict_doc.html">ENAMDICT/JMnedict Japanese Proper Names Electronic Dictionary database. </a>
 </P>
 </LI>
 <LI><P ALIGN="JUSTIFY">the 
@@ -71,9 +72,9 @@ now being used to maintain JMdict/EDICT.
 </P>
 </LI>
 <LI><P ALIGN="JUSTIFY">the 
- <a HREF="kanjidic/kanjidic.html">KANJIDIC </a>
+ <a href="https://www.edrdg.org/kanjidic/kanjidic.html">KANJIDIC </a>
 and
- <a HREF="kanjidic/kanjd2index.html">KANJIDIC2 </a>
+ <a href="https://www.edrdg.org/kanjidic/kanjd2index.html">KANJIDIC2 </a>
 Kanji Information databases.
 </P>
 </LI>

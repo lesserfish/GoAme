@@ -233,8 +233,8 @@ func KeymapFromEntry(entry *Entry) (out map[string]string, err error) {
 	}
 	Sense += "</div>"
 
-	out["Kana"] = Kana
-	out["Kanji"] = Kanji
+	out["KanaWord"] = Kana
+	out["KanjiWord"] = Kanji
 	out["Sense"] = Sense
 
 	return out, err

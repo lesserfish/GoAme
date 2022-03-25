@@ -18,14 +18,14 @@ func main() {
 		fmt.Println(err)
 	}
 
-	exmod, err := examples.Initialize(examples.InitOptions{"Database/Sentences.db", true, 0})
+	exmod, err := examples.Initialize(examples.InitOptions{"Database/Sentences.db", true, 1212})
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	card := module.Card{[]string{"@{Kanji}", "@{Kana} @{Sense} <h2>Examples:</h2> @{Example_1} @{Example_1_ENG} @{Example_1_JP}"}, ""}
-	input := module.Input{"kanji": "警察"}
+	card := module.Card{[]string{"@{KanjiWord}", "@{KanaWord} @{Sense} <h2>Examples:</h2> @{Example_1} @{Example_1_ENG} @{Example_1_JP}"}, ""}
+	input := module.Input{"kanjiword": "警察"}
 
 	err = jsmod.Render(input, &card)
 

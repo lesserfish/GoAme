@@ -57,11 +57,11 @@ func (parser JMdictModule) Render(input module.Input, card *module.Card) error {
 		return errors.New("No input given to JMdict module!")
 	}
 
-	kanji := input["kanji"]
+	kanji := input["kanjiword"]
 	kana := ""
 
 	if len(input) > 1 {
-		kana = input["kana"]
+		kana = input["kanaword"]
 	}
 
 	entry, err := FindEntry(&parser.dictionary, kanji, kana)

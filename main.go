@@ -17,7 +17,7 @@ func main() {
 		fmt.Println(err)
 	}
 
-	card := module.Card{[]string{"@{kanjiinfo}"}, ""}
+	card := module.Card{[]string{"@{kanjiinfoex}"}, ""}
 	input := module.Input{"literal": "警察"}
 
 	err = mod.Render(input, &card)

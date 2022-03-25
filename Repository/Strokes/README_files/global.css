@@ -1,0 +1,69 @@
+﻿body { margin: 0px }
+body, p, td, th, li, select, option, input { font-size: 11px }
+td.rad { font-size: 18px; line-height: 24px }
+a:link { color: db4e10; text-decoration: none }
+a:visited { color: db4e10; text-decoration: none }
+a:hover { color: db4e10; text-decoration: underline }
+.ov { text-decoration: overline }
+.titular { font-family: Osaka, Arial, Helvetica, sans-serif; font-size: 14px; color: ffffff; font-weight: 900 }
+.tits { font-family: Osaka, Arial, Helvetica, sans-serif; font-size: 12px; color: ffffff }
+.htits { font-family: Osaka, Arial, Helvetica, sans-serif; font-size: 12px; color: 074161 }
+.titsplus { font-family: Osaka, Arial, Helvetica, sans-serif; font-size: 12px; color: ffffff; background-image: url('/web/20190310162158im_/http://www.kanjicafe.com/art/jb.jpg'); background-repeat: no-repeat }
+.kc2012 {
+	font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3";
+	font-size: 14px;
+	color: 000000;
+	background-image: url('/web/20190310162158im_/http://www.kanjicafe.com/art/jrw.jpg');
+	background-repeat: no-repeat
+	}
+.hawjapban { background-image: url('/web/20190310162158im_/http://www.kanjicafe.com/art/hawaii_japan_banner_30.105.jpg'); background-repeat: no-repeat }
+.xtitsplus { font-family: Osaka, Arial, Helvetica, sans-serif; font-size: 12px; color: ffffff; background-image: url('/web/20190310162158im_/http://www.kanjicafe.com/art/jbx.jpg'); background-repeat: no-repeat }
+.tinytits { font-family: Osaka, Arial, Helvetica, sans-serif; font-size: 12px; color: ffffff; background-image: url('/web/20190310162158im_/http://www.kanjicafe.com/art/jb.102.jpg'); background-repeat: no-repeat }
+.titshome { font-family: Osaka, Arial, Helvetica, sans-serif; font-size: 12px; color: ffffff; background-image: url('/web/20190310162158im_/http://www.kanjicafe.com/art/jbk.jpg'); background-repeat: no-repeat } 
+.jinmuhome { font-family: Osaka, Arial, Helvetica, sans-serif; font-size: 12px; color: ffffff; background-image: url('/web/20190310162158im_/http://www.kanjicafe.com/art/jinmu.352.650.jpg'); background-repeat: no-repeat } 
+.jinmunopic { font-family: Osaka, Arial, Helvetica, sans-serif; font-size: 12px; color: ffffff; } 
+.holiday { font-family: Osaka, Arial, Helvetica, sans-serif; font-size: 12px; color: ffffff; background-image: url('/web/20190310162158im_/http://www.kanjicafe.com/art/jim.jpg'); background-repeat: no-repeat } 
+.kanji { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 64px; line-height: 64px; color: 000000 }
+.skanji { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 48px; color: 074161 }
+.vkanji { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3";font-size: 48px; line-height: 48px; color: 000000 }
+.exes { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 24px; line-height: 24px; color: 000000 }
+.sexes { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 24px; line-height: 24px; color: 074161 }
+.means { font-family: Osaka, Arial, Helvetica, sans-serif; font-size: 16px; color: 000000 }
+.dict24 { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 24px; line-height: 24px; color: 000000 }
+.dict18 { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 18px; line-height: 18px; color: 000000 }
+.dict16 { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 16px; line-height: 18px; color: 000000 }
+.dict14 { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 14px; line-height: 18px; color: 000000 }
+.dict12 { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 12px; line-height: 18px; color: 000000 }
+.sdict24 { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 24px; line-height: 24px; color: 074161 }
+.sdict18 { ffont-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 18px; line-height: 18px; color: 074161 }
+.sdict16 { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 16px; line-height: 18px; color: 074161 }
+.sdict14 { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 14px; line-height: 18px; color: 074161 }
+.sdict12 { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 12px; line-height: 18px; color: 074161 }
+.kunyomi { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 12px; line-height: 12px; color: 000000; }
+.okurigana { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro W3"; font-size: 12px; line-height: 12px; color: 286c33 }
+.english { font-size: 11px; font-family: Osaka, Arial, Helvetica, sans-serif; color: 000000 }
+.penglish { font-size: 12px; font-family: Osaka, Arial, Helvetica, sans-serif; color: db4e10 }
+.spenglish { font-size: 11px; font-family: Osaka, Arial, Helvetica, sans-serif; color: db4e10 }
+.engnonp { font-size: 11px; font-family: Osaka, Arial, Helvetica, sans-serif; color: 286c33 }
+.parts { font-family: Osaka, Arial, Helvetica, sans-serif; color: b0b0b0; font-size: 12px }
+/*
+     FILE ARCHIVED ON 16:21:58 Mar 10, 2019 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 06:28:53 Mar 25, 2022.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  captures_list: 73.119
+  exclusion.robots: 0.094
+  exclusion.robots.policy: 0.087
+  RedisCDXSource: 22.069
+  esindex: 0.008
+  LoadShardBlock: 30.491 (3)
+  PetaboxLoader3.datanode: 61.647 (4)
+  CDXLines.iter: 14.316 (3)
+  load_resource: 74.739
+  PetaboxLoader3.resolve: 36.457
+*/

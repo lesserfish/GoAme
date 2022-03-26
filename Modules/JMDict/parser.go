@@ -86,7 +86,7 @@ func LoadDictionary(parser *JMdictModule) (err error) {
 
 	byteData, _ := ioutil.ReadAll(xmlFile)
 
-	err = xml.Unmarshal(byteData, &parser.dictionary)
+	err = xml.Unmarshal(byteData, &parser.Dictionary)
 
 	if err != nil {
 		return err
@@ -105,7 +105,7 @@ func LoadFormatter(parser *JMdictModule) (err error) {
 
 	byteData, _ := ioutil.ReadAll(xmlFile)
 
-	err = xml.Unmarshal(byteData, &parser.formatter)
+	err = xml.Unmarshal(byteData, &parser.Formatter)
 
 	if err != nil {
 		return err

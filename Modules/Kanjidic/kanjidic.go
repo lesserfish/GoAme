@@ -14,19 +14,17 @@ type InitOptions struct {
 	DictionaryPath string
 }
 
-func Initialize(options InitOptions) (out module.Module, err error, kmod *Kanjidic_Module) {
+func Initialize(options InitOptions) (*Kanjidic_Module, error) {
 	newModule := new(Kanjidic_Module)
 	newModule.DictionaryPath = options.DictionaryPath
 
-	err = LoadDictionary(newModule)
+	err := LoadDictionary(newModule)
 
 	if err != nil {
-		return out, err, newModule
+		return newModule, err
 	}
 
-	out = *newModule
-
-	return out, nil, newModule
+	return newModule, nil
 }
 func (parser Kanjidic_Module) Close() {
 

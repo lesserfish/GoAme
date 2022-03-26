@@ -172,7 +172,7 @@ func KeymapFromEntry(characters *[]Character) (out map[string]string, err error)
 	kanji_info_basic += "</div>"
 	kanji_info_ext += "</div>"
 
-	out["kanjiinfo"] = kanji_info_basic
-	out["kanjiinfoex"] = kanji_info_ext
+	out["KanjiInfo"] = kanji_info_basic
+	out["KanjiInfoEx"] = kanji_info_ext
 	return out, err
 }

@@ -28,7 +28,7 @@ type ExampleModule struct {
 	Seed    int64
 }
 
-func Initialize(options InitOptions) (out module.Module, err error) {
+func Initialize(options InitOptions) (*ExampleModule, error) {
 	newModule := new(ExampleModule)
 	db, err := sql.Open("sqlite3", options.DBPath)
 	if err != nil {
@@ -43,7 +43,7 @@ func Initialize(options InitOptions) (out module.Module, err error) {
 	}
 
 	fmt.Println("Examples loaded!")
-	return newModule, err
+	return newModule, nil
 }
 
 func (exampleModule ExampleModule) Close() {

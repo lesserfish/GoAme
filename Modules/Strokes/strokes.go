@@ -25,18 +25,17 @@ type StrokeModule struct {
 }
 
 type StrokeOutput struct {
-	IdealPath string
-	JISPath   string
-	ALSASPath string
+	Path string
+	Type string
 }
 
-func Initialize(options InitOptions) (out module.Module, err error) {
+func Initialize(options InitOptions) (*StrokeModule, error) {
 	newModule := new(StrokeModule)
 	newModule.Path = options.StrokePath
 	newModule.kanjimod = options.Kanjimod
 	newModule.PreferJIS = options.PreferJIS
 
-	_, err = os.Stat(newModule.Path)
+	_, err := os.Stat(newModule.Path)
 
 	if os.IsNotExist(err) {
 		return newModule, err
@@ -115,15 +114,22 @@ func (strokeModule StrokeModule) Render(input module.Input, card *module.Card) (
 		if err != nil || !JISstat.Mode().IsRegular() {
 			JIS = ""
 		}
+
 		if strokeModule.PreferJIS && JIS != "" {
-			currentstroke.IdealPath = JIS
+			currentstroke.Path = JIS
+			currentstroke.Type = "JIS"
 		} else if JIS != "" && ANDAS == "" {
-			currentstroke.IdealPath = JIS
+			currentstroke.Path = JIS
+			currentstroke.Type = "JIS"
+		} else if ANDAS != "" {
+			currentstroke.Path = ANDAS
+			currentstroke.Type = "ANDAS"
 		} else {
-			currentstroke.IdealPath = ANDAS
+			continue
 		}
 
 		output = append(output, currentstroke)
+
 	}
 
 	err = CopyOutput(output, strokeModule.Path, savepath)
@@ -138,8 +144,8 @@ func (strokeModule StrokeModule) CSS(card *module.Card) {
 }
 func CopyOutput(output []StrokeOutput, inpath string, outpath string) (out error) {
 	for _, file := range output {
-		fullinpath := inpath + "/" + file.IdealPath
-		fulloutpath := outpath + "/" + file.IdealPath
+		fullinpath := inpath + "/" + file.Path
+		fulloutpath := outpath + "/" + file.Path
 		inpathstat, err := os.Stat(fullinpath)
 
 		if err != nil {
@@ -173,7 +179,7 @@ func KeymapFromEntry(output []StrokeOutput) (out map[string]string) {
 
 	value := "<div class = 'stroke_set'>"
 	for _, out := range output {
-		value += "<div class = 'stroke'>" + "<img src='" + out.IdealPath + "'>" + "</div>"
+		value += "<div class = 'stroke " + out.Type + "'>" + "<img src='" + out.Path + "'>" + "</div>"
 	}
 	value += "</div>"
 	out["Stroke"] = value

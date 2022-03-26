@@ -9,36 +9,35 @@ import (
 type JMdictModule struct {
 	DictionaryPath string
 	FormatterPath  string
-	dictionary     JMdict
-	formatter      RegexFormatter
+	Dictionary     JMdict
+	Formatter      RegexFormatter
 }
 type InitOptions struct {
 	DictionaryPath string
 	FormatterPath  string
 }
 
-func Initialize(options InitOptions) (out module.Module, err error, outModule *JMdictModule) {
+func Initialize(options InitOptions) (*JMdictModule, error) {
 	newModule := new(JMdictModule)
 	newModule.DictionaryPath = options.DictionaryPath
 	newModule.FormatterPath = options.FormatterPath
 
-	err = LoadDictionary(newModule)
+	err := LoadDictionary(newModule)
 
 	if err != nil {
-		return out, err, newModule
+		return newModule, err
 	}
 
 	if options.FormatterPath != "" {
 		err = LoadFormatter(newModule)
 
 		if err != nil {
-			return out, err, newModule
+			return newModule, err
 		}
 
 	}
-	out = *newModule
 
-	return out, nil, newModule
+	return newModule, nil
 }
 func (parser JMdictModule) Close() {
 
@@ -63,13 +62,13 @@ func (parser JMdictModule) Render(input module.Input, card *module.Card) error {
 	kanji := input["kanjiword"]
 	kana := input["kanaword"]
 
-	entry, err := FindEntry(&parser.dictionary, kanji, kana, ignore_kanji, ignore_kana)
+	entry, err := FindEntry(&parser.Dictionary, kanji, kana, ignore_kanji, ignore_kana)
 
 	if err != nil {
 		return err
 	}
 
-	err = CleanEntry(&entry, &parser.formatter)
+	err = CleanEntry(&entry, &parser.Formatter)
 
 	if err != nil {
 		return err

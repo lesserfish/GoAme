@@ -14,36 +14,37 @@ const port = process.env.PORT
 const cache = process.env.CACHE
 const tmpdir = process.env.TMP
 const FOFFILE = "./configuration/404.mp3"
+var ERRMD5 = ""
 
 // Generate 404.mp3 hash for future comparisons
-
-var ERRMD5 = ""
 
 async function SetUp(){
     ERRMD5 = await checksumFile(FOFFILE)
 }
-
 SetUp()
-// Beggining of functions
 
-AudioHandler.post('/', async (req, res) => {
-    var kana = req.body.kana
-    var kanji = req.body.kanji
+
+// Beggining of functions
+AudioHandler.get('/', async(req, res) => {
+    var kana = req.query.kana
+    var kanji = req.query.kanji
+    
     if(typeof(kana) !== 'string' || !kana instanceof String)
     {
         res.sendStatus(400)
         return
     } 
+    
     if(typeof(kanji) !== 'string' || !kanji instanceof String){
         kanji = ""
     }
     
-    console.log("[server]: Receive request for " + kana + " : " + kanji + ".")
+    console.log("[server]: Received request for " + kana + " : " + kanji + ".")
 
     var filepath = await GetFilepath(kana, kanji)
 
     if(filepath == ""){
-        res.sendStatus(503)
+        res.sendStatus(404)
         console.log("[server]: Failed to find file: " + filepath)
         return
     }
@@ -56,7 +57,6 @@ AudioHandler.post('/', async (req, res) => {
         }
     })
 })
-
 AudioHandler.listen(port, (err) => {
     if(err){
         console.log(err)
@@ -68,11 +68,14 @@ AudioHandler.listen(port, (err) => {
 async function GetFilepath(kana, kanji)
 {
     var fullpath = cache + "/" + GetFilename(kana)
+    
     if(fs.existsSync(fullpath)){
         console.log("[server]: File found locally!")
         return fullpath
     }
+    
     console.log("[server]: File not found locally! Attempting third party download.")
+    
     var err = await DownloadFile(kana, kanji, fullpath)
     if(err){
         return ""
@@ -115,7 +118,7 @@ async function DownloadFile(kana, kanji, fullpath)
         return null
     }
     else {
-        return new Error("Failed to download file!")
+        return new Error("[server]: File does not exist!")
     }
     
 }

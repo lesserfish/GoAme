@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	module "github.com/lesserfish/GoAme/Modules"
+	audio "github.com/lesserfish/GoAme/Modules/Audio"
 	examples "github.com/lesserfish/GoAme/Modules/Examples"
 	jmdict "github.com/lesserfish/GoAme/Modules/JMDict"
 	kanjidic "github.com/lesserfish/GoAme/Modules/Kanjidic"
@@ -18,14 +19,14 @@ func main() {
 	modk, e2 := kanjidic.Initialize(kanjidic.InitOptions{"Repository/Kanji/kanjidic2.xml"})
 	mods, e3 := strokes.Initialize(strokes.InitOptions{"Repository/Strokes/sodzip", modk, false})
 	mode, e4 := examples.Initialize(examples.InitOptions{"Database/Sentences.db", true, 0})
-
-	for _, e := range []error{e1, e2, e3, e4} {
+	moda, e5 := audio.Initialize(audio.InitOptions{"http://localhost:8000/?", modj})
+	for _, e := range []error{e1, e2, e3, e4, e5} {
 		if e != nil {
 			fmt.Println(e)
 		}
 	}
 
-	card := module.Card{[]string{"<b>@{KanjiWord}</b> @{KanaWord} @{Sense} @{KanjiInfoEx} @{Example} @{Example_1} @{Stroke}"}, ""}
+	card := module.Card{[]string{"<b>@{KanjiWord}</b> @{KanaWord} @{Sense} @{KanjiInfoEx} @{Example} @{Example_1} @{Stroke} @{Audio}"}, ""}
 	input := module.Input{
 		"kanjiword": "警察",
 		"literal":   "警察",
@@ -35,8 +36,9 @@ func main() {
 	e2 = modk.Render(input, &card)
 	e3 = mods.Render(input, &card)
 	e4 = mode.Render(input, &card)
+	e5 = moda.Render(input, &card)
 
-	for _, e := range []error{e1, e2, e3, e4} {
+	for _, e := range []error{e1, e2, e3, e4, e5} {
 		if e != nil {
 			fmt.Println(e)
 		}

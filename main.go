@@ -31,10 +31,10 @@ func main() {
 	}
 	modules = []module.Module{modj, modk, mods, mode, moda, end}
 
-	card := module.Card{[]string{"@{asdasd}<b>@{KanjiWord}</b> @{KanaWord} @{Sense}", "@{KanjiInfoEx}", "@{Example} @{Example_1}", "@{Stroke}", " @{Audio}"}, "tag"}
+	card := module.Card{[]string{"@{KanjiWord} @{KanaWord} @{Sense}", "@{KanjiInfoEx}", "@{Example}", "@{Stroke}", " @{Audio}"}, "tag"}
 	input := module.Input{
-		"kanjiword": "警察",
-		"literal":   "警察",
+		"kanjiword": "応援",
+		"literal":   "応援",
 		"savepath":  "/home/lesserfish/.local/share/Anki2/Dev/collection.media/"}
 
 	for _, mod := range modules {

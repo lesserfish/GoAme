@@ -199,33 +199,39 @@ func KeymapFromEntry(entry *Entry) (out map[string]string, err error) {
 		Kana += "</li>"
 	}
 	Kana += "</ol></div>"
+
 	Sense := ""
-	Sense += "<div class='Sense'><ol>"
+
+	Sense += "<div class='Sense'>" + "<ol>"
 	for _, sense := range entry.Sense {
 		Sense += "<li>"
-		Sense += "<div class='pos'><ul>"
+
+		Sense += "<div class='pos'>" + "<ul>"
 		for _, pos := range sense.Pos {
 			Sense += "<li>"
 			Sense += pos
 			Sense += "</li>"
 		}
-		Sense += "</ul></div>"
-		Sense += "<div class = 'gloss'><ol>"
+		Sense += "</ul>" + "</div>"
+
+		Sense += "<div class='gloss'>" + "<ol>"
 		for _, gloss := range sense.Gloss {
 			Sense += "<li>"
 			Sense += gloss.Text
 			Sense += "</li>"
 		}
-		Sense += "</ol></div>"
+		Sense += "</ol>" + "</div>"
+
 		Sense += "<div class='example'>"
 		for _, example := range sense.Example {
 			for _, lang := range example.ExSent {
-				Sense += "<div class='lang " + lang.Lang + "'>"
-				Sense += "\"" + lang.Text + "\""
+				Sense += "<div class='lang_" + lang.Lang + "'>"
+				Sense += lang.Text
 				Sense += "</div>"
 			}
 		}
 		Sense += "</div>"
+
 		Sense += "</li>"
 	}
 	Sense += "</ol></div>"

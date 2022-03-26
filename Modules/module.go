@@ -32,7 +32,7 @@ func (card Card) AddToFields(content string) {
 
 func (card Card) Render() (out string) {
 	for _, field := range card.Fields {
-		out += field + ";"
+		out += "\"" + field + "\"" + ";"
 	}
 	out += card.Tag
 

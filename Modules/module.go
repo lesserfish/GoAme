@@ -9,8 +9,7 @@ type Card struct {
 type Module interface {
 	Demo()
 	Render(Input, *Card) error
-	CSS(*Card)
-	Close()
+	CSS() string
 }
 
 func (card Card) Parse(keymap map[string]string, clear_unused bool) {
@@ -24,7 +23,21 @@ func (card Card) Parse(keymap map[string]string, clear_unused bool) {
 
 	card.Tag = tag
 }
+func (card Card) AddToFields(content string) {
+	for id, field := range card.Fields {
+		newfield := field + content
+		card.Fields[id] = newfield
+	}
+}
 
+func (card Card) Render() (out string) {
+	for _, field := range card.Fields {
+		out += "\"" + field + "\";"
+	}
+	out += "\"" + card.Tag + "\""
+
+	return out
+}
 func ParseString(input string, keymap map[string]string, clear_unused bool) string {
 	for i, c := range input {
 		if c == '}' {

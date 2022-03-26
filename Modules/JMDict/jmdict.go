@@ -1,7 +1,11 @@
 package jmdict
 
 import (
+	"bytes"
 	"errors"
+	"io/ioutil"
+	"log"
+	"strings"
 
 	module "github.com/lesserfish/GoAme/Modules"
 )
@@ -11,10 +15,12 @@ type JMdictModule struct {
 	FormatterPath  string
 	Dictionary     JMdict
 	Formatter      RegexFormatter
+	CSSContent     string
 }
 type InitOptions struct {
 	DictionaryPath string
 	FormatterPath  string
+	CSSPath        string
 }
 
 func Initialize(options InitOptions) (*JMdictModule, error) {
@@ -37,6 +43,14 @@ func Initialize(options InitOptions) (*JMdictModule, error) {
 
 	}
 
+	CSSdata, err := ioutil.ReadFile(options.CSSPath)
+	if err != nil {
+		return newModule, err
+	}
+
+	newModule.CSSContent = strings.TrimSpace(bytes.NewBuffer(CSSdata).String())
+
+	log.Println("JMdict Module initialized!")
 	return newModule, nil
 }
 func (parser JMdictModule) Close() {
@@ -88,6 +102,6 @@ func (parser JMdictModule) Render(input module.Input, card *module.Card) error {
 
 	return nil
 }
-func (parser JMdictModule) CSS(card *module.Card) {
-
+func (parser JMdictModule) CSS() string {
+	return parser.CSSContent
 }

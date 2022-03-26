@@ -3,7 +3,6 @@ package kanjidic
 import (
 	"encoding/xml"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 )
@@ -99,7 +98,6 @@ func LoadDictionary(parser *Kanjidic_Module) (err error) {
 		return err
 	}
 
-	fmt.Println("Dictionary loaded!")
 	return nil
 }
 func FindEntry(dict *Kanjidic, literals string) (out []Character, err error) {

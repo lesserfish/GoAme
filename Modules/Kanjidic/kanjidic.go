@@ -1,7 +1,11 @@
 package kanjidic
 
 import (
+	"bytes"
 	"errors"
+	"io/ioutil"
+	"log"
+	"strings"
 
 	module "github.com/lesserfish/GoAme/Modules"
 )
@@ -9,9 +13,11 @@ import (
 type Kanjidic_Module struct {
 	DictionaryPath string
 	Dictionary     Kanjidic
+	CSSContent     string
 }
 type InitOptions struct {
 	DictionaryPath string
+	CSSPath        string
 }
 
 func Initialize(options InitOptions) (*Kanjidic_Module, error) {
@@ -24,6 +30,15 @@ func Initialize(options InitOptions) (*Kanjidic_Module, error) {
 		return newModule, err
 	}
 
+	CSSdata, err := ioutil.ReadFile(options.CSSPath)
+
+	if err != nil {
+		return newModule, err
+	}
+
+	newModule.CSSContent = strings.TrimSpace(bytes.NewBuffer(CSSdata).String())
+
+	log.Println("Kanjidic Module initialized!")
 	return newModule, nil
 }
 func (parser Kanjidic_Module) Close() {
@@ -59,6 +74,6 @@ func (parser Kanjidic_Module) Render(input module.Input, card *module.Card) erro
 
 	return nil
 }
-func (parser Kanjidic_Module) CSS(card *module.Card) {
-
+func (parser Kanjidic_Module) CSS() string {
+	return parser.CSSContent
 }

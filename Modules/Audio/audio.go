@@ -1,12 +1,16 @@
 package audio
 
 import (
+	"bytes"
 	"errors"
 	"io"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 
 	module "github.com/lesserfish/GoAme/Modules"
 	jmdict "github.com/lesserfish/GoAme/Modules/JMDict"
@@ -15,11 +19,13 @@ import (
 type InitOptions struct {
 	URI       string
 	JMdictMod *jmdict.JMdictModule
+	CSSPath   string
 }
 
 type AudioModule struct {
-	URI       string
-	JMdictMod *jmdict.JMdictModule
+	URI        string
+	JMdictMod  *jmdict.JMdictModule
+	CSSContent string
 }
 
 func Initialize(options InitOptions) (*AudioModule, error) {
@@ -27,6 +33,15 @@ func Initialize(options InitOptions) (*AudioModule, error) {
 	newModule.URI = options.URI
 	newModule.JMdictMod = options.JMdictMod
 
+	CSSdata, err := ioutil.ReadFile(options.CSSPath)
+
+	if err != nil {
+		return newModule, err
+	}
+
+	newModule.CSSContent = strings.TrimSpace(bytes.NewBuffer(CSSdata).String())
+
+	log.Println("Audio Module initialized!")
 	return newModule, nil
 }
 
@@ -100,7 +115,8 @@ func (audioModule AudioModule) Render(input module.Input, card *module.Card) (er
 	return nil
 
 }
-func (audioModule AudioModule) CSS(card *module.Card) {
+func (audioModule AudioModule) CSS() string {
+	return audioModule.CSSContent
 }
 func SetHeaders(header *http.Header) {
 	header.Set("charset", "utf-8")
@@ -131,10 +147,12 @@ func GetKana(kanji string, dict *jmdict.JMdict) (string, error) {
 func KeymapFromEntry(kana string, kanji string) (out map[string]string) {
 	out = make(map[string]string)
 
-	filename := GetFilename(kana, kanji, "")
+	filename := GetFilename(kanji, kana, "")
+	split := strings.Split(filename, "/")
+	filename = split[1]
 
 	value := "<div class = 'audio'>"
-	value += "[sound:{{" + filename + "}}]"
+	value += "[sound:" + filename + "]"
 	value += "</div>"
 	out["Audio"] = value
 	return out

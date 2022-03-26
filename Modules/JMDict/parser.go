@@ -3,7 +3,6 @@ package jmdict
 import (
 	"encoding/xml"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"regexp"
@@ -92,7 +91,6 @@ func LoadDictionary(parser *JMdictModule) (err error) {
 		return err
 	}
 
-	fmt.Println("Dictionary loaded!")
 	return nil
 }
 func LoadFormatter(parser *JMdictModule) (err error) {
@@ -110,7 +108,6 @@ func LoadFormatter(parser *JMdictModule) (err error) {
 	if err != nil {
 		return err
 	}
-	fmt.Println("Formatter loaded!")
 	return nil
 }
 func FindEntry(dict *JMdict, kanji string, kana string, ignore_kanji bool, ignore_kana bool) (out Entry, err error) {
@@ -201,7 +198,7 @@ func KeymapFromEntry(entry *Entry) (out map[string]string, err error) {
 		}
 		Kana += "</li>"
 	}
-	Kana += "</div>"
+	Kana += "</ol></div>"
 	Sense := ""
 	Sense += "<div class='Sense'><ol>"
 	for _, sense := range entry.Sense {
@@ -231,7 +228,7 @@ func KeymapFromEntry(entry *Entry) (out map[string]string, err error) {
 		Sense += "</div>"
 		Sense += "</li>"
 	}
-	Sense += "</div>"
+	Sense += "</ol></div>"
 
 	out["KanaWord"] = Kana
 	out["KanjiWord"] = Kanji

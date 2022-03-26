@@ -1,9 +1,12 @@
 package strokes
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -16,12 +19,14 @@ type InitOptions struct {
 	StrokePath string
 	Kanjimod   *kanjidic.Kanjidic_Module
 	PreferJIS  bool
+	CSSPath    string
 }
 
 type StrokeModule struct {
-	Path      string
-	kanjimod  *kanjidic.Kanjidic_Module
-	PreferJIS bool
+	Path       string
+	kanjimod   *kanjidic.Kanjidic_Module
+	PreferJIS  bool
+	CSSContent string
 }
 
 type StrokeOutput struct {
@@ -40,6 +45,16 @@ func Initialize(options InitOptions) (*StrokeModule, error) {
 	if os.IsNotExist(err) {
 		return newModule, err
 	}
+
+	CSSdata, err := ioutil.ReadFile(options.CSSPath)
+
+	if err != nil {
+		return newModule, err
+	}
+
+	newModule.CSSContent = strings.TrimSpace(bytes.NewBuffer(CSSdata).String())
+
+	log.Println("Stroke Module initialized!")
 
 	return newModule, nil
 }
@@ -140,7 +155,8 @@ func (strokeModule StrokeModule) Render(input module.Input, card *module.Card) (
 	card.Parse(KeymapFromEntry(output), false)
 	return nil
 }
-func (strokeModule StrokeModule) CSS(card *module.Card) {
+func (strokeModule StrokeModule) CSS() string {
+	return strokeModule.CSSContent
 }
 func CopyOutput(output []StrokeOutput, inpath string, outpath string) (out error) {
 	for _, file := range output {

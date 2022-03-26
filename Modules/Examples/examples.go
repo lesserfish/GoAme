@@ -1,8 +1,10 @@
 package examples
 
 import (
+	"bytes"
 	"database/sql"
-	"fmt"
+	"io/ioutil"
+	"log"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -16,6 +18,7 @@ type InitOptions struct {
 	DBPath  string
 	Shuffle bool
 	Seed    int64
+	CSSPath string
 }
 
 type Example struct {
@@ -23,9 +26,10 @@ type Example struct {
 	ENG string
 }
 type ExampleModule struct {
-	DB      *sql.DB
-	Shuffle bool
-	Seed    int64
+	DB         *sql.DB
+	Shuffle    bool
+	Seed       int64
+	CSSContent string
 }
 
 func Initialize(options InitOptions) (*ExampleModule, error) {
@@ -42,7 +46,14 @@ func Initialize(options InitOptions) (*ExampleModule, error) {
 		newModule.Seed = time.Now().UnixMicro()
 	}
 
-	fmt.Println("Examples loaded!")
+	CSSdata, err := ioutil.ReadFile(options.CSSPath)
+
+	if err != nil {
+		return newModule, err
+	}
+
+	newModule.CSSContent = strings.TrimSpace(bytes.NewBuffer(CSSdata).String())
+	log.Println("Example Module initialized!")
 	return newModule, nil
 }
 
@@ -135,8 +146,8 @@ func (exampleModule ExampleModule) Render(input module.Input, card *module.Card)
 
 	return nil
 }
-func (ExampleModule ExampleModule) CSS(card *module.Card) {
-
+func (exampleModule ExampleModule) CSS() string {
+	return exampleModule.CSSContent
 }
 
 func KeymapFromEntry(examples []Example) (out map[string]string) {
@@ -153,7 +164,7 @@ func KeymapFromEntry(examples []Example) (out map[string]string) {
 		return out
 	}
 
-	canonicalvalue := "<div class = 'rexample' id = '0'><div class = 'JP'</div>" + examples[0].JP + "<div class = 'ENG'>" + examples[0].ENG + "</div></div>"
+	canonicalvalue := "<div class = 'rexample' id = '0'><div class = 'JP'>" + examples[0].JP + "</div><div class = 'ENG'>" + examples[0].ENG + "</div></div>"
 	out["Example"] = canonicalvalue
 	for id, ex := range examples {
 		key := "Example_" + strconv.Itoa(id)

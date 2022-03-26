@@ -221,7 +221,7 @@ func KeymapFromEntry(entry *Entry) (out map[string]string, err error) {
 		for _, example := range sense.Example {
 			for _, lang := range example.ExSent {
 				Sense += "<div class='lang " + lang.Lang + "'>"
-				Sense += lang.Text
+				Sense += "\"" + lang.Text + "\""
 				Sense += "</div>"
 			}
 		}

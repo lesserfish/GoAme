@@ -2,7 +2,6 @@ package anki
 
 import (
 	"log"
-	"strings"
 
 	module "github.com/lesserfish/GoAme/Modules"
 )
@@ -25,13 +24,13 @@ func (ankiModule AnkiModule) Demo() {
 }
 func (ankiModule AnkiModule) Render(input module.Input, card *module.Card) (err error) {
 
-	for id, field := range card.Fields {
-		updated_field := strings.ReplaceAll(field, "\"", "\"\"")
-		card.Fields[id] = updated_field
-	}
+	//for id, field := range card.Fields {
+	//updated_field := strings.ReplaceAll(field, "\"", "\"\"")
+	//card.Fields[id] = updated_field
+	//}
 
-	updated_tag := strings.ReplaceAll(card.Tag, "\"", "\"\"")
-	card.Tag = updated_tag
+	//	updated_tag := strings.ReplaceAll(card.Tag, "\"", "\"\"")
+	//	card.Tag = updated_tag
 
 	out := make(map[string]string)
 	card.Parse(out, true)

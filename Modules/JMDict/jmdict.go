@@ -48,7 +48,7 @@ func Initialize(options InitOptions) (*JMdictModule, error) {
 		return newModule, err
 	}
 
-	newModule.CSSContent = strings.TrimSpace(bytes.NewBuffer(CSSdata).String())
+	newModule.CSSContent = strings.ReplaceAll(bytes.NewBuffer(CSSdata).String(), "\n", "")
 
 	log.Println("JMdict Module initialized!")
 	return newModule, nil

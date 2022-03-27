@@ -52,7 +52,7 @@ func Initialize(options InitOptions) (*StrokeModule, error) {
 		return newModule, err
 	}
 
-	newModule.CSSContent = strings.TrimSpace(bytes.NewBuffer(CSSdata).String())
+	newModule.CSSContent = strings.ReplaceAll(bytes.NewBuffer(CSSdata).String(), "\n", "")
 
 	log.Println("Stroke Module initialized!")
 

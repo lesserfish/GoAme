@@ -2,6 +2,7 @@ package ame
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"strconv"
 
@@ -159,4 +160,10 @@ func (ameKanji AmeKanji) Render(input Input) (out string) {
 	}
 
 	return out
+}
+
+func (ameKanji AmeKanji) RenderAndSave(input Input, path string) string {
+	content := ameKanji.Render(input)
+	ioutil.WriteFile(path, []byte(content), 0666)
+	return content
 }

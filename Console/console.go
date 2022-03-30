@@ -48,6 +48,6 @@ func main() {
 		return
 	}
 
-	out := ameinstance.RenderAndSave(input, output_file)
+	out := ameinstance.URenderAndSave(input, output_file, func(progress float64) { fmt.Println("Progress: " + fmt.Sprint(progress*100) + "%") })
 	fmt.Println(out)
 }

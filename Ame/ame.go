@@ -1,7 +1,6 @@
 package ame
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -135,11 +134,14 @@ func Initialize(config Configuration) *AmeKanji {
 	return ameInstance
 }
 
-func (ameKanji AmeKanji) Render(input Input) (out string) {
+type UpdateFunc func(float64)
+
+func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string) {
 
 	for id, _ := range input.Input {
 
-		fmt.Println(strconv.Itoa(id+1) + " / " + strconv.Itoa(len(input.Input)))
+		var progress float64 = 0.0
+		progress = float64(id) / float64(len(input.Input))
 
 		currentCard := input.Template.Copy()
 		currentCSS := ""
@@ -157,13 +159,23 @@ func (ameKanji AmeKanji) Render(input Input) (out string) {
 		}
 		currentCard.AddToFields(currentCSS)
 		out += currentCard.Render() + "\n"
+
+		updatefunc(progress)
 	}
 
 	return out
 }
 
-func (ameKanji AmeKanji) RenderAndSave(input Input, path string) string {
-	content := ameKanji.Render(input)
+func (ameKanji AmeKanji) URenderAndSave(input Input, path string, updatefunc UpdateFunc) string {
+	content := ameKanji.URender(input, updatefunc)
 	ioutil.WriteFile(path, []byte(content), 0666)
 	return content
+}
+
+func (ameKanji AmeKanji) Render(input Input) string {
+	return ameKanji.URender(input, func(f float64) {})
+}
+
+func (AmeKanji AmeKanji) RenderAndSave(input Input, path string) string {
+	return AmeKanji.URenderAndSave(input, path, func(f float64) {})
 }

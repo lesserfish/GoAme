@@ -2,7 +2,7 @@ import xml.etree.cElementTree as ET
 
 root = ET.Element("RegexFormatter")
 raw_file = "raw.txt"
-out_file = "out.xml"
+out_file = "../../Resources/Database/polxml.xml"
 
 file = open(raw_file, "r")
 while line := file.readline():

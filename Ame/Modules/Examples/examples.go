@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	module "github.com/lesserfish/GoAme/Modules"
+	module "github.com/lesserfish/GoAme/Ame/Modules"
 	_ "github.com/mattn/go-sqlite3"
 )
 

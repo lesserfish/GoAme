@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"strings"
 
-	module "github.com/lesserfish/GoAme/Modules"
-	jmdict "github.com/lesserfish/GoAme/Modules/JMDict"
+	module "github.com/lesserfish/GoAme/Ame/Modules"
+	jmdict "github.com/lesserfish/GoAme/Ame/Modules/JMDict"
 )
 
 type InitOptions struct {

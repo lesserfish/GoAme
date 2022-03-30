@@ -7,7 +7,7 @@ import (
 	"log"
 	"strings"
 
-	module "github.com/lesserfish/GoAme/Modules"
+	module "github.com/lesserfish/GoAme/Ame/Modules"
 )
 
 type JMdictModule struct {

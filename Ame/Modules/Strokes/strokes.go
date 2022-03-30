@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"strings"
 
-	module "github.com/lesserfish/GoAme/Modules"
-	kanjidic "github.com/lesserfish/GoAme/Modules/Kanjidic"
+	module "github.com/lesserfish/GoAme/Ame/Modules"
+	kanjidic "github.com/lesserfish/GoAme/Ame/Modules/Kanjidic"
 )
 
 type InitOptions struct {

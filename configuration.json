@@ -1,0 +1,28 @@
+{
+    "JMdict" : {
+        "DictionaryPath" : "/home/lesserfish/Documents/Code/GoAme/Ame/Repository/Vocabulary/JMdict_e_examp.xml",
+        "FormatterPath" : "/home/lesserfish/Documents/Code/GoAme/Ame/Database/polxml.xml",
+        "CSSPath" : "/tmp/tmp.css"
+    },
+    "Audio" : {
+        "URI" : "http://localhost:8000/?",
+        "CSSPath" : "/tmp/tmp.css"
+    },
+    "Kanjidic" : {
+        "DictionaryPath" : "/home/lesserfish/Documents/Code/GoAme/Ame/Repository/Kanji/kanjidic2.xml",
+        "CSSPath" : "/tmp/tmp.css"
+    },
+    "Strokes" : {
+        "StrokePath" : "/home/lesserfish/Documents/Code/GoAme/Ame/Repository/Strokes/sodzip/",
+        "CSSPath" : "/tmp/tmp.css",
+        "PreferJIS" : "False"
+    },
+    "Examples" : {
+        "DBPath" : "/home/lesserfish/Documents/Code/GoAme/Ame/Database/Sentences.db",
+        "CSSPath" : "/tmp/tmp.css",
+        "Seed" : "0",
+        "Shuffle" : "True"
+    },
+    "Anki" : {
+    }
+}

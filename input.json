@@ -1,0 +1,20 @@
+{
+    "Template" : {
+        "Fields":["@{kanjiword} @{kanaword} @{sense}","@{example}", "@{audio}", "@{kanjiinfoex}", "@{stroke}"],
+        "Tag":"tag"
+    },
+    "Input" : [
+        {
+            "kanjiword" : "助ける",
+            "kanaword" : "たすける",
+            "literal" : "助",
+            "savepath" : "/home/lesserfish/.local/share/Anki2/Dev/collection.media/"
+        },
+        {
+            "kanjiword" : "応援",
+            "kanaword" : "",
+            "literal" : "応援",
+            "savepath" : "/home/lesserfish/.local/share/Anki2/Dev/collection.media/"
+        }
+    ]
+}

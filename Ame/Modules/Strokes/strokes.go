@@ -198,6 +198,6 @@ func KeymapFromEntry(output []StrokeOutput) (out map[string]string) {
 		value += "<div class = 'stroke " + out.Type + "'>" + "<img src='" + out.Path + "'>" + "</div>"
 	}
 	value += "</div>"
-	out["Stroke"] = value
+	out["stroke"] = value
 	return out
 }

@@ -38,6 +38,15 @@ func (card Card) Render() (out string) {
 
 	return out
 }
+
+func (card Card) Copy() Card {
+	newcard := Card{}
+	for _, field := range card.Fields {
+		newcard.Fields = append(newcard.Fields, field)
+	}
+	newcard.Tag = card.Tag
+	return newcard
+}
 func ParseString(input string, keymap map[string]string, clear_unused bool) string {
 	for i, c := range input {
 		if c == '}' {

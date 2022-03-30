@@ -1,6 +1,7 @@
 package ame
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 
@@ -14,6 +15,10 @@ import (
 )
 
 type Configuration map[string]map[string]string
+type Input struct {
+	Template module.Card
+	Input    []module.Input
+}
 
 type AmeKanji struct {
 	modules []module.Module
@@ -127,4 +132,31 @@ func Initialize(config Configuration) *AmeKanji {
 	}
 
 	return ameInstance
+}
+
+func (ameKanji AmeKanji) Render(input Input) (out string) {
+
+	for id, _ := range input.Input {
+
+		fmt.Println(strconv.Itoa(id+1) + " / " + strconv.Itoa(len(input.Input)))
+
+		currentCard := input.Template.Copy()
+		currentCSS := ""
+
+		for _, mod := range ameKanji.modules {
+
+			err := mod.Render(input.Input[id], &currentCard)
+			currentCSS += mod.CSS()
+
+			if err != nil {
+				errmsg := "Error rendering card. Error: " + err.Error()
+				log.Println(errmsg)
+			}
+
+		}
+		currentCard.AddToFields(currentCSS)
+		out += currentCard.Render() + "\n"
+	}
+
+	return out
 }

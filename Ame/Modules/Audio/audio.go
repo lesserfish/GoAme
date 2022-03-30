@@ -154,6 +154,6 @@ func KeymapFromEntry(kana string, kanji string) (out map[string]string) {
 	value := "<div class = 'audio'>"
 	value += "[sound:" + filename + "]"
 	value += "</div>"
-	out["Audio"] = value
+	out["audio"] = value
 	return out
 }

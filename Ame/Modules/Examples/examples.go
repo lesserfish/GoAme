@@ -153,11 +153,11 @@ func (exampleModule ExampleModule) CSS() string {
 func KeymapFromEntry(examples []Example) (out map[string]string) {
 	out = make(map[string]string)
 
-	out["Example"] = ""
+	out["example"] = ""
 	for i := 0; i < 100; i++ {
-		out["Example_"+strconv.Itoa(i)] = ""
-		out["Example_"+strconv.Itoa(i)+"_ENG"] = ""
-		out["Example_"+strconv.Itoa(i)+"_JP"] = ""
+		out["example_"+strconv.Itoa(i)] = ""
+		out["example_"+strconv.Itoa(i)+"_eng"] = ""
+		out["example_"+strconv.Itoa(i)+"_jp"] = ""
 	}
 
 	if len(examples) == 0 {
@@ -165,15 +165,15 @@ func KeymapFromEntry(examples []Example) (out map[string]string) {
 	}
 
 	canonicalvalue := "<div class = 'rexample' id = '0'><div class = 'JP'>" + examples[0].JP + "</div><div class = 'ENG'>" + examples[0].ENG + "</div></div>"
-	out["Example"] = canonicalvalue
+	out["example"] = canonicalvalue
 	for id, ex := range examples {
-		key := "Example_" + strconv.Itoa(id)
+		key := "example_" + strconv.Itoa(id)
 		value := "<div class = 'rexample' id = '" + strconv.Itoa(id) + "'><div class = 'JP'>" + ex.JP + "</div><div class = 'ENG'>" + ex.ENG + "</div></div>"
 		out[key] = value
-		key = "Example_" + strconv.Itoa(id) + "_JP"
+		key = "example_" + strconv.Itoa(id) + "_jp"
 		value = "<div class = 'rexample' id = '" + strconv.Itoa(id) + "'><div class = 'JP'>" + ex.JP + "</div></div>"
 		out[key] = value
-		key = "Example_" + strconv.Itoa(id) + "_ENG"
+		key = "example_" + strconv.Itoa(id) + "_eng"
 		value = "<div class = 'rexample' id = '" + strconv.Itoa(id) + "'><div class = 'ENG'>" + ex.ENG + "</div></div>"
 		out[key] = value
 

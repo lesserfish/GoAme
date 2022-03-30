@@ -1,6 +1,7 @@
 package ame
 
 import (
+	"errors"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -24,7 +25,7 @@ type AmeKanji struct {
 	modules []module.Module
 }
 
-func Initialize(config Configuration) *AmeKanji {
+func Initialize(config Configuration) (*AmeKanji, error) {
 	ameInstance := new(AmeKanji)
 
 	_, jmdict_ok := config["JMdict"]
@@ -38,7 +39,7 @@ func Initialize(config Configuration) *AmeKanji {
 
 		if err != nil {
 			errmsg := "Failed to initialize JMDict module. Error: " + err.Error()
-			log.Println(errmsg)
+			return ameInstance, errors.New(errmsg)
 		} else {
 
 			ameInstance.modules = append(ameInstance.modules, jmdict_mod)
@@ -54,7 +55,7 @@ func Initialize(config Configuration) *AmeKanji {
 
 				if err != nil {
 					errmsg := "Failed to initialize Audio module. Error: " + err.Error()
-					log.Println(errmsg)
+					return ameInstance, errors.New(errmsg)
 				} else {
 					ameInstance.modules = append(ameInstance.modules, audio_mod)
 				}
@@ -73,7 +74,7 @@ func Initialize(config Configuration) *AmeKanji {
 
 		if err != nil {
 			errmsg := "Failed to initialize Kanjidic module. Error: " + err.Error()
-			log.Println(errmsg)
+			return ameInstance, errors.New(errmsg)
 		} else {
 
 			ameInstance.modules = append(ameInstance.modules, kanjidic_mod)
@@ -90,7 +91,7 @@ func Initialize(config Configuration) *AmeKanji {
 
 				if err != nil {
 					errmsg := "Failed to initialize Strokes module. Error: " + err.Error()
-					log.Println(errmsg)
+					return ameInstance, errors.New(errmsg)
 				} else {
 					ameInstance.modules = append(ameInstance.modules, strokes_mod)
 				}
@@ -111,7 +112,7 @@ func Initialize(config Configuration) *AmeKanji {
 
 		if err != nil {
 			errmsg := "Failed to initialize Examples module. Error: " + err.Error()
-			log.Println(errmsg)
+			return ameInstance, errors.New(errmsg)
 		} else {
 			ameInstance.modules = append(ameInstance.modules, examples_mod)
 		}
@@ -125,13 +126,13 @@ func Initialize(config Configuration) *AmeKanji {
 
 		if err != nil {
 			errmsg := "Failed to initialize Anki module. Error: " + err.Error()
-			log.Println(errmsg)
+			return ameInstance, errors.New(errmsg)
 		} else {
 			ameInstance.modules = append(ameInstance.modules, anki_mod)
 		}
 	}
 
-	return ameInstance
+	return ameInstance, nil
 }
 
 type UpdateFunc func(float64)

@@ -1,10 +1,17 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 
 	"github.com/streadway/amqp"
 )
+
+type jstest struct {
+	Name []string
+	Age  int
+}
 
 func main() {
 	connection, err := amqp.Dial("amqp://localhost:5672")
@@ -20,7 +27,7 @@ func main() {
 	defer channel.Close()
 
 	queue, err := channel.QueueDeclare(
-		"first",
+		"ame",
 		false,
 		false,
 		false,
@@ -30,10 +37,14 @@ func main() {
 		log.Println(err)
 	}
 
-	text := "hello world!"
+	text := jstest{[]string{"a", "b", "c"}, 121}
+	byteinfo, err := json.Marshal(text)
+
+	fmt.Println(string(byteinfo))
+
 	err = channel.Publish("", queue.Name, false, false, amqp.Publishing{
-		ContentType: "text/plain",
-		Body:        []byte(text),
+		ContentType: "application/json",
+		Body:        byteinfo,
 	})
 
 	if err != nil {

@@ -123,7 +123,6 @@ func main() {
 	// Start Cleaners
 
 	cleaner := Cleaner{}
-	cleaner.SavedFiles = []Files{}
 	cleaner.redisClient = redisClient
 
 	go cleaner.CleanTasker()

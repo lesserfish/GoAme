@@ -7,24 +7,38 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/gomodule/redigo/redis"
 	ame "github.com/lesserfish/GoAme/Ame"
 	"github.com/streadway/amqp"
 )
 
+var (
+	workercount       uint
+	AMQPURI           string
+	AMQPIP            uint
+	REDISURI          string
+	REDISIP           uint
+	REDISPROC         string
+	queuename         string
+	IDshift           uint
+	configuration     string
+	StorageDirectory  string
+	DownloadDirectory string
+)
+
 func main() {
-	var workercount uint
-	var URI string
-	var IP uint
-	var queuename string
-	var IDshift uint
-	var configuration string
 
 	flag.UintVar(&workercount, "n", 64, "Specify the quantity of workers to be used.")
-	flag.StringVar(&URI, "url", "amqp://localhost", "Address of RabbitMQ server")
-	flag.UintVar(&IP, "p", 5672, "port of the RabbitMQ server")
+	flag.StringVar(&AMQPURI, "amqpurl", "amqp://localhost", "Address of RabbitMQ server")
+	flag.StringVar(&REDISURI, "redisurl", "localhost", "Address of RabbitMQ server")
+	flag.UintVar(&AMQPIP, "amqpp", 5672, "port of the RabbitMQ server")
+	flag.UintVar(&REDISIP, "redisp", 6379, "port of the Redis server")
+	flag.StringVar(&REDISPROC, "redisproc", "tcp", "Redis protocol. 'tcp' or 'udp'")
 	flag.StringVar(&queuename, "queue", "ame", "Name of the queue to be used!")
 	flag.UintVar(&IDshift, "idshift", 0, "Value of the starting ID of the workers")
 	flag.StringVar(&configuration, "c", "", "Configuration file for Ame")
+	flag.StringVar(&StorageDirectory, "storage", "/tmp", "Directory for storage of temporary files.")
+	flag.StringVar(&DownloadDirectory, "download", "/tmp", "Directory for storage of download files.")
 
 	flag.Parse()
 
@@ -36,7 +50,7 @@ func main() {
 
 	// Initialize AMQP
 
-	fulladdr := URI + ":" + strconv.Itoa(int(IP))
+	fulladdr := AMQPURI + ":" + strconv.Itoa(int(AMQPIP))
 	connection, err := amqp.Dial(fulladdr)
 
 	if err != nil {
@@ -67,6 +81,23 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	// Initialize Redis
+
+	redisPool := redis.Pool{
+		MaxIdle:   80,
+		MaxActive: 12000,
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial(REDISPROC, REDISURI+":"+strconv.Itoa(int(REDISIP)))
+			if err != nil {
+				panic(err.Error())
+			}
+			return c, err
+		},
+	}
+
+	redisClient := redisPool.Get()
+	defer redisClient.Close()
+
 	// Initialize Ame
 
 	config_content, err := ioutil.ReadFile(configuration)
@@ -89,7 +120,13 @@ func main() {
 	// Create workers
 
 	for id := uint(1); id <= workercount; id++ {
-		newworker := Worker{id + IDshift, channel, queue.Name, ameinstance}
+
+		newworker := Worker{id + IDshift,
+			channel,
+			queue.Name,
+			redisClient,
+			ameinstance}
+
 		go newworker.Work()
 	}
 

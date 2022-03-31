@@ -3,14 +3,17 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 
+	"github.com/google/uuid"
+	ame "github.com/lesserfish/GoAme/Ame"
 	"github.com/streadway/amqp"
 )
 
-type jstest struct {
-	Name []string
-	Age  int
+type Message struct {
+	UUID  uuid.UUID
+	Input ame.Input
 }
 
 func main() {
@@ -37,8 +40,25 @@ func main() {
 		log.Println(err)
 	}
 
-	text := jstest{[]string{"a", "b", "c"}, 121}
-	byteinfo, err := json.Marshal(text)
+	input_file := "/home/lesserfish/Documents/Code/GoAme/Resources/input.json"
+	input_content, err := ioutil.ReadFile(input_file)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+	var input ame.Input
+
+	err = json.Unmarshal(input_content, &input)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	info := Message{}
+	info.Input = input
+	info.UUID, _ = uuid.NewUUID()
+
+	byteinfo, err := json.Marshal(info)
 
 	fmt.Println(string(byteinfo))
 

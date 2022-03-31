@@ -31,11 +31,6 @@ type Worker struct {
 	cleaner     *Cleaner
 }
 
-type jstest struct {
-	Name []string
-	Age  int
-}
-
 func (worker Worker) Work() {
 	logmsg := "[Worker " + strconv.Itoa(int(worker.workerID)) + "] Starting work!"
 	log.Println(logmsg)
@@ -57,6 +52,9 @@ func (worker Worker) Work() {
 	}
 
 	for msg := range msgs {
+
+		// Parse Message
+
 		var message Message
 		err := json.Unmarshal(msg.Body, &message)
 		if err != nil {
@@ -90,7 +88,7 @@ func (worker Worker) Work() {
 			continue
 		}
 
-		for i, _ := range message.Input.Input {
+		for i := range message.Input.Input {
 			message.Input.Input[i]["savepath"] = new_media_directory
 		}
 

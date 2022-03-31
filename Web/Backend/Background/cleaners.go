@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -29,8 +28,6 @@ func (cleaner Cleaner) Clean() {
 	for id, File := range SavedFiles {
 		now := time.Now()
 		diff := now.Sub(File.creation_time)
-
-		fmt.Println(PersistenceTime - diff.Minutes())
 		if diff.Minutes() >= PersistenceTime {
 			path := DownloadDirectory + "/out_" + File.UUID.String() + ".zip"
 			cleaner.ReportDeleted(File.UUID)

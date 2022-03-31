@@ -1,9 +1,7 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"strconv"
 	"time"
 
 	"github.com/gomodule/redigo/redis"
@@ -26,8 +24,6 @@ func (cleaner Cleaner) DeleteFileAt(position int) {
 }
 
 func (cleaner Cleaner) Clean() {
-	fmt.Println("Cleaning " + strconv.Itoa(len(*cleaner.trashCan)) + " items.")
-	fmt.Println(*&cleaner.trashCan)
 	for id, File := range *cleaner.trashCan {
 		now := time.Now()
 		diff := now.Sub(File.creation_time)
@@ -52,7 +48,7 @@ func (cleaner Cleaner) ReportDeleted(id uuid.UUID) {
 func (cleaner Cleaner) Start() {
 	for {
 		select {
-		case <-time.After(time.Duration(CleanTime) * time.Second):
+		case <-time.After(time.Duration(CleanTime) * time.Minute):
 			cleaner.Clean()
 		}
 	}

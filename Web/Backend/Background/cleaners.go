@@ -50,7 +50,7 @@ func (cleaner Cleaner) CleanTasker() {
 
 	for {
 		select {
-		case <-time.After(time.Duration(CleanTime) * time.Second):
+		case <-time.After(time.Duration(CleanTime) * time.Minute):
 			cleaner.Clean()
 		}
 	}

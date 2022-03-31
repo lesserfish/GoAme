@@ -31,8 +31,8 @@ var (
 func main() {
 
 	flag.UintVar(&workercount, "n", 64, "Specify the quantity of workers to be used.")
-	flag.StringVar(&AMQPURI, "amqpurl", "amqp://localhost", "Address of RabbitMQ server")
-	flag.StringVar(&REDISURI, "redisurl", "localhost", "Address of RabbitMQ server")
+	flag.StringVar(&AMQPURI, "amqp", "amqp://localhost", "Address of RabbitMQ server")
+	flag.StringVar(&REDISURI, "redis", "localhost", "Address of RabbitMQ server")
 	flag.UintVar(&AMQPIP, "amqpp", 5672, "port of the RabbitMQ server")
 	flag.UintVar(&REDISIP, "redisp", 6379, "port of the Redis server")
 	flag.StringVar(&REDISPROC, "redisproc", "tcp", "Redis protocol. 'tcp' or 'udp'")
@@ -67,6 +67,11 @@ func main() {
 	}
 	defer channel.Close()
 
+	err = channel.Qos(1, 0, false)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	queue, err := channel.QueueDeclare(
 		queuename,
 		false,
@@ -78,12 +83,6 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	err = channel.Qos(1, 0, false)
-
-	if err != nil {
-		log.Fatalln(err)
-	}
-
 	// Initialize Redis
 
 	redisPool := redis.Pool{
@@ -124,8 +123,9 @@ func main() {
 
 	cleaner := Cleaner{}
 	cleaner.redisClient = redisClient
+	cleaner.trashCan = new([]Trash)
 
-	go cleaner.CleanTasker()
+	go cleaner.Start()
 	// Start workers
 
 	for id := uint(1); id <= workercount; id++ {

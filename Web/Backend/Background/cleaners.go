@@ -1,31 +1,34 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/google/uuid"
 )
 
-type Files struct {
+type Trash struct {
 	UUID          uuid.UUID
 	creation_time time.Time
 }
 
-var SavedFiles []Files
-
 type Cleaner struct {
 	redisClient redis.Conn
+	trashCan    *[]Trash
 }
 
 func (cleaner Cleaner) DeleteFileAt(position int) {
-	SavedFiles[position] = SavedFiles[len(SavedFiles)-1]
-	SavedFiles = SavedFiles[:len(SavedFiles)-1]
+	(*cleaner.trashCan)[position] = (*cleaner.trashCan)[len(*cleaner.trashCan)-1]
+	*cleaner.trashCan = (*cleaner.trashCan)[:len(*cleaner.trashCan)-1]
 }
 
 func (cleaner Cleaner) Clean() {
-	for id, File := range SavedFiles {
+	fmt.Println("Cleaning " + strconv.Itoa(len(*cleaner.trashCan)) + " items.")
+	fmt.Println(*&cleaner.trashCan)
+	for id, File := range *cleaner.trashCan {
 		now := time.Now()
 		diff := now.Sub(File.creation_time)
 		if diff.Minutes() >= PersistenceTime {
@@ -46,16 +49,15 @@ func (cleaner Cleaner) ReportDeleted(id uuid.UUID) {
 		"Status", "Deleted",
 		"Progress", "1")
 }
-func (cleaner Cleaner) CleanTasker() {
-
+func (cleaner Cleaner) Start() {
 	for {
 		select {
-		case <-time.After(time.Duration(CleanTime) * time.Minute):
+		case <-time.After(time.Duration(CleanTime) * time.Second):
 			cleaner.Clean()
 		}
 	}
 }
 
-func (cleaner Cleaner) AddFile(id uuid.UUID, created_at time.Time) {
-	SavedFiles = append(SavedFiles, Files{id, created_at})
+func (cleaner Cleaner) AddTrash(id uuid.UUID, created_at time.Time) {
+	*cleaner.trashCan = append(*cleaner.trashCan, Trash{id, created_at})
 }

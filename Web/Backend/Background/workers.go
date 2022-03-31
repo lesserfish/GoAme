@@ -114,7 +114,7 @@ func (worker Worker) Work() {
 
 		// Add to list of created zip files
 
-		worker.cleaner.AddFile(message.UUID, time.Now())
+		worker.cleaner.AddTrash(message.UUID, time.Now())
 
 		// Delete previously create directory
 

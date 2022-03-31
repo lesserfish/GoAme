@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/google/uuid"
@@ -107,10 +108,12 @@ func (worker Worker) Work() {
 		if err != nil {
 			msg.Ack(false)
 			worker.ReportError(message.UUID)
+			RemoveDir(new_directory)
 			log.Println("Could not create ZIP file. Error: " + err.Error())
 			continue
 		}
 
+		AddFile(message.UUID, time.Now())
 		// Delete previously create directory
 
 		RemoveDir(new_directory)
@@ -151,6 +154,10 @@ func CreateDir(path string) error {
 }
 func RemoveDir(path string) error {
 	err := os.RemoveAll(path)
+	return err
+}
+func RemoveFile(path string) error {
+	err := os.Remove(path)
 	return err
 }
 func ZipDir(source string, target string) error {

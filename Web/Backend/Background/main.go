@@ -24,6 +24,8 @@ var (
 	configuration     string
 	StorageDirectory  string
 	DownloadDirectory string
+	PersistenceTime   float64
+	CleanTime         float64
 )
 
 func main() {
@@ -39,7 +41,8 @@ func main() {
 	flag.StringVar(&configuration, "c", "", "Configuration file for Ame")
 	flag.StringVar(&StorageDirectory, "storage", "/tmp", "Directory for storage of temporary files.")
 	flag.StringVar(&DownloadDirectory, "download", "/tmp", "Directory for storage of download files.")
-
+	flag.Float64Var(&PersistenceTime, "persistence", 30, "Time zip files will stick around in minutes")
+	flag.Float64Var(&CleanTime, "cleanperiod", 10, "Period for files to be deleted")
 	flag.Parse()
 
 	if len(configuration) == 0 {
@@ -129,6 +132,10 @@ func main() {
 
 		go newworker.Work()
 	}
+
+	// Start Cleaners
+
+	go CleanTasker()
 
 	forever := make(chan bool)
 	<-forever

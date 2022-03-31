@@ -16,7 +16,7 @@ type Message struct {
 	Input ame.Input
 }
 
-func main() {
+func old_main() {
 	connection, err := amqp.Dial("amqp://localhost:5672")
 	if err != nil {
 		log.Println(err)

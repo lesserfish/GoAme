@@ -120,6 +120,13 @@ func main() {
 
 	log.Println("Ame initialized!")
 
+	// Start Cleaners
+
+	cleaner := Cleaner{}
+	cleaner.SavedFiles = []Files{}
+	cleaner.redisClient = redisClient
+
+	go cleaner.CleanTasker()
 	// Create workers
 
 	for id := uint(1); id <= workercount; id++ {
@@ -128,14 +135,11 @@ func main() {
 			channel,
 			queue.Name,
 			redisClient,
-			ameinstance}
+			ameinstance,
+			&cleaner}
 
 		go newworker.Work()
 	}
-
-	// Start Cleaners
-
-	go CleanTasker()
 
 	forever := make(chan bool)
 	<-forever

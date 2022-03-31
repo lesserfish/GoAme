@@ -28,6 +28,7 @@ type Worker struct {
 	queueName   string
 	redisClient redis.Conn
 	AmeKanji    *ame.AmeKanji
+	cleaner     *Cleaner
 }
 
 type jstest struct {
@@ -113,7 +114,10 @@ func (worker Worker) Work() {
 			continue
 		}
 
-		AddFile(message.UUID, time.Now())
+		// Add to list of created zip files
+
+		worker.cleaner.AddFile(message.UUID, time.Now())
+
 		// Delete previously create directory
 
 		RemoveDir(new_directory)
@@ -146,6 +150,11 @@ func (worker Worker) ReportError(id uuid.UUID) {
 func (worker Worker) ReportSuccess(id uuid.UUID) {
 	worker.redisClient.Do("HMSET", id.String(),
 		"Status", "Success",
+		"Progress", "1")
+}
+func (worker Worker) ReportDeleted(id uuid.UUID) {
+	worker.redisClient.Do("HMSET", id.String(),
+		"Status", "Deleted",
 		"Progress", "1")
 }
 func CreateDir(path string) error {

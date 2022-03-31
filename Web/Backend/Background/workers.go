@@ -101,7 +101,7 @@ func (worker Worker) Work() {
 
 		// Create zip file and move it to Download directory
 
-		zipdir := DownloadDirectory + "/" + "out_" + message.UUID.String() + ".zip"
+		zipdir := DownloadDirectory + "/" + GetZipnameFromID(message.UUID)
 		err = ZipDir(new_directory, zipdir)
 
 		if err != nil {
@@ -215,4 +215,8 @@ func ZipDir(source string, target string) error {
 		_, err = io.Copy(headerWriter, f)
 		return err
 	})
+}
+func GetZipnameFromID(id uuid.UUID) string {
+	out := "out_" + id.String() + ".zip"
+	return out
 }

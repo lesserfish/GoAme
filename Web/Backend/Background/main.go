@@ -126,7 +126,7 @@ func main() {
 	cleaner.redisClient = redisClient
 
 	go cleaner.CleanTasker()
-	// Create workers
+	// Start workers
 
 	for id := uint(1); id <= workercount; id++ {
 

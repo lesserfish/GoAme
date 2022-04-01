@@ -90,6 +90,7 @@ func (server Server) Serve(addr string) {
 func (server Server) CreateHandlers() {
 	server.Router.HandleFunc("/post", Wrap(server.PostHandler, server.Logger, server.Authorize, server.CheckPostValidity, server.RegisterRequest))
 	server.Router.HandleFunc("/get", Wrap(server.GetHandler, server.Logger))
+	server.Router.HandleFunc("/help", Wrap(server.HelpHandler, server.Logger))
 }
 func (server Server) Close() {
 	server.DB.Close()

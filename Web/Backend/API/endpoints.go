@@ -113,6 +113,55 @@ func (server Server) GetHandler(rw http.ResponseWriter, r *http.Request) {
 
 }
 
+func (server Server) HelpHandler(rw http.ResponseWriter, r *http.Request) {
+	kanji := r.FormValue("kanji")
+	if kanji == "" {
+		ErrorResponse(rw, "Failed to specify Kanji", http.StatusBadRequest)
+	}
+
+	smtm, err := server.DB.Prepare("SELECT kana FROM kanjikana where kanji == ?;")
+
+	if err != nil {
+		ErrorResponse(rw, "Internal error", http.StatusInternalServerError)
+		log.Println(err)
+		return
+	}
+	KKRow := []string{}
+	rows, err := smtm.Query(kanji)
+
+	if err != nil {
+		ErrorResponse(rw, "Internal Error", http.StatusInternalServerError)
+		return
+	}
+
+	for rows.Next() {
+		var kanjireading string
+		rows.Scan(&kanjireading)
+
+		KKRow = append(KKRow, kanjireading)
+	}
+
+	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(http.StatusUnsupportedMediaType)
+
+	response := struct {
+		Message  string
+		Response struct {
+			Kanji string
+			Kana  []string
+		}
+	}{}
+
+	response.Message = "OK"
+	response.Response = struct {
+		Kanji string
+		Kana  []string
+	}{kanji, KKRow}
+
+	byteresponse, _ := json.Marshal(response)
+	rw.Write(byteresponse)
+
+}
 func GetZipnameFromID(id uuid.UUID) string {
 	out := "out_" + id.String() + ".zip"
 	return out

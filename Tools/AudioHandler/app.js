@@ -13,7 +13,9 @@ AudioHandler.use(express.json())
 const port = process.env.PORT
 const cache = process.env.CACHE
 const tmpdir = process.env.TMP
-const FOFFILE = "./configuration/404.mp3"
+const FOFFILE = process.argv.slice(2)[0]
+//"./configuration/404.mp3"
+
 var ERRMD5 = ""
 
 // Generate 404.mp3 hash for future comparisons

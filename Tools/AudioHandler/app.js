@@ -53,6 +53,7 @@ AudioHandler.get('/', async(req, res) => {
 
     res.sendFile(filepath, (err) => {
         if(err) {
+            res.sendStatus(404)
             console.log("[server]: Failed to send file " + filepath + ". " + err.message + ".")
         } else {
             console.log("[server]: Sent file: " + filepath + ".")

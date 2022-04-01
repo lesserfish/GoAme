@@ -7,7 +7,10 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
+
+	"github.com/gorilla/handlers"
 )
 
 type Middleware func(http.HandlerFunc) http.HandlerFunc
@@ -21,24 +24,19 @@ func Wrap(endpoint http.HandlerFunc, middleware ...Middleware) http.HandlerFunc 
 
 func (server Server) Logger(next http.HandlerFunc) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
-		remote_addr := ""
-
-		forwarded := r.Header.Get("X-FORWARDED-FOR")
-		if forwarded != "" {
-			remote_addr = forwarded
-		} else {
-			remote_addr = r.RemoteAddr
-		}
-		method := r.Method
-		length := r.ContentLength
-
-		logmsg := "Receive " + method + " request of size " + strconv.Itoa(int(length)) + " from IP: " + remote_addr + "."
-		log.Println(logmsg)
-
-		next(rw, r)
+		handlers.LoggingHandler(log.Writer(), next).ServeHTTP(rw, r)
 	}
 }
+func (server Server) CORS(next http.HandlerFunc) http.HandlerFunc {
+	return func(rw http.ResponseWriter, r *http.Request) {
+		credentials := handlers.AllowCredentials()
+		methods := handlers.AllowedMethods(strings.Split(corsmethodpolicy, ","))
+		origins := handlers.AllowedOrigins([]string{corsoriginpolicy})
+		headers := handlers.AllowedHeaders(strings.Split(corsheaderpolicy, ","))
 
+		handlers.CORS(credentials, methods, origins, headers)(next).ServeHTTP(rw, r)
+	}
+}
 func (server Server) Authorize(next http.HandlerFunc) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 

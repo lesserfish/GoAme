@@ -1,4 +1,2 @@
-- Create interface to invoke Ame with an array of inputs. This should have an init function which returns a pointer to a struct. This struct should have a function which will generate an output.txt given an array of inputs, while saving everything in a specified directory.
 - Create the CSS for every module.
-- Create the webserver.
-- Create a sqlite database which will contain a kanji_word : kana_readings map.
+- Create the frontend

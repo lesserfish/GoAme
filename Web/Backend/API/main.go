@@ -12,6 +12,9 @@ var (
 	maxrequests       uint64
 	DownloadDirectory string
 	ctx               context.Context
+	corsoriginpolicy  string
+	corsmethodpolicy  string
+	corsheaderpolicy  string
 )
 
 func main() {
@@ -37,6 +40,9 @@ func main() {
 	flag.Uint64Var(&redisport, "redisport", 6379, "Redis port")
 	flag.StringVar(&redisproc, "redisproc", "tcp", "Proc of Redis")
 	flag.StringVar(&DownloadDirectory, "download", "/tmp", "Directory for storage of download files.")
+	flag.StringVar(&corsoriginpolicy, "corsorigin", "", "Cors policy")
+	flag.StringVar(&corsmethodpolicy, "corsmethod", "*", "Cors policy")
+	flag.StringVar(&corsheaderpolicy, "corsheader", "*", "Cors policy")
 	flag.Parse()
 
 	ctx = context.Background()

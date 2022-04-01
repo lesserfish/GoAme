@@ -126,10 +126,7 @@ def MergeAudio(Aaudio, Baudio):
     faudio = faudio * REPEAT
     return faudio
 
-# GLOBAL
 
-tree = ET.parse(args.dictpath)
-root = tree.getroot()
 
 def HandleTask(kanji, kana, id):
     meanings = GetMeaning(root, kanji, kana)
@@ -143,18 +140,15 @@ def HandleTask(kanji, kana, id):
 
     out.export(args.downloaddir + "/" + id + "/" + kanji + ".mp3", format="mp3")
 
-def CreateIDDir(path):
-    os.mkdir(path)
-def RemoveIDDir(path):
-    shutil.rmtree(path)
-def ZIPDir(source, destiny):
-    shutil.make_archive(destiny, 'zip', source)
+
+tree = ET.parse(args.dictpath)
+root = tree.getroot()
 
 id = "1"
 dpath = args.downloaddir + "/" + id
 opath = args.outputdir + "/" + "out_" + id
 
-CreateIDDir(dpath)
+os.mkdir(dpath)
 HandleTask("応援", "おうえん", id)
-ZIPDir(dpath, opath)
-RemoveIDDir(dpath)
+shutil.make_archive(dpath, 'zip', opath)
+shutil.rmtree(dpath)

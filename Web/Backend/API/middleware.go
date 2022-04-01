@@ -118,6 +118,12 @@ func (server Server) CheckPostValidity(next http.HandlerFunc) http.HandlerFunc {
 			ErrorResponse(rw, "Empty Request", http.StatusBadRequest)
 			return
 		}
+
+		if len(request.AmeInput.Input) > int(maxrequests) {
+			ErrorResponse(rw, "Request too large", http.StatusBadRequest)
+			return
+		}
+
 		r.Body = ioutil.NopCloser(bytes.NewReader(body))
 		next(rw, r)
 	}

@@ -18,7 +18,7 @@
         "PreferJIS" : "False"
     },
     "Examples" : {
-        "DBPath" : "/home/lesserfish/Documents/Code/GoAme/Resources/Database/Sentences.db",
+        "DBPath" : "/home/lesserfish/Documents/Code/GoAme/Resources/Database/Examples.sqlite",
         "CSSPath" : "/tmp/tmp.css",
         "Seed" : "0",
         "Shuffle" : "True"

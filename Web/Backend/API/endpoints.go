@@ -96,6 +96,7 @@ func (server Server) GetHandler(rw http.ResponseWriter, r *http.Request) {
 
 	if status == "Success" {
 		filename := DownloadDirectory + "/" + GetZipnameFromID(uuid.MustParse(reqid))
+		rw.Header().Add("content-disposition", "filename=\"out.zip\"")
 		http.ServeFile(rw, r, filename)
 	} else {
 

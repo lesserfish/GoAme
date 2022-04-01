@@ -5,27 +5,67 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/streadway/amqp"
 )
 
 type Server struct {
-	Router *mux.Router
-	DB     *sql.DB
+	Router         *mux.Router
+	DB             *sql.DB
+	AMQPConnection *amqp.Connection
+	AMQPChannel    *amqp.Channel
+	RedisClient    *redis.Client
+	queueName      string
 }
 type InitOptions struct {
-	DB string
+	DB        string
+	amqpADDR  string
+	amqpPORT  string
+	redisADDR string
+	redisPORT string
+	redisProc string
+	queue     string
 }
 
 func CreateServer(options InitOptions) (*Server, error) {
 
 	db, err := sql.Open("sqlite3", options.DB)
+	if err != nil {
+		return nil, err
+	}
+	amqpaddr := options.amqpADDR + ":" + options.amqpPORT
+	amqpconnection, err := amqp.Dial(amqpaddr)
 
 	if err != nil {
 		return nil, err
 	}
 
-	server := Server{mux.NewRouter(), db}
+	amqpchannel, err := amqpconnection.Channel()
+	if err != nil {
+		log.Println(err)
+	}
+
+	amqpchannel.QueueDeclare(
+		options.queue,
+		false,
+		false,
+		false,
+		false,
+		nil)
+
+	redisclient := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
+
+	server := Server{mux.NewRouter(),
+		db,
+		amqpconnection, amqpchannel,
+		redisclient,
+		options.queue}
 	return &server, nil
 }
 func (server Server) Initiate() {
@@ -48,8 +88,10 @@ func (server Server) Serve(addr string) {
 	}
 }
 func (server Server) CreateHandlers() {
-	server.Router.HandleFunc("/", Wrap(server.PostHandler, server.Logger, server.Authorize, server.CheckPostValidity, server.RegisterRequest))
+	server.Router.HandleFunc("/post", Wrap(server.PostHandler, server.Logger, server.Authorize, server.CheckPostValidity, server.RegisterRequest))
+	server.Router.HandleFunc("/get", Wrap(server.GetHandler, server.Logger))
 }
 func (server Server) Close() {
 	server.DB.Close()
+	server.AMQPConnection.Close()
 }

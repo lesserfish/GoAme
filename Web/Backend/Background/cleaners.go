@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/gomodule/redigo/redis"
+	"github.com/go-redis/redis/v8"
 	"github.com/google/uuid"
 )
 
@@ -14,7 +14,7 @@ type Trash struct {
 }
 
 type Cleaner struct {
-	redisClient redis.Conn
+	redisClient *redis.Client
 	trashCan    *[]Trash
 }
 
@@ -34,6 +34,7 @@ func (cleaner Cleaner) Clean() {
 			if err != nil {
 				log.Println("Failed to delete file. Error: " + err.Error())
 			}
+			log.Println("[Cleaner] Deleted file with id: " + File.UUID.String())
 			cleaner.DeleteFileAt(id)
 			cleaner.Clean()
 			return
@@ -41,11 +42,13 @@ func (cleaner Cleaner) Clean() {
 	}
 }
 func (cleaner Cleaner) ReportDeleted(id uuid.UUID) {
-	cleaner.redisClient.Do("HMSET", id.String(),
+	cleaner.redisClient.HMSet(ctx, id.String(),
 		"Status", "Deleted",
 		"Progress", "1")
 }
 func (cleaner Cleaner) Start() {
+
+	log.Println("[Cleaner] Starting work!")
 	for {
 		select {
 		case <-time.After(time.Duration(CleanTime) * time.Minute):
@@ -55,5 +58,6 @@ func (cleaner Cleaner) Start() {
 }
 
 func (cleaner Cleaner) AddTrash(id uuid.UUID, created_at time.Time) {
+	log.Println("[Cleaner] Added file to trashcan with id: " + id.String())
 	*cleaner.trashCan = append(*cleaner.trashCan, Trash{id, created_at})
 }

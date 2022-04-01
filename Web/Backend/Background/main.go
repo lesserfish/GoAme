@@ -1,13 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"io/ioutil"
 	"log"
 	"strconv"
 
-	"github.com/gomodule/redigo/redis"
+	"github.com/go-redis/redis/v8"
 	ame "github.com/lesserfish/GoAme/Ame"
 	"github.com/streadway/amqp"
 )
@@ -26,6 +27,7 @@ var (
 	DownloadDirectory string
 	PersistenceTime   float64
 	CleanTime         float64
+	ctx               context.Context
 )
 
 func main() {
@@ -45,6 +47,7 @@ func main() {
 	flag.Float64Var(&CleanTime, "cleanperiod", 10, "Period for files to be deleted")
 	flag.Parse()
 
+	ctx = context.Background()
 	if len(configuration) == 0 {
 		log.Println("You need to specify a configuration file for Ame.")
 		flag.PrintDefaults()
@@ -85,19 +88,12 @@ func main() {
 	}
 	// Initialize Redis
 
-	redisPool := redis.Pool{
-		MaxIdle:   80,
-		MaxActive: 12000,
-		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial(REDISPROC, REDISURI+":"+strconv.Itoa(int(REDISIP)))
-			if err != nil {
-				panic(err.Error())
-			}
-			return c, err
-		},
-	}
+	redisClient := redis.NewClient(&redis.Options{
+		Addr:     REDISURI + ":" + strconv.Itoa(int(REDISIP)),
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
 
-	redisClient := redisPool.Get()
 	defer redisClient.Close()
 
 	// Initialize Ame

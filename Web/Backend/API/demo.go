@@ -11,11 +11,6 @@ import (
 	"github.com/streadway/amqp"
 )
 
-type Message struct {
-	UUID  uuid.UUID
-	Input ame.Input
-}
-
 func old_main() {
 	connection, err := amqp.Dial("amqp://localhost:5672")
 	if err != nil {

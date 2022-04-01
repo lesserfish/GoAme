@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/gomodule/redigo/redis"
+	"github.com/go-redis/redis/v8"
 	"github.com/google/uuid"
 	ame "github.com/lesserfish/GoAme/Ame"
 	"github.com/streadway/amqp"
@@ -26,7 +26,7 @@ type Worker struct {
 	workerID    uint
 	channel     *amqp.Channel
 	queueName   string
-	redisClient redis.Conn
+	redisClient *redis.Client
 	AmeKanji    *ame.AmeKanji
 	cleaner     *Cleaner
 }
@@ -63,6 +63,8 @@ func (worker Worker) Work() {
 			continue
 		}
 		worker.AcceptRequest(message.UUID)
+
+		log.Println("[Worker " + strconv.Itoa(int(worker.workerID)) + "] Accepted request: " + message.UUID.String())
 
 		// Create directory for request
 
@@ -123,6 +125,7 @@ func (worker Worker) Work() {
 		// Success
 		worker.ReportSuccess(message.UUID)
 		msg.Ack(false)
+		log.Println("[Worker " + strconv.Itoa(int(worker.workerID)) + "] Finished request: " + message.UUID.String())
 	}
 
 	text := "[Worker " + strconv.Itoa(int(worker.workerID)) + "] " + "Exiting!"
@@ -131,27 +134,27 @@ func (worker Worker) Work() {
 }
 
 func (worker Worker) AcceptRequest(id uuid.UUID) {
-	worker.redisClient.Do("HMSET", id.String(),
+	worker.redisClient.HMSet(ctx, id.String(),
 		"Status", "Accepted",
 		"Progress", "0")
 }
 func (worker Worker) LogProgress(id uuid.UUID, progress float64) {
-	worker.redisClient.Do("HMSET", id.String(),
+	worker.redisClient.HMSet(ctx, id.String(),
 		"Status", "In Progress",
 		"Progress", fmt.Sprint(progress))
 }
 func (worker Worker) ReportError(id uuid.UUID) {
-	worker.redisClient.Do("HMSET", id.String(),
+	worker.redisClient.HMSet(ctx, id.String(),
 		"Status", "Failed",
 		"Progress", "0")
 }
 func (worker Worker) ReportSuccess(id uuid.UUID) {
-	worker.redisClient.Do("HMSET", id.String(),
+	worker.redisClient.HMSet(ctx, id.String(),
 		"Status", "Success",
 		"Progress", "1")
 }
 func (worker Worker) ReportDeleted(id uuid.UUID) {
-	worker.redisClient.Do("HMSET", id.String(),
+	worker.redisClient.HMSet(ctx, id.String(),
 		"Status", "Deleted",
 		"Progress", "1")
 }

@@ -86,10 +86,12 @@ func (server Server) Authorize(next http.HandlerFunc) http.HandlerFunc {
 			}
 		}
 
-		log.Println("Reqsum: " + strconv.Itoa(int(reqsum)))
 		if reqsum >= maxrequests {
-			ErrorResponse(rw, "Too many requests!", http.StatusForbidden)
+			log.Println("Remote address " + remote_addr + " has exceeded it's quota.")
+			ErrorResponse(rw, "Too many requests!", http.StatusTooManyRequests)
 			return
+		} else {
+			log.Println("Remote address " + remote_addr + " has a total of " + strconv.Itoa(int(reqsum)) + " requests.")
 		}
 
 		next(rw, r)

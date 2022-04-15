@@ -15,10 +15,11 @@ import (
 )
 
 type InitOptions struct {
-	DBPath  string
-	Shuffle bool
-	Seed    int64
-	CSSPath string
+	DBPath      string
+	Shuffle     bool
+	Seed        int64
+	CSSPath     string
+	MaxExamples uint64
 }
 
 type Example struct {
@@ -26,10 +27,11 @@ type Example struct {
 	ENG string
 }
 type ExampleModule struct {
-	DB         *sql.DB
-	Shuffle    bool
-	Seed       int64
-	CSSContent string
+	DB          *sql.DB
+	Shuffle     bool
+	Seed        int64
+	CSSContent  string
+	MaxExamples uint64
 }
 
 func Initialize(options InitOptions) (*ExampleModule, error) {
@@ -42,6 +44,8 @@ func Initialize(options InitOptions) (*ExampleModule, error) {
 	newModule.DB = db
 	newModule.Shuffle = options.Shuffle
 	newModule.Seed = options.Seed
+	newModule.MaxExamples = options.MaxExamples
+
 	if options.Seed == 0 {
 		newModule.Seed = time.Now().UnixMicro()
 	}
@@ -94,7 +98,7 @@ func (exampleModule ExampleModule) Render(input module.Input, card *module.Card)
 
 	ids := []int{}
 
-	for rowid.Next() {
+	for ce := 0; ce < int(exampleModule.MaxExamples) && rowid.Next(); ce++ {
 		var currentid int
 		err = rowid.Scan(&currentid)
 
@@ -140,7 +144,7 @@ func (exampleModule ExampleModule) Render(input module.Input, card *module.Card)
 			examples[i], examples[j] = examples[j], examples[i]
 		})
 	}
-	keymap := KeymapFromEntry(examples)
+	keymap := KeymapFromEntry(examples, exampleModule.MaxExamples)
 
 	card.Parse(keymap, false)
 
@@ -150,11 +154,11 @@ func (exampleModule ExampleModule) CSS() string {
 	return exampleModule.CSSContent
 }
 
-func KeymapFromEntry(examples []Example) (out map[string]string) {
+func KeymapFromEntry(examples []Example, maxExamples uint64) (out map[string]string) {
 	out = make(map[string]string)
 
 	out["example"] = ""
-	for i := 0; i < 100; i++ {
+	for i := 0; i < int(maxExamples); i++ {
 		out["example_"+strconv.Itoa(i)] = ""
 		out["example_"+strconv.Itoa(i)+"_eng"] = ""
 		out["example_"+strconv.Itoa(i)+"_jp"] = ""

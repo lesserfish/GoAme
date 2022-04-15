@@ -2,8 +2,8 @@ package ame
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
-	"log"
 	"strconv"
 
 	module "github.com/lesserfish/GoAme/Ame/Modules"
@@ -107,6 +107,7 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 		examples_init.CSSPath = config["Examples"]["CSSPath"]
 		examples_init.Seed, _ = strconv.ParseInt(config["Examples"]["Seed"], 10, 64)
 		examples_init.Shuffle, _ = strconv.ParseBool(config["Examples"]["Shuffle"])
+		examples_init.MaxExamples, _ = strconv.ParseUint(config["Examples"]["MaxExamples"], 10, 64)
 
 		examples_mod, err := examples.Initialize(examples_init)
 
@@ -137,8 +138,9 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 
 type UpdateFunc func(float64)
 
-func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string) {
+func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string, err string) {
 
+	errorlog := ""
 	for id, _ := range input.Input {
 
 		var progress float64 = 0.0
@@ -148,15 +150,14 @@ func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string
 		currentCSS := ""
 
 		for _, mod := range ameKanji.modules {
-
 			err := mod.Render(input.Input[id], &currentCard)
 			currentCSS += mod.CSS()
 
 			if err != nil {
-				errmsg := "Error rendering card. Error: " + err.Error()
-				log.Println(errmsg)
+				currentinput := fmt.Sprint(input.Input[id])
+				errmsg := fmt.Sprintf("Error rendering card %s.\nError: %s", currentinput, err.Error())
+				errorlog += errmsg + "\n"
 			}
-
 		}
 		currentCard.AddToFields(currentCSS)
 		out += currentCard.Render() + "\n"
@@ -164,19 +165,20 @@ func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string
 		updatefunc(progress)
 	}
 
-	return out
+	return out, errorlog
 }
 
-func (ameKanji AmeKanji) URenderAndSave(input Input, path string, updatefunc UpdateFunc) string {
-	content := ameKanji.URender(input, updatefunc)
+func (ameKanji AmeKanji) URenderAndSave(input Input, path string, errpath string, updatefunc UpdateFunc) (string, string) {
+	content, err := ameKanji.URender(input, updatefunc)
 	ioutil.WriteFile(path, []byte(content), 0666)
-	return content
+	ioutil.WriteFile(errpath, []byte(err), 0666)
+	return content, err
 }
 
-func (ameKanji AmeKanji) Render(input Input) string {
+func (ameKanji AmeKanji) Render(input Input) (string, string) {
 	return ameKanji.URender(input, func(f float64) {})
 }
 
-func (AmeKanji AmeKanji) RenderAndSave(input Input, path string) string {
-	return AmeKanji.URenderAndSave(input, path, func(f float64) {})
+func (AmeKanji AmeKanji) RenderAndSave(input Input, path string, errpath string) (string, string) {
+	return AmeKanji.URenderAndSave(input, path, errpath, func(f float64) {})
 }

@@ -15,10 +15,12 @@ func main() {
 	var config_file string
 	var input_file string
 	var output_file string
+	var log_file string
 
 	flag.StringVar(&config_file, "c", "", "path of configuration json file")
 	flag.StringVar(&input_file, "i", "", "path of input json file")
 	flag.StringVar(&output_file, "o", "", "path of the output file, containing the anki deck in .txt format")
+	flag.StringVar(&log_file, "log", "./log.txt", "path of the log file.")
 
 	flag.Parse()
 
@@ -56,6 +58,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	out := ameinstance.URenderAndSave(input, output_file, func(progress float64) { fmt.Println("Progress: " + fmt.Sprint(progress*100) + "%") })
+	out, log := ameinstance.URenderAndSave(input, output_file, log_file, func(progress float64) { fmt.Println("Progress: " + fmt.Sprint(progress*100) + "%") })
 	fmt.Println(out)
+	fmt.Println(log)
 }

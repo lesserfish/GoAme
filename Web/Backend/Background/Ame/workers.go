@@ -95,9 +95,10 @@ func (worker Worker) Work() {
 		}
 
 		deckfile := new_directory + "anki_deck.txt"
+		errfile := new_directory + "log.txt"
 
 		// Invoke AmeKanji
-		worker.AmeKanji.URenderAndSave(message.Input, deckfile, func(p float64) {
+		worker.AmeKanji.URenderAndSave(message.Input, deckfile, errfile, func(p float64) {
 			worker.LogProgress(message.UUID, p)
 		})
 

@@ -148,8 +148,16 @@ func CleanInput(input map[string]string) string {
 }
 func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string, err string) {
 
+	activeModules := []module.Module{}
+
+	for _, module := range ameKanji.modules {
+		if module.Active(input.Template.Fields) {
+			activeModules = append(activeModules, module)
+		}
+	}
+
 	errorlog := ""
-	for id, _ := range input.Input {
+	for id := range input.Input {
 
 		var progress float64 = 0.0
 		progress = float64(id) / float64(len(input.Input))
@@ -157,7 +165,7 @@ func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string
 		currentCard := input.Template.Copy()
 		currentCSS := ""
 
-		for _, mod := range ameKanji.modules {
+		for _, mod := range activeModules {
 			err := mod.Render(input.Input[id], &currentCard)
 			currentCSS += mod.CSS()
 

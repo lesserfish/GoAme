@@ -3,6 +3,7 @@ package kanjidic
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"strings"
@@ -76,4 +77,23 @@ func (parser Kanjidic_Module) Render(input module.Input, card *module.Card) erro
 }
 func (parser Kanjidic_Module) CSS() string {
 	return parser.CSSContent
+}
+func (parser Kanjidic_Module) Active(Fields []string) (out bool) {
+	keywords := []string{"kanjiinfo", "kaniinfoex"}
+
+	out = false
+keyword_search:
+	for _, keyword := range keywords {
+		key := fmt.Sprintf("@{%s}", keyword)
+
+		for _, field := range Fields {
+			if strings.Contains(field, key) {
+				out = true
+				break keyword_search
+			}
+		}
+	}
+
+	return out
+
 }

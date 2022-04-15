@@ -3,6 +3,7 @@ package audio
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -56,7 +57,7 @@ func (audioModule AudioModule) Render(input module.Input, card *module.Card) (er
 	path := input["savepath"]
 
 	if kana == "" && kanji == "" {
-		return errors.New("No input given to JMdic module!")
+		return errors.New("no input given to JMdic module")
 	}
 	if kana == "" {
 		kana, err = GetKana(kanji, &audioModule.JMdictMod.Dictionary)
@@ -116,6 +117,25 @@ func (audioModule AudioModule) Render(input module.Input, card *module.Card) (er
 	return nil
 
 }
+func (audioModule AudioModule) Active(Fields []string) (out bool) {
+	keywords := []string{"audio"}
+
+	out = false
+keyword_search:
+	for _, keyword := range keywords {
+		key := fmt.Sprintf("@{%s}", keyword)
+
+		for _, field := range Fields {
+			if strings.Contains(field, key) {
+				out = true
+				break keyword_search
+			}
+		}
+	}
+
+	return out
+
+}
 func (audioModule AudioModule) CSS() string {
 	return audioModule.CSSContent
 }
@@ -135,12 +155,12 @@ func GetKana(kanji string, dict *jmdict.JMdict) (string, error) {
 	}
 
 	if len(entry.REle) == 0 {
-		return "", errors.New("No kana expression.")
+		return "", errors.New("no kana expression")
 	}
 	rele := entry.REle[0]
 
 	if len(rele.Reb) == 0 {
-		return "", errors.New("No kana expression.")
+		return "", errors.New("no kana expression")
 	}
 	kana := rele.Reb[0]
 	return kana, nil

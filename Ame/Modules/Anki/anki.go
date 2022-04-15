@@ -40,3 +40,6 @@ func (ankiModule AnkiModule) Render(input module.Input, card *module.Card) (err 
 func (ankiModule AnkiModule) CSS() string {
 	return ""
 }
+func (ankiModule AnkiModule) Active(Fields []string) (out bool) {
+	return true
+}

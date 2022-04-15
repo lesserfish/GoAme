@@ -3,6 +3,7 @@ package examples
 import (
 	"bytes"
 	"database/sql"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -154,6 +155,30 @@ func (exampleModule ExampleModule) CSS() string {
 	return exampleModule.CSSContent
 }
 
+func (exampleModule ExampleModule) Active(Fields []string) (out bool) {
+	keywords := []string{"example"}
+	for i := 0; i < int(exampleModule.MaxExamples); i++ {
+		keywords = append(keywords, fmt.Sprintf("example_%d", i))
+		keywords = append(keywords, fmt.Sprintf("example_%d_eng", i))
+		keywords = append(keywords, fmt.Sprintf("example_%d_jp", i))
+	}
+
+	out = false
+keyword_search:
+	for _, keyword := range keywords {
+		key := fmt.Sprintf("@{%s}", keyword)
+
+		for _, field := range Fields {
+			if strings.Contains(field, key) {
+				out = true
+				break keyword_search
+			}
+		}
+	}
+
+	return out
+
+}
 func KeymapFromEntry(examples []Example, maxExamples uint64) (out map[string]string) {
 	out = make(map[string]string)
 

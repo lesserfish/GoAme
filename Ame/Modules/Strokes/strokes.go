@@ -158,6 +158,25 @@ func (strokeModule StrokeModule) Render(input module.Input, card *module.Card) (
 func (strokeModule StrokeModule) CSS() string {
 	return strokeModule.CSSContent
 }
+func (strokeModule StrokeModule) Active(Fields []string) (out bool) {
+	keywords := []string{"stroke"}
+
+	out = false
+keyword_search:
+	for _, keyword := range keywords {
+		key := fmt.Sprintf("@{%s}", keyword)
+
+		for _, field := range Fields {
+			if strings.Contains(field, key) {
+				out = true
+				break keyword_search
+			}
+		}
+	}
+
+	return out
+
+}
 func CopyOutput(output []StrokeOutput, inpath string, outpath string) (out error) {
 	for _, file := range output {
 		fullinpath := inpath + "/" + file.Path
@@ -168,7 +187,7 @@ func CopyOutput(output []StrokeOutput, inpath string, outpath string) (out error
 			return err
 		}
 		if !inpathstat.Mode().IsRegular() {
-			return errors.New("Fullpath is not a file")
+			return errors.New("fullpath is not a file")
 		}
 		source, err := os.Open(fullinpath)
 		if err != nil {

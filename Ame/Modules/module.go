@@ -10,6 +10,7 @@ type Module interface {
 	Demo()
 	Render(Input, *Card) error
 	CSS() string
+	Active([]string) bool
 }
 
 func (card Card) Parse(keymap map[string]string, clear_unused bool) {

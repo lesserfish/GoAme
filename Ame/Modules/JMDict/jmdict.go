@@ -3,6 +3,7 @@ package jmdict
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"strings"
@@ -104,4 +105,23 @@ func (parser JMdictModule) Render(input module.Input, card *module.Card) error {
 }
 func (parser JMdictModule) CSS() string {
 	return parser.CSSContent
+}
+func (parser JMdictModule) Active(Fields []string) (out bool) {
+	keywords := []string{"kanjiword", "kanaword", "sense"}
+
+	out = false
+keyword_search:
+	for _, keyword := range keywords {
+		key := fmt.Sprintf("@{%s}", keyword)
+
+		for _, field := range Fields {
+			if strings.Contains(field, key) {
+				out = true
+				break keyword_search
+			}
+		}
+	}
+
+	return out
+
 }

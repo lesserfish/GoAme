@@ -172,5 +172,13 @@ func KeymapFromEntry(characters *[]Character) (out map[string]string, err error)
 
 	out["kanjiinfo"] = kanji_info_basic
 	out["kanjiinfoex"] = kanji_info_ext
+
+	literal := ""
+	for _, char := range *characters {
+		literal += char.Literal
+	}
+
+	out["literal"] = "<div class = 'kliteral'>" + literal + "</div>"
+
 	return out, err
 }

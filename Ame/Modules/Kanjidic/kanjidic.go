@@ -79,7 +79,7 @@ func (parser Kanjidic_Module) CSS() string {
 	return parser.CSSContent
 }
 func (parser Kanjidic_Module) Active(Fields []string) (out bool) {
-	keywords := []string{"kanjiinfo", "kaniinfoex"}
+	keywords := []string{"kanjiinfo", "kaniinfoex", "literal"}
 
 	out = false
 keyword_search:

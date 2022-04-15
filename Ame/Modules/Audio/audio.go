@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strconv"
 	"strings"
 
 	module "github.com/lesserfish/GoAme/Ame/Modules"
@@ -73,10 +72,6 @@ func (audioModule AudioModule) Render(input module.Input, card *module.Card) (er
 
 	filepath := GetFilename(kana, kanji, path)
 
-	file, err := os.Create(filepath)
-	if err != nil {
-		return err
-	}
 	client := http.Client{
 		CheckRedirect: func(r *http.Request, via []*http.Request) error {
 			r.URL.Opaque = r.URL.Path
@@ -98,10 +93,16 @@ func (audioModule AudioModule) Render(input module.Input, card *module.Card) (er
 	}
 
 	if resp.StatusCode != 200 {
-		return errors.New("Error. Status code: " + strconv.Itoa(resp.StatusCode))
+		return errors.New("could not find audio file")
 	}
 
 	defer resp.Body.Close()
+
+	file, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+
 	defer file.Close()
 
 	_, err = io.Copy(file, resp.Body)

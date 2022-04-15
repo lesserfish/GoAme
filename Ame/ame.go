@@ -138,6 +138,14 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 
 type UpdateFunc func(float64)
 
+func CleanInput(input map[string]string) string {
+	copy := make(map[string]string)
+	for key, value := range input {
+		copy[key] = value
+	}
+	delete(copy, "savepath")
+	return fmt.Sprint(copy)
+}
 func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string, err string) {
 
 	errorlog := ""
@@ -154,7 +162,7 @@ func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string
 			currentCSS += mod.CSS()
 
 			if err != nil {
-				currentinput := fmt.Sprint(input.Input[id])
+				currentinput := CleanInput(input.Input[id])
 				errmsg := fmt.Sprintf("Error rendering card %s.\nError: %s", currentinput, err.Error())
 				errorlog += errmsg + "\n"
 			}

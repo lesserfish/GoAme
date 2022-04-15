@@ -23,7 +23,5 @@
         "Seed" : "0",
         "Shuffle" : "True",
         "MaxExamples" : "100"
-    },
-    "Anki" : {
     }
 }

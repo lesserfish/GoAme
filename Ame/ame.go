@@ -22,7 +22,8 @@ type Input struct {
 }
 
 type AmeKanji struct {
-	modules []module.Module
+	modules    []module.Module
+	ankiModule module.Module
 }
 
 func Initialize(config Configuration) (*AmeKanji, error) {
@@ -119,18 +120,12 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 		}
 	}
 
-	_, anki_ok := config["Anki"]
-	if anki_ok {
-		anki_init := anki.InitOptions{}
-
-		anki_mod, err := anki.Initialize(anki_init)
-
-		if err != nil {
-			errmsg := "Failed to initialize Anki module. Error: " + err.Error()
-			return ameInstance, errors.New(errmsg)
-		} else {
-			ameInstance.modules = append(ameInstance.modules, anki_mod)
-		}
+	anki_mod, err := anki.Initialize(anki.InitOptions{})
+	if err != nil {
+		errmsg := "Failed to initialize Anki module. Error: " + err.Error()
+		return ameInstance, errors.New(errmsg)
+	} else {
+		ameInstance.ankiModule = anki_mod
 	}
 
 	return ameInstance, nil
@@ -146,7 +141,7 @@ func CleanInput(input map[string]string) string {
 	delete(copy, "savepath")
 	return fmt.Sprint(copy)
 }
-func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string, err string) {
+func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string, errorlog string) {
 
 	activeModules := []module.Module{}
 
@@ -156,7 +151,6 @@ func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string
 		}
 	}
 
-	errorlog := ""
 	for id := range input.Input {
 
 		var progress float64 = 0.0
@@ -175,7 +169,22 @@ func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string
 				errorlog += errmsg + "\n"
 			}
 		}
-		currentCard.AddToFields(currentCSS)
+
+		// Render CSS
+		CSSMap := make(map[string]string)
+		CSSMap["CSS"] = currentCSS
+
+		// Anki Module
+
+		currentCard.Parse(CSSMap, false)
+		err := ameKanji.ankiModule.Render(input.Input[id], &currentCard)
+
+		if err != nil {
+			currentinput := CleanInput(input.Input[id])
+			errmsg := fmt.Sprintf("Error rendering card %s.\nError: %s", currentinput, err.Error())
+			errorlog += errmsg + "\n"
+		}
+
 		out += currentCard.Render() + "\n"
 
 		updatefunc(progress)

@@ -169,16 +169,14 @@ func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string
 				errorlog += errmsg + "\n"
 			}
 		}
-
 		// Render CSS
 		CSSMap := make(map[string]string)
 		CSSMap["CSS"] = currentCSS
+		currentCard.Parse(CSSMap, false)
 
 		// Anki Module
 
-		currentCard.Parse(CSSMap, false)
 		err := ameKanji.ankiModule.Render(input.Input[id], &currentCard)
-
 		if err != nil {
 			currentinput := CleanInput(input.Input[id])
 			errmsg := fmt.Sprintf("Error rendering card %s.\nError: %s", currentinput, err.Error())

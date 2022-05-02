@@ -1,25 +1,25 @@
 {
     "JMdict" : {
-        "DictionaryPath" : "/Resources/Repository/Vocabulary/JMdict_e_examp.xml",
-        "FormatterPath" : "/Resources/Database/polxml.xml",
-        "CSSPath" : "/Resources/CSS/JMDict.css"
+        "DictionaryPath" : "$(Resources)/Repository/Vocabulary/JMdict_e_examp.xml",
+        "FormatterPath" : "$(Resources)/Database/polxml.xml",
+        "CSSPath" : "$(Resources)/CSS/JMDict.css"
     },
     "Audio" : {
-        "URI" : "http://audiointerface:9003/?",
-        "CSSPath" : "/Resources/CSS/Audio.css"
+        "URI" : "$(AudioURI)",
+        "CSSPath" : "$(Resources)/CSS/Audio.css"
     },
     "Kanjidic" : {
-        "DictionaryPath" : "/Resources/Repository/Kanji/kanjidic2.xml",
-        "CSSPath" : "/Resources/CSS/Kanjidic.css"
+        "DictionaryPath" : "$(Resources)/Repository/Kanji/kanjidic2.xml",
+        "CSSPath" : "$(Resources)/CSS/Kanjidic.css"
     },
     "Strokes" : {
-        "StrokePath" : "/Resources/Repository/Strokes/sodzip/",
-        "CSSPath" : "/Resources/CSS/Strokes.css",
+        "StrokePath" : "$(Resources)/Repository/Strokes/sodzip/",
+        "CSSPath" : "$(Resources)/CSS/Strokes.css",
         "PreferJIS" : "False"
     },
     "Examples" : {
-        "DBPath" : "/Resources/Database/Examples.sqlite",
-        "CSSPath" : "/Resources/CSS/Examples.css",
+        "DBPath" : "$(Resources)/Database/Examples.sqlite",
+        "CSSPath" : "$(Resources)/CSS/Examples.css",
         "Seed" : "0",
         "Shuffle" : "True",
         "MaxExamples" : "100"

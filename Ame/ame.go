@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strconv"
 
 	module "github.com/lesserfish/GoAme/Ame/Modules"
@@ -26,8 +27,48 @@ type AmeKanji struct {
 	ankiModule module.Module
 }
 
+func ParseEnv(input string) string {
+	for id, char := range input {
+		if char == ')' {
+			end := id
+			if end > 0 {
+				for start := end - 1; start >= 0; start-- {
+					if input[start] == ' ' {
+						break
+					}
+					if input[start] == '$' && input[start+1] == '(' {
+						prelude := input[0:start]
+						prologue := input[end+1:]
+						env := input[start+2 : end]
+						envval := os.Getenv(env)
+						newstring := prelude + envval + prologue
+						return ParseEnv(newstring)
+					}
+				}
+			}
+		}
+	}
+	return input
+}
+
+func ParseConfiguration(Input Configuration) Configuration {
+	output := make(Configuration)
+
+	for modname, modconf := range Input {
+		outconf := make(map[string]string)
+		for key, val := range modconf {
+			updated_val := ParseEnv(val)
+			outconf[key] = updated_val
+		}
+		output[modname] = outconf
+	}
+
+	return output
+}
 func Initialize(config Configuration) (*AmeKanji, error) {
 	ameInstance := new(AmeKanji)
+
+	config = ParseConfiguration(config)
 
 	_, jmdict_ok := config["JMdict"]
 	if jmdict_ok {

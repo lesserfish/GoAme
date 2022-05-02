@@ -64,6 +64,9 @@ services:
       audiointerface:
         condition: service_started
     container_name: ameworker
+    environment:
+      - Resources=/Resources
+      - AudioURI=http://audiointerface:9003/?
     volumes:
       - "../Data/Storage:/Storage"
       - "../Data/Workers/Ame/Downloads:/Downloads"

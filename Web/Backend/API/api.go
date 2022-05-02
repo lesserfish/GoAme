@@ -55,8 +55,9 @@ func CreateServer(options InitOptions) (*Server, error) {
 		false,
 		nil)
 
+	redisaddr := options.redisADDR + ":" + options.redisPORT
 	redisclient := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     redisaddr,
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})

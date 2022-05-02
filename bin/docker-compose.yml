@@ -24,6 +24,20 @@ services:
       test: ["CMD", "redis-cli", "ping"]
       interval: 1m
       retries: 30
+  audiointerface:
+    image: node:latest
+    ports:
+      - 9003:9003
+    environment:
+      - PORT=9003
+      - CACHE=/Storage
+      - TMP=/tmp
+    volumes:
+      - "./Server/AudioInterface:/AudioInterface"
+      - "../Data/Audio:/Storage"
+    restart: always
+    working_dir: /AudioInterface
+    command: bash -c "npm install && node app.js configuration/404.mp3"
   api:
     image: ubuntu:latest
     depends_on:
@@ -35,9 +49,25 @@ services:
     ports:
       - 9000:9000
     volumes:
-      - "../Data/API:/Storage"
+      - "../Data/Storage:/Storage"
       - "./Server/API:/Server"
       - "./Resources:/Resources"
     restart: always
     command: ["/Server/API", "-db", "/Resources/Database/KanjiKana.sqlite", "-amqp", "amqp://rabbitmq", "-redis", "redis", "-download", "/Storage", "-addr", "0.0.0.0", "-p", "9000"]
-    
+  ameworker:
+    image: ubuntu:latest
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      audiointerface:
+        condition: service_started
+    container_name: ameworker
+    volumes:
+      - "../Data/Storage:/Storage"
+      - "../Data/Workers/Ame/Downloads:/Downloads"
+      - "./Server/Workers/:/Ame"
+      - "./Resources:/Resources"
+    restart: always
+    command: ["/Ame/AmeWorker", "-amqp", "amqp://rabbitmq", "-redis", "redis", "-storage", "/Storage", "-download", "/Downloads", "-c", "/Resources/configuration.json"]

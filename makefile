@@ -11,6 +11,6 @@ default:
 	cp -r Tools/AudioHandler/app.js Tools/AudioHandler/package.json Tools/AudioHandler/configuration Tools/AudioHandler/.gitignore bin/Server/AudioInterface
 
 clean:
-	rm -r bin/Console
-	rm -r bin/Resources
-	rm -r bin/Server
+	rm -rf bin/Console
+	rm -rf bin/Resources
+	rm -rf bin/Server

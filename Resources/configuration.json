@@ -1,25 +1,25 @@
 {
     "JMdict" : {
-        "DictionaryPath" : "/home/lesserfish/Documents/Code/GoAme/Resources/Repository/Vocabulary/JMdict_e_examp.xml",
-        "FormatterPath" : "/home/lesserfish/Documents/Code/GoAme/Resources/Database/polxml.xml",
-        "CSSPath" : "/home/lesserfish/Documents/Code/GoAme/Ame/Modules/JMDict/Static/default.css"
+        "DictionaryPath" : "/Resources/Repository/Vocabulary/JMdict_e_examp.xml",
+        "FormatterPath" : "/Resources/Database/polxml.xml",
+        "CSSPath" : "/Resources/CSS/JMDict.css"
     },
     "Audio" : {
-        "URI" : "http://localhost:8000/?",
-        "CSSPath" : "/home/lesserfish/Documents/Code/GoAme/Ame/Modules/Audio/Static/default.css"
+        "URI" : "http://audiointerface:9003/?",
+        "CSSPath" : "/Resources/CSS/Audio.css"
     },
     "Kanjidic" : {
-        "DictionaryPath" : "/home/lesserfish/Documents/Code/GoAme/Resources/Repository/Kanji/kanjidic2.xml",
-        "CSSPath" : "/home/lesserfish/Documents/Code/GoAme/Ame/Modules/Kanjidic/Static/default.css"
+        "DictionaryPath" : "/Resources/Repository/Kanji/kanjidic2.xml",
+        "CSSPath" : "/Resources/CSS/Kanjidic.css"
     },
     "Strokes" : {
-        "StrokePath" : "/home/lesserfish/Documents/Code/GoAme/Resources/Repository/Strokes/sodzip/",
-        "CSSPath" : "/home/lesserfish/Documents/Code/GoAme/Ame/Modules/Strokes/Static/default.css",
+        "StrokePath" : "/Resources/Repository/Strokes/sodzip/",
+        "CSSPath" : "/Resources/CSS/Strokes.css",
         "PreferJIS" : "False"
     },
     "Examples" : {
-        "DBPath" : "/home/lesserfish/Documents/Code/GoAme/Resources/Database/Examples.sqlite",
-        "CSSPath" : "/home/lesserfish/Documents/Code/GoAme/Ame/Modules/Examples/Static/default.css",
+        "DBPath" : "/Resources/Database/Examples.sqlite",
+        "CSSPath" : "/Resources/CSS/Examples.css",
         "Seed" : "0",
         "Shuffle" : "True",
         "MaxExamples" : "100"

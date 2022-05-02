@@ -23,8 +23,8 @@ var (
 	queuename         string
 	IDshift           uint
 	configuration     string
-	StorageDirectory  string
 	DownloadDirectory string
+	StorageDirectory  string
 	PersistenceTime   float64
 	CleanTime         float64
 	ctx               context.Context
@@ -41,8 +41,8 @@ func main() {
 	flag.StringVar(&queuename, "queue", "ame", "Name of the queue to be used!")
 	flag.UintVar(&IDshift, "idshift", 0, "Value of the starting ID of the workers")
 	flag.StringVar(&configuration, "c", "", "Configuration file for Ame")
-	flag.StringVar(&StorageDirectory, "storage", "/tmp", "Directory for storage of temporary files.")
-	flag.StringVar(&DownloadDirectory, "download", "/tmp", "Directory for storage of download files.")
+	flag.StringVar(&DownloadDirectory, "download", "/tmp", "Directory for storage of temporary files.")
+	flag.StringVar(&StorageDirectory, "storage", "/tmp", "Directory for storage of download files.")
 	flag.Float64Var(&PersistenceTime, "persistence", 30, "Time zip files will stick around in minutes")
 	flag.Float64Var(&CleanTime, "cleanperiod", 10, "Period for files to be deleted")
 	flag.Parse()

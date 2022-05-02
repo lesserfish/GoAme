@@ -28,7 +28,7 @@ func (cleaner Cleaner) Clean() {
 		now := time.Now()
 		diff := now.Sub(File.creation_time)
 		if diff.Minutes() >= PersistenceTime {
-			path := DownloadDirectory + "/" + GetZipnameFromID(File.UUID)
+			path := StorageDirectory + "/" + GetZipnameFromID(File.UUID)
 			cleaner.ReportDeleted(File.UUID)
 			err := RemoveFile(path)
 			if err != nil {

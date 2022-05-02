@@ -68,7 +68,7 @@ func (worker Worker) Work() {
 
 		// Create directory for request
 
-		new_directory := StorageDirectory + "/" + "dir_" + message.UUID.String() + "/"
+		new_directory := DownloadDirectory + "/" + "dir_" + message.UUID.String() + "/"
 		new_media_directory := new_directory + "Media" + "/"
 
 		_, err = os.Stat(new_directory)
@@ -104,7 +104,7 @@ func (worker Worker) Work() {
 
 		// Create zip file and move it to Download directory
 
-		zipdir := DownloadDirectory + "/" + GetZipnameFromID(message.UUID)
+		zipdir := StorageDirectory + "/" + GetZipnameFromID(message.UUID)
 		err = ZipDir(new_directory, zipdir)
 
 		if err != nil {

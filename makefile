@@ -6,7 +6,7 @@ console:
 
 frontend:
 	cd Web/Frontend && npm install && npm run build
-	cp -r Web/Frontend/public Resources/
+	cp -r Web/Frontend/build Resources/public/
 server: 
 	mkdir -p bin/Server/API
 	mkdir -p bin/Server/Workers

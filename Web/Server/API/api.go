@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
@@ -14,6 +13,7 @@ import (
 
 type Server struct {
 	Router         *mux.Router
+	APIRouter      *mux.Router
 	DB             *sql.DB
 	AMQPConnection *amqp.Connection
 	AMQPChannel    *amqp.Channel
@@ -30,29 +30,6 @@ type InitOptions struct {
 	redisProc string
 	queue     string
 	publicdir string
-}
-
-// FileSystem custom file system handler
-type FileSystem struct {
-	fs http.FileSystem
-}
-
-// Open opens file
-func (fs FileSystem) Open(path string) (http.File, error) {
-	f, err := fs.fs.Open(path)
-	if err != nil {
-		return nil, err
-	}
-
-	s, _ := f.Stat()
-	if s.IsDir() {
-		index := strings.TrimSuffix(path, "/") + "/index.html"
-		if _, err := fs.fs.Open(index); err != nil {
-			return nil, err
-		}
-	}
-
-	return f, nil
 }
 
 func CreateServer(options InitOptions) (*Server, error) {
@@ -88,7 +65,10 @@ func CreateServer(options InitOptions) (*Server, error) {
 		DB:       0,  // use default DB
 	})
 
-	server := Server{mux.NewRouter(),
+	router := mux.NewRouter()
+	apirouter := router.PathPrefix("/api/").Subrouter()
+	server := Server{router,
+		apirouter,
 		db,
 		amqpconnection, amqpchannel,
 		redisclient,
@@ -116,12 +96,12 @@ func (server Server) Serve(addr string) {
 	}
 }
 func (server Server) CreateHandlers() {
-	server.Router.HandleFunc("/post", Wrap(server.PostHandler, server.CORS, server.Logger, server.Authorize, server.CheckPostValidity, server.RegisterRequest)).Methods("POST")
-	server.Router.HandleFunc("/get", Wrap(server.GetHandler, server.CORS, server.Logger)).Methods("GET")
-	server.Router.HandleFunc("/help", Wrap(server.HelpHandler, server.CORS, server.Logger)).Methods("GET")
+	server.APIRouter.HandleFunc("/post", Wrap(server.PostHandler, server.CORS, server.Logger, server.Authorize, server.CheckPostValidity, server.RegisterRequest)).Methods("POST")
+	server.APIRouter.HandleFunc("/get", Wrap(server.GetHandler, server.CORS, server.Logger)).Methods("GET")
+	server.APIRouter.HandleFunc("/help", Wrap(server.HelpHandler, server.CORS, server.Logger)).Methods("GET")
 
-	fileServer := http.FileServer(FileSystem{http.Dir(server.publicdir)})
-	server.Router.HandleFunc("/", http.StripPrefix("/", fileServer).ServeHTTP).Methods("GET")
+	server.Router.PathPrefix("/static/").HandlerFunc(Wrap(http.StripPrefix("/static/", http.FileServer(http.Dir(server.publicdir))).ServeHTTP, server.CORS, server.Logger))
+	server.Router.PathPrefix("/").HandlerFunc(Wrap(http.FileServer(http.Dir(server.publicdir)).ServeHTTP, server.CORS, server.Logger))
 }
 func (server Server) Close() {
 	server.DB.Close()

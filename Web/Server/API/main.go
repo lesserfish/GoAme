@@ -27,6 +27,7 @@ func main() {
 	var redisport uint64
 	var redisproc string
 	var queue string
+	var publicdir string
 
 	flag.StringVar(&database, "db", "/tmp/db.sqlite", "path of sqlite3 database")
 	flag.StringVar(&address, "addr", "localhost", "ip address of host")
@@ -43,6 +44,7 @@ func main() {
 	flag.StringVar(&corsoriginpolicy, "corsorigin", "", "Cors policy")
 	flag.StringVar(&corsmethodpolicy, "corsmethod", "*", "Cors policy")
 	flag.StringVar(&corsheaderpolicy, "corsheader", "*", "Cors policy")
+	flag.StringVar(&publicdir, "publicdir", "/tmp", "Directory of public HTML files.")
 	flag.Parse()
 
 	ctx = context.Background()
@@ -55,7 +57,8 @@ func main() {
 		redisADDR: redisaddr,
 		redisPORT: strconv.Itoa(int(redisport)),
 		redisProc: redisproc,
-		queue:     queue}
+		queue:     queue,
+		publicdir: publicdir}
 
 	server, err := CreateServer(options)
 

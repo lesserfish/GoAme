@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
@@ -18,6 +19,7 @@ type Server struct {
 	AMQPChannel    *amqp.Channel
 	RedisClient    *redis.Client
 	queueName      string
+	publicdir      string
 }
 type InitOptions struct {
 	DB        string
@@ -27,6 +29,30 @@ type InitOptions struct {
 	redisPORT string
 	redisProc string
 	queue     string
+	publicdir string
+}
+
+// FileSystem custom file system handler
+type FileSystem struct {
+	fs http.FileSystem
+}
+
+// Open opens file
+func (fs FileSystem) Open(path string) (http.File, error) {
+	f, err := fs.fs.Open(path)
+	if err != nil {
+		return nil, err
+	}
+
+	s, err := f.Stat()
+	if s.IsDir() {
+		index := strings.TrimSuffix(path, "/") + "/index.html"
+		if _, err := fs.fs.Open(index); err != nil {
+			return nil, err
+		}
+	}
+
+	return f, nil
 }
 
 func CreateServer(options InitOptions) (*Server, error) {
@@ -66,7 +92,8 @@ func CreateServer(options InitOptions) (*Server, error) {
 		db,
 		amqpconnection, amqpchannel,
 		redisclient,
-		options.queue}
+		options.queue,
+		options.publicdir}
 	return &server, nil
 }
 func (server Server) Initiate() {
@@ -92,6 +119,9 @@ func (server Server) CreateHandlers() {
 	server.Router.HandleFunc("/post", Wrap(server.PostHandler, server.CORS, server.Logger, server.Authorize, server.CheckPostValidity, server.RegisterRequest)).Methods("POST")
 	server.Router.HandleFunc("/get", Wrap(server.GetHandler, server.CORS, server.Logger)).Methods("GET")
 	server.Router.HandleFunc("/help", Wrap(server.HelpHandler, server.CORS, server.Logger)).Methods("GET")
+
+	fileServer := http.FileServer(FileSystem{http.Dir(server.publicdir)})
+	server.Router.HandleFunc("/", http.StripPrefix("/", fileServer).ServeHTTP).Methods("GET")
 }
 func (server Server) Close() {
 	server.DB.Close()

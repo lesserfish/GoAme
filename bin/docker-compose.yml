@@ -53,7 +53,7 @@ services:
       - "./Server/API:/Server"
       - "./Resources:/Resources"
     restart: always
-    command: ["/Server/API", "-db", "/Resources/Database/KanjiKana.sqlite", "-amqp", "amqp://rabbitmq", "-redis", "redis", "-download", "/Storage", "-addr", "0.0.0.0", "-p", "9000"]
+    command: ["/Server/API", "-db", "/Resources/Database/KanjiKana.sqlite", "-amqp", "amqp://rabbitmq", "-redis", "redis", "-download", "/Storage", "-addr", "0.0.0.0", "-p", "9000", "-publicdir", "/Resources/public"]
   ameworker:
     image: ubuntu:latest
     depends_on:

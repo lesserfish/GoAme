@@ -114,7 +114,7 @@ func (server Server) GetHandler(rw http.ResponseWriter, r *http.Request) {
 }
 
 func (server Server) HelpHandler(rw http.ResponseWriter, r *http.Request) {
-	kanji := r.FormValue("kanji")
+	kanji := r.FormValue("word")
 	if kanji == "" {
 		ErrorResponse(rw, "Failed to specify Kanji", http.StatusBadRequest)
 	}

@@ -10,6 +10,7 @@ import (
 var (
 	permanence        uint64
 	maxrequests       uint64
+	maxhelprequests   uint64
 	DownloadDirectory string
 	ctx               context.Context
 	corsoriginpolicy  string
@@ -34,6 +35,7 @@ func main() {
 	flag.Uint64Var(&port, "p", 9000, "port of where to serve")
 	flag.Uint64Var(&permanence, "permanence", 240, "Duration each request will be stored in memory")
 	flag.Uint64Var(&maxrequests, "maxreq", 5000, "Maximum number of requests per client")
+	flag.Uint64Var(&maxhelprequests, "maxhelpreq", 1000, "Maximum number of help requests per client")
 	flag.StringVar(&amqpaddr, "amqp", "amqp://localhost", "Address of amqp")
 	flag.Uint64Var(&amqpport, "amqpport", 5672, "Amqp port")
 	flag.StringVar(&queue, "queue", "ame", "Queue name")

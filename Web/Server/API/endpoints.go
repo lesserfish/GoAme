@@ -62,7 +62,7 @@ func (server Server) PostHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	rw.Header().Set("Content-Type", "application/json")
-	rw.WriteHeader(http.StatusUnsupportedMediaType)
+	rw.WriteHeader(http.StatusOK)
 
 	response := make(map[string]string)
 	response["message"] = "OK!"
@@ -99,11 +99,12 @@ func (server Server) GetHandler(rw http.ResponseWriter, r *http.Request) {
 	if status == "Success" {
 		filename := DownloadDirectory + "/" + GetZipnameFromID(uuid.MustParse(reqid))
 		rw.Header().Add("content-disposition", "filename=\"out.zip\"")
+		rw.WriteHeader(http.StatusOK)
 		http.ServeFile(rw, r, filename)
 	} else {
 
 		rw.Header().Set("Content-Type", "application/json")
-		rw.WriteHeader(http.StatusUnsupportedMediaType)
+		rw.WriteHeader(http.StatusOK)
 
 		response := make(map[string]string)
 		response["Status"] = status
@@ -144,7 +145,7 @@ func (server Server) HelpHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	rw.Header().Set("Content-Type", "application/json")
-	rw.WriteHeader(http.StatusUnsupportedMediaType)
+	rw.WriteHeader(http.StatusOK)
 
 	response := struct {
 		Message  string
@@ -186,7 +187,6 @@ func (server Server) HelpHandler2(rw http.ResponseWriter, r *http.Request) {
 	RequestedWords := []string{}
 
 	for id, rawword := range RawRequestedWords {
-		log.Println(id)
 		if id >= int(maxhelprequests) {
 			break
 		}
@@ -227,7 +227,7 @@ func (server Server) HelpHandler2(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	rw.Header().Set("Content-Type", "application/json")
-	rw.WriteHeader(http.StatusUnsupportedMediaType)
+	rw.WriteHeader(http.StatusOK)
 
 	response := struct {
 		Message  string

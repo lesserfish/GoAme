@@ -42,7 +42,6 @@
         allSelected = true;
         for(var i = 0; i < inputarray.length; i++) {
             if(inputarray[i].selected == false) {
-                console.log(inputarray[i])
                 allSelected = false;
                 return;
             }
@@ -175,8 +174,8 @@
                 </div>
                 {#each inputarray as entry, iid}
                     <div class="entry">
-                        <input class="form-check-input" type="checkbox" value="" bind:checked="{inputarray[iid].selected}" on:change="{() => {SelectionChange(); console.log(allSelected);}}">
-                        <input type="text" value="{inputarray[iid].kanji}" placeholder="kanji reading">
+                        <input class="form-check-input" type="checkbox" value="" bind:checked="{inputarray[iid].selected}" on:change="{() => {SelectionChange();}}">
+                        <input disabled type="text" value="{inputarray[iid].kanji}" placeholder="kanji reading">
                         <input type="text" value="{inputarray[iid].kana}" placeholder="{inputarray[iid].kanadb[0] || 'kana reading'}"
                             list="entry_{iid}_candidates">
                         <input type="text" value="{inputarray[iid].literal}">

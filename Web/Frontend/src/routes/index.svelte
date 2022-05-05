@@ -6,7 +6,7 @@
         Input: 'Input',
     };
     let page = Pages.Home;
-    const Templates = {
+    let Templates = {
         JPENG : 'JPEng',
         ENGJP : 'EngJP',
         Kanji : 'Kanji',
@@ -15,6 +15,26 @@
     let template = Templates.JPENG;
 
     let customtemplate = ["@{kanjiword} <br> @{kanaword} <br> @{audio} @{css}", "@{sense} @{kaniinfoex} @{stroke} @{css}"]
+
+    let inputarray = [ {
+            selected: false,
+            kanji:  "食べる",
+            kanadb : ["たべる"],
+            kana: "",
+            literal: ["食"]
+        }, {
+            selected: false,
+            kanji:  "開ける",
+            kanadb : ["ひらける","あける"],
+            kana: "",
+            literal: ["開"]
+        }, {
+            selected: false,
+            kanji:  "開ける",
+            kanadb : ["ひらける","あける"],
+            kana: "",
+            literal: ["開"]
+        }]
 
     function playDemo() {
         let audioFile = new Audio("./media/sangyou.mp3");;
@@ -65,16 +85,16 @@
         </div>
         <div class="template-selector">
             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked on:click={() => {template = Templates.JPENG}}>
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" bind:group="{template}" value={Templates.JPENG} on:click={() => {template = Templates.JPENG}}>
                 <label class="btn btn-outline-secondary" for="btnradio1">JP to EN</label>
 
-                <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" on:click={() => {template = Templates.ENGJP}}>
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" bind:group="{template}" value={Templates.ENGJP} on:click={() => {template = Templates.ENGJP}}>
                 <label class="btn btn-outline-secondary" for="btnradio2">EN to JP</label>
 
-                <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" on:click={() => {template = Templates.Kanji}}>
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" bind:group="{template}" value={Templates.Kanji} on:click={() => {template = Templates.Kanji}}>
                 <label class="btn btn-outline-secondary" for="btnradio3">Kanji</label>
                 
-                <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off" on:click={() => {template = Templates.Custom}}>
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off" bind:group="{template}" value={Templates.Custom} on:click={() => {template = Templates.Custom}}>
                 <label class="btn btn-outline-secondary" for="btnradio4">Custom</label>
             </div>
         </div>
@@ -93,7 +113,7 @@
         <div class='card-example'>
             <div class="kliteral">絹</div><style>.kanji_info{text-align:center;list-style-position:inside}.kanji_info>ol>li{color:#333;font-size:100%}.kanji_info>.kanji_instance>.literal{color:#000;font-size:150%;text-align:center}.kanji_info>.kanji_instance>.meanings{text-align:center;margin-right:3%}.kanji_info>.kanji_instance>.meanings>ol>li{font-size:100%}.kanji_info>.kanji_instance>.meanings>ol>li:nth-child(1){font-size:125%}.kanji_info>.kanji_instance>.readings>ul>li{display:inline;margin-left:4%;margin-right:4%}.kanji_info>.kanji_instance>.misc>*{margin-top:3%;margin-bottom:3%}.kliteral{text-align: center;color:#000;font-size:150%}</style>
             <hr>
-            <div class="kanji_info"><div class="kanji_instance"><div class="literal">絹</div><div class="meanings"><ol><li>silk</li></ol></div><div class="readings"><ul><li>ケン</li><li>きぬ</li></ul></div><div class="misc"><div class="grade"> Grade: 6</div><div class="strokecount"> Stroke count: 13</div><div class="jlpt"> JLPT: 1</div><div class="freq"> Frequency: 1916</div></div></div></div><br><div class="stroke_set"><div class="stroke ANDAS"><img src="./media/ANDAS1361.gif"></div></div><style>.kanji_info{text-align:center;list-style-position:inside}.kanji_info>ol>li{color:#333;font-size:100%}.kanji_info>.kanji_instance>.literal{color:#000;font-size:150%;text-align:center}.kanji_info>.kanji_instance>.meanings{text-align:center;margin-right:3%}.kanji_info>.kanji_instance>.meanings>ol>li{font-size:100%}.kanji_info>.kanji_instance>.meanings>ol>li:nth-child(1){font-size:125%}.kanji_info>.kanji_instance>.readings>ul>li{display:inline;margin-left:4%;margin-right:4%}.kanji_info>.kanji_instance>.misc>*{margin-top:3%;margin-bottom:3%}.kliteral{text-align: center;color:#000;font-size:150%}</style>
+            <div class="kanji_info"><div class="kanji_instance"><div class="literal">絹</div><div class="meanings"><ol><li>silk</li></ol></div><div class="readings"><ul><li>ケン</li><li>きぬ</li></ul></div><div class="misc"><div class="grade"> Grade: 6</div><div class="strokecount"> Stroke count: 13</div><div class="jlpt"> JLPT: 1</div><div class="freq"> Frequency: 1916</div></div></div></div><br><div class="stroke_set"><div class="stroke ANDAS"><img src="./media/ANDAS1361.gif" alt="stroke"></div></div><style>.kanji_info{text-align:center;list-style-position:inside}.kanji_info>ol>li{color:#333;font-size:100%}.kanji_info>.kanji_instance>.literal{color:#000;font-size:150%;text-align:center}.kanji_info>.kanji_instance>.meanings{text-align:center;margin-right:3%}.kanji_info>.kanji_instance>.meanings>ol>li{font-size:100%}.kanji_info>.kanji_instance>.meanings>ol>li:nth-child(1){font-size:125%}.kanji_info>.kanji_instance>.readings>ul>li{display:inline;margin-left:4%;margin-right:4%}.kanji_info>.kanji_instance>.misc>*{margin-top:3%;margin-bottom:3%}.kliteral{text-align: center;color:#000;font-size:150%}</style>
         </div>
         {:else}
         <div class='template-creator'>
@@ -124,7 +144,30 @@
         </button>
     </div>
     <div class="content">
-        Input
+        <div class="input_creator">
+
+        </div>
+        <div class="input_field">
+            <div class="entry_container">
+                {#each inputarray as entry, iid}
+                    <div class="entry">
+                        <input class="form-check-input" type="checkbox" value="" checked="{inputarray[iid].selected}">
+                        <input type="text" value="{inputarray[iid].kanji}" placeholder="kanji reading">
+                        <input type="text" value="{inputarray[iid].kana}" placeholder="{inputarray[iid].kanadb[0] || 'kana reading'}"
+                            list="entry_{iid}_candidates">
+                        <input type="text" value="{inputarray[iid].literal}">
+                        <button type="button" class="btn btn-sm btn-outline-danger" on:click={() => {inputarray.splice(iid, 1); inputarray = inputarray;}}><i class="bi bi-x"></i></button>
+                        {#if inputarray[iid].kanadb.length > 0}
+                            <datalist id="entry_{iid}_candidates">
+                            {#each inputarray[iid].kanadb as reading, rid}
+                                <option value={reading}>{reading}</option>
+                            {/each}
+                            </datalist>
+                        {/if}
+                    </div>
+                {/each}
+            </div>
+        </div>
     </div>
     <div class='controller'>
         <button type="button" class="btn btn-outline-secondary" on:click={SendForm}>
@@ -138,6 +181,7 @@
     .controller {
         text-align: center;
         margin-top: 30px;
+        margin-bottom: 15px;
     }
     .content {
         text-align: center;

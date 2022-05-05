@@ -35,7 +35,24 @@
             kana: "",
             literal: ["開"]
         }]
+    
+    let allSelected = false;
 
+    function SelectionChange() {
+        allSelected = true;
+        for(var i = 0; i < inputarray.length; i++) {
+            if(inputarray[i].selected == false) {
+                console.log(inputarray[i])
+                allSelected = false;
+                return;
+            }
+        }
+    }
+    function SelectAll() {
+        for(var i = 0; i < inputarray.length; i++) {
+            inputarray[i].selected = allSelected;
+        }
+    }
     function playDemo() {
         let audioFile = new Audio("./media/sangyou.mp3");;
         audioFile.play()
@@ -149,9 +166,16 @@
         </div>
         <div class="input_field">
             <div class="entry_container">
+                <div class="allselect">
+                    <input class="form-check-input" type="checkbox" value="" bind:checked="{allSelected}" on:change="{SelectAll}">
+                    <input type="text" style="visibility: hidden;">
+                    <input type="text" style="visibility: hidden;">
+                    <input type="text" style="visibility: hidden;">
+                    <button type="button" class="btn btn-sm btn-outline-danger" style="visibility: hidden;"><i class="bi bi-x"></i></button>
+                </div>
                 {#each inputarray as entry, iid}
                     <div class="entry">
-                        <input class="form-check-input" type="checkbox" value="" checked="{inputarray[iid].selected}">
+                        <input class="form-check-input" type="checkbox" value="" bind:checked="{inputarray[iid].selected}" on:change="{() => {SelectionChange(); console.log(allSelected);}}">
                         <input type="text" value="{inputarray[iid].kanji}" placeholder="kanji reading">
                         <input type="text" value="{inputarray[iid].kana}" placeholder="{inputarray[iid].kanadb[0] || 'kana reading'}"
                             list="entry_{iid}_candidates">
@@ -207,5 +231,7 @@
         text-align: center;
         outline: 3px solid rgb(209, 209, 209);
         box-shadow: 0 10px rgb(221, 221, 221);
+    }
+    .allselect {
     }
 </style>

@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/gorilla/handlers"
@@ -29,14 +28,27 @@ func (server Server) Logger(next http.HandlerFunc) http.HandlerFunc {
 }
 func (server Server) CORS(next http.HandlerFunc) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
-		credentials := handlers.AllowCredentials()
-		methods := handlers.AllowedMethods(strings.Split(corsmethodpolicy, ","))
-		origins := handlers.AllowedOrigins([]string{corsoriginpolicy})
-		headers := handlers.AllowedHeaders(strings.Split(corsheaderpolicy, ","))
+		addCorsHeader(rw)
 
-		handlers.CORS(credentials, methods, origins, headers)(next).ServeHTTP(rw, r)
+		if r.Method == "OPTIONS" {
+			rw.WriteHeader(http.StatusOK)
+			return
+		} else {
+			handlers.CORS()(next).ServeHTTP(rw, r)
+		}
 	}
 }
+
+func addCorsHeader(res http.ResponseWriter) {
+	headers := res.Header()
+	headers.Add("Access-Control-Allow-Origin", "*")
+	headers.Add("Vary", "Origin")
+	headers.Add("Vary", "Access-Control-Request-Method")
+	headers.Add("Vary", "Access-Control-Request-Headers")
+	headers.Add("Access-Control-Allow-Headers", "Content-Type, Origin, Accept, token")
+	headers.Add("Access-Control-Allow-Methods", "GET, POST,OPTIONS")
+}
+
 func (server Server) Authorize(next http.HandlerFunc) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 

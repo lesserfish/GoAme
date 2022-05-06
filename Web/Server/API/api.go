@@ -102,10 +102,10 @@ func (server Server) Serve(addr string) {
 	}
 }
 func (server Server) CreateHandlers() {
-	server.APIRouter.HandleFunc("/post", Wrap(server.PostHandler, server.CORS, server.Logger, server.Authorize, server.CheckPostValidity, server.RegisterRequest)).Methods("POST")
-	server.APIRouter.HandleFunc("/get", Wrap(server.GetHandler, server.CORS, server.Logger)).Methods("GET")
+	server.APIRouter.HandleFunc("/post", Wrap(server.PostHandler, server.CORS, server.Logger, server.Authorize, server.CheckPostValidity, server.RegisterRequest)).Methods("POST", "OPTIONS")
+	server.APIRouter.HandleFunc("/get", Wrap(server.GetHandler, server.CORS, server.Logger)).Methods("GET", "OPTIONS")
 	server.APIRouter.HandleFunc("/help", Wrap(server.HelpHandler, server.CORS, server.Logger)).Methods("GET")
-	server.APIRouter.HandleFunc("/help", Wrap(server.HelpHandler2, server.CORS, server.Logger)).Methods("POST")
+	server.APIRouter.HandleFunc("/help", Wrap(server.HelpHandler2, server.CORS, server.Logger)).Methods("POST", "OPTIONS")
 
 	server.Router.PathPrefix("/static/").HandlerFunc(Wrap(http.StripPrefix("/static/", http.FileServer(http.Dir(server.publicdir))).ServeHTTP, server.CORS, server.Logger))
 	server.Router.PathPrefix("/").HandlerFunc(Wrap(http.FileServer(http.Dir(server.publicdir)).ServeHTTP, server.CORS, server.Logger))

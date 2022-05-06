@@ -81,9 +81,17 @@
         for(var n = 0; n < lines.length; n++){
             var line = lines[n];
             var segments = line.split(/;|\|/); // Splits on ; or |
+            
             var kanji = segments[0];
+            kanji = kanji.replace(/\s/g, '');
+            
             var kana = segments[1] || "";
+            kana = kana.replace(/\s/g, '');
+            
             var literal = segments[2] || "";
+            literal = literal.replace(/\s/g, '');
+            
+            
             if(kanji == "" && kana == "" && literal == ""){
                 continue;
             }
@@ -94,12 +102,23 @@
         }
         // Download helpful info from rest api
         
-        var uri = "localhost:9000/api/help"
+        var uri = "http://localhost:9000/api/help"
+
+        var xmlHttpRequest = new XMLHttpRequest();
+        xmlHttpRequest.open('POST', uri, true);
+        xmlHttpRequest.setRequestHeader('Content-Type', 'application/json')
+        xmlHttpRequest.onload = function(){
+            console.log(this.responseText);
+        }
+        var requestbody = JSON.stringify(CandidateKanjis);
+
+        xmlHttpRequest.send(requestbody);
+
         var Additions = [];
         for(var n = 0; n < Candidates.length; n++) {
 
         }
-        console.log(Candidates);
+        console.log(CandidateKanjis);
         srcinput = '';
     }
     function HandleInputKey(keyevent) {

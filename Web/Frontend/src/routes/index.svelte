@@ -17,18 +17,21 @@
     let customtemplate = ["@{kanjiword} <br> @{kanaword} <br> @{audio} @{css}", "@{sense} @{kaniinfoex} @{stroke} @{css}"]
 
     let inputarray = [ {
+            id: 0,
             selected: false,
             kanji:  "食べる",
             kanadb : ["たべる"],
             kana: "",
             literal: ["食"]
         }, {
+            id: 1,
             selected: false,
             kanji:  "開ける",
             kanadb : ["ひらける","あける"],
             kana: "",
             literal: ["開"]
         }, {
+            id: 2,
             selected: false,
             kanji:  "開ける",
             kanadb : ["ひらける","あける"],
@@ -52,9 +55,64 @@
             inputarray[i].selected = allSelected;
         }
     }
+    function DeleteSelected() {
+        for(var i = 0; i < inputarray.length; i++) {
+            if(inputarray[i].selected == true){
+                inputarray.splice(i, 1);
+                inputarray = inputarray;
+                return DeleteSelected() + 1;
+            }
+        }
+        return 0;
+    }
     function playDemo() {
         let audioFile = new Audio("./media/sangyou.mp3");;
         audioFile.play()
+    }
+
+    let srcinput = "";
+    function HandleInput() {
+        var lines = srcinput.split('\n');
+
+        var Candidates = []
+        var CandidateKanjis = []
+
+        // Fill To Add array
+        for(var n = 0; n < lines.length; n++){
+            var line = lines[n];
+            var segments = line.split(/;|\|/); // Splits on ; or |
+            var kanji = segments[0];
+            var kana = segments[1] || "";
+            var literal = segments[2] || "";
+            if(kanji == "" && kana == "" && literal == ""){
+                continue;
+            }
+            Candidates.push({ 'kanji': kanji,
+                        'kana': kana,
+                        'literal': literal});
+            CandidateKanjis.push(kanji);
+        }
+        // Download helpful info from rest api
+        
+        var uri = "localhost:9000/api/help"
+        var Additions = [];
+        for(var n = 0; n < Candidates.length; n++) {
+
+        }
+        console.log(Candidates);
+        srcinput = '';
+    }
+    function HandleInputKey(keyevent) {
+        if(keyevent.key == 'Enter') {
+            keyevent.preventDefault();
+            HandleInput();
+        }
+    }
+    function HandleClipboard(clipevent){
+        clipevent.preventDefault();
+        var data = (clipevent.originalEvent || clipevent).clipboardData.getData('text/plain');
+        srcinput = data;
+        HandleInput();
     }
     function SendForm() {
 
@@ -160,29 +218,33 @@
         </button>
     </div>
     <div class="content">
-        <div class="input_creator">
-
+        <div class="row justify-content-center" style="margin-bottom: 20px;">
+           <div class='col-6 align-self-center'>
+                <div class="cell description edit inputbox" contenteditable="true" bind:innerHTML="{srcinput}" on:input="{(e) => {console.log(e)}}" on:paste="{HandleClipboard}" on:keydown="{HandleInputKey}" placeholder="食べる|たべる"></div>
+           </div>
         </div>
-        <div class="input_field">
+        <div class="row input_field">
             <div class="entry_container">
-                <div class="allselect">
-                    <input class="form-check-input" type="checkbox" value="" bind:checked="{allSelected}" on:change="{SelectAll}">
-                    <input type="text" style="visibility: hidden;">
-                    <input type="text" style="visibility: hidden;">
-                    <input type="text" style="visibility: hidden;">
-                    <button type="button" class="btn btn-sm btn-outline-danger" style="visibility: hidden;"><i class="bi bi-x"></i></button>
+                <div class="row allselect">
+                    <div class="col allselectleft">
+                        <input id="selectallcheck" class="form-check-input" type="checkbox" value="" bind:checked="{allSelected}" on:change="{SelectAll}">
+                        <label for="selectallcheck">Select all</label>
+                    </div>
+                    <div class="col allselectright">
+                        <button type="button" class="btn btn-sm btn-outline-danger" on:click="{DeleteSelected}"><i class="bi bi-x">Erase selected</i></button>
+                    </div>
                 </div>
-                {#each inputarray as entry, iid}
+                {#each inputarray as entry (entry.id)}
                     <div class="entry">
-                        <input class="form-check-input" type="checkbox" value="" bind:checked="{inputarray[iid].selected}" on:change="{() => {SelectionChange();}}">
-                        <input disabled type="text" value="{inputarray[iid].kanji}" placeholder="kanji reading">
-                        <input type="text" value="{inputarray[iid].kana}" placeholder="{inputarray[iid].kanadb[0] || 'kana reading'}"
-                            list="entry_{iid}_candidates">
-                        <input type="text" value="{inputarray[iid].literal}">
-                        <button type="button" class="btn btn-sm btn-outline-danger" on:click={() => {inputarray.splice(iid, 1); inputarray = inputarray;}}><i class="bi bi-x"></i></button>
-                        {#if inputarray[iid].kanadb.length > 0}
-                            <datalist id="entry_{iid}_candidates">
-                            {#each inputarray[iid].kanadb as reading, rid}
+                        <input class="form-check-input" type="checkbox" value="" bind:checked="{entry.selected}" on:change="{() => {SelectionChange();}}">
+                        <input disabled type="text" value="{entry.kanji}" placeholder="kanji reading">
+                        <input type="text" value="{entry.kana}" placeholder="{entry.kanadb[0] || 'kana reading'}"
+                            list="entry_{entry.id}_candidates">
+                        <input type="text" value="{entry.literal}">
+                        <button type="button" class="btn btn-sm btn-outline-danger" on:click={() => {inputarray.splice(inputarray.indexOf(entry), 1); inputarray = inputarray;}}><i class="bi bi-x"></i></button>
+                        {#if entry.kanadb.length > 0}
+                            <datalist id="entry_{entry.id}_candidates">
+                            {#each entry.kanadb as reading, rid}
                                 <option value={reading}>{reading}</option>
                             {/each}
                             </datalist>
@@ -193,7 +255,7 @@
         </div>
     </div>
     <div class='controller'>
-        <button type="button" class="btn btn-outline-secondary" on:click={SendForm}>
+        <button type="button" class="btn btn-outline-primary" on:click={SendForm}>
             <i class="bi bi-arrow-right "></i>
         </button>
     </div>
@@ -231,6 +293,22 @@
         outline: 3px solid rgb(209, 209, 209);
         box-shadow: 0 10px rgb(221, 221, 221);
     }
+    .allselectleft {
+        text-align: left;
+        margin-left: 25%;
+    }
+    .allselectright > button {
+        text-align: right;
+        margin-right: 35%;
+    }
     .allselect {
+        margin-bottom: 15px;
+    }
+    .inputbox {
+        border: 1px solid black;
+        text-align: left;
+    }
+    .input_creator {
+        width: 50%;
     }
 </style>

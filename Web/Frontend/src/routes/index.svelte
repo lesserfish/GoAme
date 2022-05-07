@@ -98,6 +98,7 @@
         xmlHttpRequest.open('POST', uri, true);
         xmlHttpRequest.setRequestHeader('Content-Type', 'application/json')
         xmlHttpRequest.onload = function(){
+            SetLoading('hide');
             var rawresponse = this.responseText;
             var response = JSON.parse(rawresponse);
             console.log(response);
@@ -127,6 +128,7 @@
         }
         var requestbody = JSON.stringify(CandidateKanjis);
 
+        SetLoading('show');
         xmlHttpRequest.send(requestbody);
 
         var Additions = [];
@@ -147,6 +149,9 @@
         var data = (clipevent.originalEvent || clipevent).clipboardData.getData('text/plain');
         srcinput = data;
         HandleInput();
+    }
+    function SetLoading(option) {
+        window.$('#loadingModal').modal(option);
     }
     function SendForm() {
 
@@ -296,6 +301,20 @@
         <button type="button" class="btn btn-outline-primary" on:click={SendForm}>
             <i class="bi bi-arrow-right "></i>
         </button>
+        <button type="button" class="btn btn-outline-danger" on:click="{() => {SetLoading('show')}}">Click me... </button>
+    </div>
+    <div class="loadingpopup">
+        <div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {/if}
@@ -348,5 +367,17 @@
     }
     .input_creator {
         width: 50%;
+    }
+    .loadingpopup {
+        text-align: center;
+    }
+    .loadingpopup * {
+        outline: 0px solid black !important;
+    }
+    .modal-content {
+        background-color: transparent;
+        outline: 0;
+        border: 0;
+        box-shadow: 0 0 0 0;
     }
 </style>

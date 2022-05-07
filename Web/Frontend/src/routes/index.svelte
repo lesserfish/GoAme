@@ -16,29 +16,7 @@
 
     let customtemplate = ["@{kanjiword} <br> @{kanaword} <br> @{audio} @{css}", "@{sense} @{kaniinfoex} @{stroke} @{css}"]
 
-    let inputarray = [ {
-            id: 0,
-            selected: false,
-            kanji:  "食べる",
-            kanadb : ["たべる"],
-            kana: "",
-            literal: ["食"]
-        }, {
-            id: 1,
-            selected: false,
-            kanji:  "開ける",
-            kanadb : ["ひらける","あける"],
-            kana: "",
-            literal: ["開"]
-        }, {
-            id: 2,
-            selected: false,
-            kanji:  "開ける",
-            kanadb : ["ひらける","あける"],
-            kana: "",
-            literal: ["開"]
-        }]
-    
+    let inputarray = []
     let allSelected = false;
 
     function SelectionChange() {
@@ -91,15 +69,26 @@
             var literal = segments[2] || "";
             literal = literal.replace(/\s/g, '');
             
-            
             if(kanji == "" && kana == "" && literal == ""){
                 continue;
             }
+
+            if(literal == "") {
+                for(var k = 0; k < kanji.length; k++){
+                    var letter = kanji[k];
+                    var hexval = letter.codePointAt(0);
+                    if(hexval >= 0x4E00 && hexval <= 0x9FAF) {
+                        literal += letter;
+                    }
+                }
+            }
+
             Candidates.push({ 'kanji': kanji,
                         'kana': kana,
                         'literal': literal});
             CandidateKanjis.push(kanji);
         }
+        console.log(Candidates);
         // Download helpful info from rest api
         
         var uri = "http://localhost:9000/api/help"
@@ -108,7 +97,32 @@
         xmlHttpRequest.open('POST', uri, true);
         xmlHttpRequest.setRequestHeader('Content-Type', 'application/json')
         xmlHttpRequest.onload = function(){
-            console.log(this.responseText);
+            var rawresponse = this.responseText;
+            var response = JSON.parse(rawresponse);
+            console.log(response);
+
+            if(response.Message != "OK"){
+                console.error(response.Message);
+                return;
+            }
+
+            var info = response.Response;
+            console.log(info);
+
+            for(var k = 0; k < Candidates.length; k++) {
+                var currentCandidate = Candidates[k];
+                var newEntry = { 
+                    id : inputarray.length, 
+                    selected: false,
+                    kanji: currentCandidate.kanji,
+                    kana: currentCandidate.kana,
+                    literal: currentCandidate.literal,
+                    kanadb: info[currentCandidate.kanji]
+                }
+
+                inputarray.push(newEntry);
+            }
+                inputarray = inputarray;
         }
         var requestbody = JSON.stringify(CandidateKanjis);
 
@@ -239,7 +253,7 @@
     <div class="content">
         <div class="row justify-content-center" style="margin-bottom: 20px;">
            <div class='col-6 align-self-center'>
-                <div class="cell description edit inputbox" contenteditable="true" bind:innerHTML="{srcinput}" on:input="{(e) => {console.log(e)}}" on:paste="{HandleClipboard}" on:keydown="{HandleInputKey}" placeholder="食べる|たべる"></div>
+               <div class="cell description edit inputbox" contenteditable="true" bind:innerHTML="{srcinput}" on:input="{() => {}}" on:paste="{HandleClipboard}" on:keydown="{HandleInputKey}" placeholder="食べる|たべる"></div>
            </div>
         </div>
         <div class="row input_field">

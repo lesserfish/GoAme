@@ -17,6 +17,7 @@
     let customtemplate = ["@{kanjiword} <br> @{kanaword} <br> @{audio} @{css}", "@{sense} @{kaniinfoex} @{stroke} @{css}"]
 
     let inputarray = []
+    let tag = "AmeKanji"
     let allSelected = false;
 
     function SelectionChange() {
@@ -117,7 +118,7 @@
                     kanji: currentCandidate.kanji,
                     kana: currentCandidate.kana,
                     literal: currentCandidate.literal,
-                    kanadb: info[currentCandidate.kanji]
+                    kanadb: info[currentCandidate.kanji] || []
                 }
 
                 inputarray.push(newEntry);
@@ -285,6 +286,10 @@
                     </div>
                 {/each}
             </div>
+        </div>
+        <div class="tagfield">
+             <label for="tag">Tag: </label>
+             <input id="tag" type="text" bind:value="{tag}" placeholder="Tag for your cards">
         </div>
     </div>
     <div class='controller'>

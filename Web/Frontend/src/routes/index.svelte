@@ -98,7 +98,6 @@
         xmlHttpRequest.open('POST', uri, true);
         xmlHttpRequest.setRequestHeader('Content-Type', 'application/json')
         xmlHttpRequest.onload = function(){
-            SetLoading('hide');
             var rawresponse = this.responseText;
             var response = JSON.parse(rawresponse);
             console.log(response);
@@ -124,19 +123,14 @@
 
                 inputarray.push(newEntry);
             }
-                inputarray = inputarray;
+            inputarray = inputarray;
+            setTimeout(() => {SetLoading('hide')}, 600);
         }
         var requestbody = JSON.stringify(CandidateKanjis);
 
         SetLoading('show');
         xmlHttpRequest.send(requestbody);
-
-        var Additions = [];
-        for(var n = 0; n < Candidates.length; n++) {
-
-        }
-        console.log(CandidateKanjis);
-        srcinput = '';
+        srcinput = "";
     }
     function HandleInputKey(keyevent) {
         if(keyevent.key == 'Enter') {

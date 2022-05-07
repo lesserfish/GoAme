@@ -65,7 +65,7 @@ func (server Server) PostHandler(rw http.ResponseWriter, r *http.Request) {
 	rw.WriteHeader(http.StatusOK)
 
 	response := make(map[string]string)
-	response["message"] = "OK!"
+	response["message"] = "OK"
 	response["uuid"] = newid.String()
 
 	byteresponse, _ := json.Marshal(response)

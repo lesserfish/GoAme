@@ -19,7 +19,12 @@
     let inputarray = []
     let tag = "AmeKanji"
     let allSelected = false;
-
+    
+    var id = 0;
+    function NewID(){
+        id = id + 1;
+        return id;
+    }
     function SelectionChange() {
         allSelected = true;
         for(var i = 0; i < inputarray.length; i++) {
@@ -89,7 +94,6 @@
                         'literal': literal});
             CandidateKanjis.push(kanji);
         }
-        console.log(Candidates);
         // Download helpful info from rest api
         
         var uri = "http://localhost:9000/api/help"
@@ -100,20 +104,18 @@
         xmlHttpRequest.onload = function(){
             var rawresponse = this.responseText;
             var response = JSON.parse(rawresponse);
-            console.log(response);
 
-            if(response.Message != "OK"){
+            if(this.status != 200){
                 console.error(response.Message);
                 return;
             }
 
             var info = response.Response;
-            console.log(info);
 
             for(var k = 0; k < Candidates.length; k++) {
                 var currentCandidate = Candidates[k];
                 var newEntry = { 
-                    id : inputarray.length, 
+                    id : NewID(), 
                     selected: false,
                     kanji: currentCandidate.kanji,
                     kana: currentCandidate.kana,
@@ -148,6 +150,69 @@
         window.$('#loadingModal').modal(option);
     }
     function SendForm() {
+        var chosentemplate = []
+        switch(template) {
+            case Templates.JPENG: 
+                chosentemplate = ["@{kanjiword}@{css}","@{kanaword}<br>@{sense}<br>@{audio}<br><br>@{example}@{css}"]
+            case Templates.ENGJP:
+                chosentemplate = ["@{sense}@{css}","@{kanjiword}<br>@{kanaword}<br>@{sense}<br><br>@{example}@{css}"]
+            case Templates.Kanji:
+                chosentemplate = ["@{literal}@{css}","@{kanjiinfoex}<br>@{stroke}@{css}"]
+            case Templates.Custom:
+                chosentemplate = customtemplate;
+        }
+        var TemplateForm = {"Fields" : chosentemplate, "Tag" : tag};
+        var InputForm = [];
+
+        for(var i = 0; i < inputarray.length; i++) {
+            var currentinput = inputarray[i]
+            var chosenkana = currentinput.kana;
+            if(chosenkana == ""){
+                chosenkana = currentinput.kanadb[0] || "";
+            }
+            var entry = {
+                "kanjiword" : currentinput.kanji,
+                "kanaword" : chosenkana,
+                "literal" : currentinput.literal
+            }
+
+            InputForm.push(entry);
+        }
+
+        var Request = {
+            "AmeInput" : {
+                "Template" : TemplateForm,
+                "Input" : InputForm
+            }
+        }
+
+        var uri = "http://localhost:9000/api/post"
+
+        var xmlHttpRequest = new XMLHttpRequest();
+        xmlHttpRequest.open('POST', uri, true);
+        xmlHttpRequest.setRequestHeader('Content-Type', 'application/json')
+        xmlHttpRequest.onload = function(){
+            var rawresponse = this.responseText;
+
+            var response = JSON.parse(rawresponse);
+             
+            if(this.status != 200){
+                console.error(response.message);
+                // TODO: Handle Error!
+                return;
+            }
+
+            var uuid = response.uuid;
+
+            // Redirect to uuid
+
+            var redirectionuri = "get?id=" + uuid;
+            window.location.replace(redirectionuri);
+        }
+        
+        var requestbody = JSON.stringify(Request);
+
+        xmlHttpRequest.send(requestbody);
 
     }
 </script>
@@ -270,10 +335,10 @@
                 {#each inputarray as entry (entry.id)}
                     <div class="entry">
                         <input class="form-check-input" type="checkbox" value="" bind:checked="{entry.selected}" on:change="{() => {SelectionChange();}}">
-                        <input disabled type="text" value="{entry.kanji}" placeholder="kanji reading">
-                        <input type="text" value="{entry.kana}" placeholder="{entry.kanadb[0] || 'kana reading'}"
+                        <input disabled type="text" bind:value="{entry.kanji}" placeholder="kanji reading">
+                        <input type="text" bind:value="{entry.kana}" placeholder="{entry.kanadb[0] || 'kana reading'}"
                             list="entry_{entry.id}_candidates">
-                        <input type="text" value="{entry.literal}">
+                        <input type="text" bind:value="{entry.literal}">
                         <button type="button" class="btn btn-sm btn-outline-danger" on:click={() => {inputarray.splice(inputarray.indexOf(entry), 1); inputarray = inputarray;}}><i class="bi bi-x"></i></button>
                         {#if entry.kanadb.length > 0}
                             <datalist id="entry_{entry.id}_candidates">

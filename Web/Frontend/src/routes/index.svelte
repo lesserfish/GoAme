@@ -1,5 +1,6 @@
 <script>
     import { fly } from 'svelte/transition';
+    const APIURI = "http://localhost:9000/"
     const Pages = {
         Home: 'Home',
         Template: 'Template',
@@ -96,7 +97,7 @@
         }
         // Download helpful info from rest api
         
-        var uri = "http://localhost:9000/api/help"
+        var uri = APIURI + "api/help"
 
         var xmlHttpRequest = new XMLHttpRequest();
         xmlHttpRequest.open('POST', uri, true);
@@ -186,7 +187,7 @@
             }
         }
 
-        var uri = "http://localhost:9000/api/post"
+        var uri = APIURI + "api/post"
 
         var xmlHttpRequest = new XMLHttpRequest();
         xmlHttpRequest.open('POST', uri, true);
@@ -206,7 +207,7 @@
 
             // Redirect to uuid
 
-            var redirectionuri = "get?id=" + uuid;
+            var redirectionuri = "get.html?id=" + uuid;
             window.location.replace(redirectionuri);
         }
         

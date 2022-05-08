@@ -1,15 +1,14 @@
 <script>
     import { onMount } from 'svelte';
 
-    export const prerender = false;
-
+    const APIURI = "http://localhost:9000/"
     const timeoutdelay = 2000; // 2 seconds
     var message = "Sending request"
     var status = "loading";
     
     function poll(uuid) {
         
-        var uri = "http://localhost:9000/api/get?id=" + uuid;
+        var uri = APIURI + "get?id=" + uuid;
         var xmlHttpRequest = new XMLHttpRequest();
 
         xmlHttpRequest.open("GET", uri, true);
@@ -17,7 +16,7 @@
             var statuscode = this.status;
             var rawresponse = this.responseText;
             
-            var uri = "http://localhost:9000/api/get?id=" + uuid;
+            var uri = APIURI + "get?id=" + uuid;
             
             var response = {};
             var contentType = this.getResponseHeader('Content-Type');

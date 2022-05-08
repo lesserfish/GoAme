@@ -1,6 +1,7 @@
 package jmdict
 
 import (
+	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"io/ioutil"
@@ -74,6 +75,12 @@ type RegexFormatter struct {
 	Pos     []Operation `xml:"pos"`
 }
 
+func CopyEntry(input *Entry) (output Entry) {
+	byt, _ := json.Marshal(*input)
+	json.Unmarshal(byt, &output)
+	return output
+
+}
 func LoadDictionary(parser *JMdictModule) (err error) {
 	DictionaryPath := parser.DictionaryPath
 
@@ -148,7 +155,7 @@ entry_search:
 		}
 
 		if match_kanji && match_kana {
-			out = entry
+			out = CopyEntry(&entry)
 			err = nil
 			break entry_search
 		}
@@ -156,7 +163,7 @@ entry_search:
 
 	return out, err
 }
-func CleanEntry(entry *Entry, order *RegexFormatter) (out error) {
+func CleanEntry(entry *Entry, order *RegexFormatter) {
 	for senseid, sense := range entry.Sense {
 		for posid, pos := range sense.Pos {
 			out_string := pos
@@ -168,8 +175,6 @@ func CleanEntry(entry *Entry, order *RegexFormatter) (out error) {
 			entry.Sense[senseid].Pos[posid] = out_string
 		}
 	}
-
-	return out
 }
 
 func KeymapFromEntry(entry *Entry) (out map[string]string, err error) {

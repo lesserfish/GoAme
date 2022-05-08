@@ -83,7 +83,7 @@ func (parser JMdictModule) Render(input module.Input, card *module.Card) error {
 		return err
 	}
 
-	err = CleanEntry(&entry, &parser.Formatter)
+	CleanEntry(&entry, &parser.Formatter)
 
 	if err != nil {
 		return err

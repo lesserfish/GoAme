@@ -5,16 +5,17 @@
     },
     "Input" : [
         {
-            "kanjiword" : "助ける",
-            "kanaword" : "たすける",
+            "kanjiword" : "冗談",
+            "kanaword" : "じょうだん",
             "literal" : "助",
-            "savepath" : "/home/lesserfish/.local/share/Anki2/Dev/collection.media/"
+            "savepath" : "/tmp"
         },
         {
-            "kanjiword" : "応援",
-            "kanaword" : "",
-            "literal" : "応援",
-            "savepath" : "/home/lesserfish/.local/share/Anki2/Dev/collection.media/"
+            "kanjiword" : "冗談",
+            "kanaword" : "じょうだん",
+            "literal" : "助",
+            "savepath" : "/tmp"
         }
+
     ]
 }

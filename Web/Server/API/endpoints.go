@@ -65,8 +65,8 @@ func (server Server) PostHandler(rw http.ResponseWriter, r *http.Request) {
 	rw.WriteHeader(http.StatusOK)
 
 	response := make(map[string]string)
-	response["message"] = "OK"
-	response["uuid"] = newid.String()
+	response["Message"] = "OK"
+	response["UUID"] = newid.String()
 
 	byteresponse, _ := json.Marshal(response)
 	rw.Write(byteresponse)
@@ -99,6 +99,7 @@ func (server Server) GetHandler(rw http.ResponseWriter, r *http.Request) {
 	if status == "Success" {
 		filename := DownloadDirectory + "/" + GetZipnameFromID(uuid.MustParse(reqid))
 		rw.Header().Add("content-disposition", "filename=\"out.zip\"")
+		rw.Header().Set("Content-Type", "application/zip")
 		rw.WriteHeader(http.StatusOK)
 		http.ServeFile(rw, r, filename)
 	} else {
@@ -107,6 +108,7 @@ func (server Server) GetHandler(rw http.ResponseWriter, r *http.Request) {
 		rw.WriteHeader(http.StatusOK)
 
 		response := make(map[string]string)
+		response["Message"] = "OK"
 		response["Status"] = status
 		response["Progress"] = progress
 
@@ -222,6 +224,7 @@ func (server Server) HelpHandler2(rw http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			ErrorResponse(rw, "Failed to parse request", http.StatusBadRequest)
+			return
 		}
 		Output[word] = append(Output[word], reading)
 	}
@@ -237,7 +240,11 @@ func (server Server) HelpHandler2(rw http.ResponseWriter, r *http.Request) {
 	response.Message = "OK"
 	response.Response = Output
 
-	byteresponse, _ := json.Marshal(response)
+	byteresponse, err := json.Marshal(response)
+	if err != nil {
+		ErrorResponse(rw, "Internal Error", http.StatusInternalServerError)
+		return
+	}
 	rw.Write(byteresponse)
 
 }

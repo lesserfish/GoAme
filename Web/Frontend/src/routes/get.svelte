@@ -1,13 +1,79 @@
 <script>
     import { page } from '$app/stores';
-    const uuid = $page.url.searchParams.get('id');
-    
-    function poll() {
-    
-    }
+    import { onMount } from 'svelte';
 
+    const uuid = $page.url.searchParams.get('id');
+    const timeoutdelay = 2000; // 2 seconds
     var message = "Sending request"
     var status = "loading";
+    
+    function poll() {
+        
+        var uri = "http://localhost:9000/api/get?id=" + uuid;
+        var xmlHttpRequest = new XMLHttpRequest();
+
+        xmlHttpRequest.open("GET", uri, true);
+        xmlHttpRequest.onload = function(){
+            var statuscode = this.status;
+            var rawresponse = this.responseText;
+            
+            var uri = "http://localhost:9000/api/get?id=" + uuid;
+            
+            var response = {};
+            var contentType = this.getResponseHeader('Content-Type');
+            if(contentType == "application/zip") {
+                status = "success";
+                message = "";
+                window.open(uri, '_self');
+                return;
+            }
+            else if(contentType == "application/json"){
+                response = JSON.parse(rawresponse);
+            }
+            
+            if(statuscode != 200){
+                status = "error";
+                message = "Error:  " + (response.Message || "Invalid response from server.");
+                return;
+            }
+
+            var taskstatus = response.Status;
+            var progress = Math.round(response.Progress * 100);
+
+            if(taskstatus == "Deleted"){
+                status = "error"
+                message = "Error. File has already been deleted."
+                return;
+            }
+            else if(taskstatus == "In Progress") {
+                status = "loading";
+                message = "In progress.... (" + String(progress) + "%)";
+                setTimeout(poll, timeoutdelay);
+                return;
+            }
+            else if(taskstatus == "Failed") {
+                status = "error";
+                message = "Task failed :(";
+                return;
+            }
+            else if(taskstatus == "Accepted") {
+                status = "loading";
+                message = "In progress...";
+                setTimeout(poll, timeoutdelay);
+                return;
+            } else {
+                console.log(taskstatus);
+                console.log(progress);
+            }
+
+        }
+
+        xmlHttpRequest.send();
+    }
+    onMount(async () => {
+        poll();
+	});
+
 </script>
 
 <div id="header">

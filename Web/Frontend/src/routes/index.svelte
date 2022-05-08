@@ -109,7 +109,6 @@
                 console.error(response.Message);
                 return;
             }
-
             var info = response.Response;
 
             for(var k = 0; k < Candidates.length; k++) {
@@ -197,12 +196,12 @@
             var response = JSON.parse(rawresponse);
              
             if(this.status != 200){
-                console.error(response.message);
+                console.error(response.Message);
                 // TODO: Handle Error!
                 return;
             }
 
-            var uuid = response.uuid;
+            var uuid = response.UUID;
 
             // Redirect to uuid
 
@@ -360,7 +359,6 @@
         <button type="button" class="btn btn-outline-primary" on:click={SendForm}>
             <i class="bi bi-arrow-right "></i>
         </button>
-        <button type="button" class="btn btn-outline-danger" on:click="{() => {SetLoading('show')}}">Click me... </button>
     </div>
     <div class="loadingpopup">
         <div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

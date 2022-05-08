@@ -142,10 +142,10 @@ func (server Server) CheckPostValidity(next http.HandlerFunc) http.HandlerFunc {
 }
 func ErrorResponse(rw http.ResponseWriter, message string, statusCode int) {
 	rw.Header().Set("Content-Type", "application/json")
-	rw.WriteHeader(http.StatusUnsupportedMediaType)
+	rw.WriteHeader(statusCode)
 
 	response := make(map[string]string)
-	response["message"] = message
+	response["Message"] = message
 
 	byteresponse, _ := json.Marshal(response)
 

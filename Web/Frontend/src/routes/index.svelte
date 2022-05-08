@@ -236,7 +236,14 @@
         </button>
     </div>
     <div class="content">
-        Home
+        <div class="home">
+            <div class="logo">
+                <h1>雨</h1>
+            </div>
+            <div class="description">
+                AmeKanji! An anki tool deck creator.
+            </div>
+        </div>
     </div>
     <div class='controller'>
         <button type="button" class="btn btn-outline-secondary" on:click={() => {page = Pages.Template}}>
@@ -442,4 +449,9 @@
         border: 0;
         box-shadow: 0 0 0 0;
     }
+    .logo h1 {
+        font-size: 168px;
+        font-family: 'Yuji Boku', serif;
+    }
+
 </style>

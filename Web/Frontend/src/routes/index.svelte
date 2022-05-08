@@ -1,6 +1,6 @@
 <script>
     import { fly } from 'svelte/transition';
-    const APIURI = "http://amekanji.com/api/"
+    const APIURI = "https://amekanji.com/api/"
     const Pages = {
         Home: 'Home',
         Template: 'Template',

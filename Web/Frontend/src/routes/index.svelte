@@ -221,7 +221,7 @@
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="./">
-                <img src="./logo_64.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                <img alt="logo" src="./logo_64.png" width="30" height="24" class="d-inline-block align-text-top">
                 AmeKanji
             </a>
         </div>
@@ -296,7 +296,7 @@
 
             <div class = 'kliteral'>雨</div> <style>.kanji_info{text-align:center;list-style-position:inside}.kanji_info>ol>li{color:#333;font-size:100%}.kanji_info>.kanji_instance>.literal{color:#000;font-size:150%;text-align:center}.kanji_info>.kanji_instance>.meanings{text-align:center;margin-right:3%}.kanji_info>.kanji_instance>.meanings>ol>li{font-size:100%}.kanji_info>.kanji_instance>.meanings>ol>li:nth-child(1){font-size:125%}.kanji_info>.kanji_instance>.readings>ul>li{display:inline;margin-left:4%;margin-right:4%}.kanji_info>.kanji_instance>.misc>*{margin-top:3%;margin-bottom:3%}.kliteral{text-align: center;color:#000;font-size:150%}</style>
             <br>
-            <div class = 'kanji_info'><div class = 'kanji_instance'><div class = 'literal'>雨</div><div class = meanings><ol><li>rain</li></ol></div><div class = readings><ul><li>ウ</li><li>あめ</li><li>あま-</li><li>-さめ</li></ul></div><div class='misc'><div class='grade'> Grade: 1</div><div class='strokecount'> Stroke count: 8</div><div class='jlpt'> JLPT: 4</div><div class='freq'> Frequency: 950</div></div></div></div><br><div class = 'stroke_set'><div class = 'stroke ANDAS'><img src='./media/ANDAS3561.gif'></div></div><style>.kanji_info{text-align:center;list-style-position:inside}.kanji_info>ol>li{color:#333;font-size:100%}.kanji_info>.kanji_instance>.literal{color:#000;font-size:150%;text-align:center}.kanji_info>.kanji_instance>.meanings{text-align:center;margin-right:3%}.kanji_info>.kanji_instance>.meanings>ol>li{font-size:100%}.kanji_info>.kanji_instance>.meanings>ol>li:nth-child(1){font-size:125%}.kanji_info>.kanji_instance>.readings>ul>li{display:inline;margin-left:4%;margin-right:4%}.kanji_info>.kanji_instance>.misc>*{margin-top:3%;margin-bottom:3%}.kliteral{text-align: center;color:#000;font-size:150%}</style>
+            <div class = 'kanji_info'><div class = 'kanji_instance'><div class = 'literal'>雨</div><div class = meanings><ol><li>rain</li></ol></div><div class = readings><ul><li>ウ</li><li>あめ</li><li>あま-</li><li>-さめ</li></ul></div><div class='misc'><div class='grade'> Grade: 1</div><div class='strokecount'> Stroke count: 8</div><div class='jlpt'> JLPT: 4</div><div class='freq'> Frequency: 950</div></div></div></div><br><div class = 'stroke_set'><div class = 'stroke ANDAS'><img alt="stroke" src='./media/ANDAS3561.gif'></div></div><style>.kanji_info{text-align:center;list-style-position:inside}.kanji_info>ol>li{color:#333;font-size:100%}.kanji_info>.kanji_instance>.literal{color:#000;font-size:150%;text-align:center}.kanji_info>.kanji_instance>.meanings{text-align:center;margin-right:3%}.kanji_info>.kanji_instance>.meanings>ol>li{font-size:100%}.kanji_info>.kanji_instance>.meanings>ol>li:nth-child(1){font-size:125%}.kanji_info>.kanji_instance>.readings>ul>li{display:inline;margin-left:4%;margin-right:4%}.kanji_info>.kanji_instance>.misc>*{margin-top:3%;margin-bottom:3%}.kliteral{text-align: center;color:#000;font-size:150%}</style>
         </div>
         {:else}
         <div class='template-creator'>
@@ -433,9 +433,6 @@
     .inputbox {
         border: 1px solid black;
         text-align: left;
-    }
-    .input_creator {
-        width: 50%;
     }
     .loadingpopup {
         text-align: center;

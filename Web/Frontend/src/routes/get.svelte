@@ -1,13 +1,13 @@
 <script>
-    import { page } from '$app/stores';
     import { onMount } from 'svelte';
 
-    const uuid = $page.url.searchParams.get('id');
+    export const prerender = false;
+
     const timeoutdelay = 2000; // 2 seconds
     var message = "Sending request"
     var status = "loading";
     
-    function poll() {
+    function poll(uuid) {
         
         var uri = "http://localhost:9000/api/get?id=" + uuid;
         var xmlHttpRequest = new XMLHttpRequest();
@@ -48,7 +48,7 @@
             else if(taskstatus == "In Progress") {
                 status = "loading";
                 message = "In progress.... (" + String(progress) + "%)";
-                setTimeout(poll, timeoutdelay);
+                setTimeout(() => {poll(uuid)}, timeoutdelay);
                 return;
             }
             else if(taskstatus == "Failed") {
@@ -59,7 +59,7 @@
             else if(taskstatus == "Accepted") {
                 status = "loading";
                 message = "In progress...";
-                setTimeout(poll, timeoutdelay);
+                setTimeout(() => {poll(uuid)}, timeoutdelay);
                 return;
             } else {
                 console.log(taskstatus);
@@ -71,7 +71,9 @@
         xmlHttpRequest.send();
     }
     onMount(async () => {
-        poll();
+        const params = new URLSearchParams(window.location.search);
+        const uuid = params.get("id");
+        poll(uuid);
 	});
 
 </script>
@@ -80,7 +82,7 @@
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="./">
-                <img src="./logo_64.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                <img src="./logo_64.png" alt="logo 64px" width="30" height="24" class="d-inline-block align-text-top">
                 AmeKanji
             </a>
         </div>

@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
 
-    const APIURI = "http://localhost:9000/"
+    const APIURI = "http://amekanji.com/api/"
     const timeoutdelay = 2000; // 2 seconds
     var message = "Sending request"
     var status = "loading";

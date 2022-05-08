@@ -5,15 +5,15 @@
     },
     "Input" : [
         {
-            "kanjiword" : "冗談",
-            "kanaword" : "じょうだん",
-            "literal" : "助",
+            "kanjiword" : "",
+            "kanaword" : "けど",
+            "literal" : "",
             "savepath" : "/tmp"
         },
         {
-            "kanjiword" : "冗談",
-            "kanaword" : "じょうだん",
-            "literal" : "助",
+            "kanjiword" : "仕事",
+            "kanaword" : "",
+            "literal" : "",
             "savepath" : "/tmp"
         }
 

@@ -1,6 +1,6 @@
 <script>
     import { fly } from 'svelte/transition';
-    const APIURI = "http://localhost:9000/"
+    const APIURI = "http://amekanji.com/api/"
     const Pages = {
         Home: 'Home',
         Template: 'Template',
@@ -97,7 +97,7 @@
         }
         // Download helpful info from rest api
         
-        var uri = APIURI + "api/help"
+        var uri = APIURI + "help"
 
         var xmlHttpRequest = new XMLHttpRequest();
         xmlHttpRequest.open('POST', uri, true);
@@ -187,7 +187,7 @@
             }
         }
 
-        var uri = APIURI + "api/post"
+        var uri = APIURI + "post"
 
         var xmlHttpRequest = new XMLHttpRequest();
         xmlHttpRequest.open('POST', uri, true);

@@ -11,7 +11,7 @@ while line := file.readline():
 	find = segment[0:sep]
 	replace = segment[sep + 2: -1]
 	newpos = ET.SubElement(root, "pos")
-	ET.SubElement(newpos, "find").text = find
+	ET.SubElement(newpos, "find").text = "^&" + find + ";$"
 	ET.SubElement(newpos, "replace").text = replace
 
 e = ET.SubElement(root, "pos")

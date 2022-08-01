@@ -73,4 +73,4 @@ services:
       - "./Server/Workers/:/Ame"
       - "./Resources:/Resources"
     restart: always
-    command: ["/Ame/AmeWorker", "-amqp", "amqp://rabbitmq", "-redis", "redis", "-storage", "/Storage", "-download", "/Downloads", "-c", "/Resources/configuration.json", "-n", "4"]
+    command: ["/Ame/AmeWorker", "-amqp", "amqp://rabbitmq", "-redis", "redis", "-storage", "/Storage", "-download", "/Downloads", "-c", "/Resources/configuration.json", "-n", "16"]

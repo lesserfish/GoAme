@@ -1,5 +1,6 @@
 <script>
     import { fly } from 'svelte/transition';
+    import { onMount } from 'svelte';
     const APIURI = "https://amekanji.com/api/"
     const Pages = {
         Home: 'Home',
@@ -21,9 +22,13 @@
     let tag = "AmeKanji"
     let allSelected = false;
     
-    var id = 0;
+    //var id = 0;
     function NewID(){
-        id = id + 1;
+        var id = 0;
+        for(var i = 0; i < inputarray.length; i++)
+        {
+            id = id > inputarray[i].id ? id : inputarray[i].id + 1;
+        }
         return id;
     }
     function SelectionChange() {
@@ -48,6 +53,7 @@
                 return DeleteSelected() + 1;
             }
         }
+        UpdateCookie();
         return 0;
     }
     function playDemo() {
@@ -126,6 +132,7 @@
                 inputarray.push(newEntry);
             }
             inputarray = inputarray;
+            UpdateCookie();
             setTimeout(() => {SetLoading('hide')}, 600);
         }
         var requestbody = JSON.stringify(CandidateKanjis);
@@ -216,6 +223,37 @@
         xmlHttpRequest.send(requestbody);
 
     }
+    let Cookie = {};
+    function LoadCookies()
+    {
+        try
+        {
+            var cookiesrc = document.cookie.substring(8);
+            var obj = JSON.parse(cookiesrc);
+            return obj;
+        } catch (e)
+        {
+            console.error(e);
+            return {}
+        }
+    }
+    function SetCookie()
+    {
+        var cookiesrc = JSON.stringify(Cookie);
+        document.cookie = "storage=" + cookiesrc + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; SameSite=None;";
+    }
+    onMount(async () => {
+        Cookie = LoadCookies();
+        customtemplate = Cookie.ctemplate || ["@{kanjiword} <br> @{kanaword} <br> @{audio} @{CSS}", "@{sense} @{kaniinfoex} @{stroke} @{CSS}"];
+        inputarray = Cookie.input || [];
+    });
+    function UpdateCookie()
+    {
+        Cookie.input = inputarray;
+        Cookie.ctemplate = customtemplate;
+        SetCookie();
+    }
+    
 </script>
 
 <div id="header">
@@ -304,13 +342,13 @@
             {#each customtemplate as form, fid}
                 <div class="mb-3">
                     <label for="form_{fid}" class="form-label">Field {fid + 1}: </label>
-                    <textarea class="form-control" id="form_{fid}" rows="3" bind:value={customtemplate[fid]}></textarea>
+                    <textarea class="form-control" id="form_{fid}" rows="3" bind:value={customtemplate[fid]} on:change={() => {UpdateCookie();}}></textarea>
                     {#if customtemplate.length > 2}
-                        <button type="button" class="btn btn-outline-secondary" on:click={() => {customtemplate.splice(fid, 1); customtemplate = customtemplate;}}> <i class="bi bi-eraser"></i> </button>
+                        <button type="button" class="btn btn-outline-secondary" on:click={() => {customtemplate.splice(fid, 1); customtemplate = customtemplate; UpdateCookie();}}> <i class="bi bi-eraser"></i> </button>
                     {/if}
                 </div>
             {/each}
-            <button type="button" class="btn btn-outline-secondary" on:click={() => {customtemplate.push(""); customtemplate = customtemplate;}}> <i class="bi bi-plus"></i> </button>
+            <button type="button" class="btn btn-outline-secondary" on:click={() => {customtemplate.push(""); customtemplate = customtemplate;UpdateCookie();}}> <i class="bi bi-plus"></i> </button>
         </div>
         {/if}
     </div>
@@ -351,7 +389,7 @@
                         <input type="text" bind:value="{entry.kana}" placeholder="{entry.kanadb[0] || 'kana reading'}"
                             list="entry_{entry.id}_candidates">
                         <input type="text" bind:value="{entry.literal}">
-                        <button type="button" class="btn btn-sm btn-outline-danger" on:click={() => {inputarray.splice(inputarray.indexOf(entry), 1); inputarray = inputarray;}}><i class="bi bi-x"></i></button>
+                        <button type="button" class="btn btn-sm btn-outline-danger" on:click={() => {inputarray.splice(inputarray.indexOf(entry), 1); inputarray = inputarray; UpdateCookie();}}><i class="bi bi-x"></i></button>
                         {#if entry.kanadb.length > 0}
                             <datalist id="entry_{entry.id}_candidates">
                             {#each entry.kanadb as reading, rid}

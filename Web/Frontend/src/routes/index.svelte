@@ -240,12 +240,18 @@
     function SetCookie()
     {
         var cookiesrc = JSON.stringify(Cookie);
-        document.cookie = "storage=" + cookiesrc + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; SameSite=None;";
+        document.cookie = "storage=" + cookiesrc + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; SameSite=None; Secure;";
     }
     onMount(async () => {
         Cookie = LoadCookies();
         customtemplate = Cookie.ctemplate || ["@{kanjiword} <br> @{kanaword} <br> @{audio} @{CSS}", "@{sense} @{kaniinfoex} @{stroke} @{CSS}"];
         inputarray = Cookie.input || [];
+
+        // Check that no duplicate ids exist.
+        for(var i = 0; i < inputarray.length; i++)
+        {
+            inputarray[i].id = i;
+        }
     });
     function UpdateCookie()
     {

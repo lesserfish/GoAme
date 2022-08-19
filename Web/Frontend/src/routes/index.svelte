@@ -258,12 +258,19 @@
         xmlHttpRequest.send(requestbody);
 
     }
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
     let Cookie = {};
     function LoadCookies()
     {
         try
         {
-            var cookiesrc = document.cookie.substring(8);
+            //var cookiesrc = document.cookie.substring(8);
+            var cookiesrc = getCookie("storage");
             var obj = JSON.parse(cookiesrc);
             return obj;
         } catch (e)

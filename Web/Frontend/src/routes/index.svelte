@@ -61,6 +61,8 @@
         audioFile.play()
     }
 
+    const allkana = ['ー', 'ぁ', 'あ', 'ぃ', 'い', 'ぅ', 'う', 'ぇ', 'え', 'ぉ', 'お', 'か', 'が', 'き', 'ぎ', 'く', 'ぐ', 'け', 'げ', 'こ', 'ご', 'さ', 'ざ', 'し', 'じ', 'す', 'ず', 'せ', 'ぜ', 'そ', 'ぞ', 'た', 'だ', 'ち', 'ぢ', 'っ', 'つ', 'づ', 'て', 'で', 'と', 'ど', 'な', 'に', 'ぬ', 'ね', 'の', 'は', 'ば', 'ぱ', 'ひ', 'び', 'ぴ', 'ふ', 'ぶ', 'ぷ', 'へ', 'べ', 'ぺ', 'ほ', 'ぼ', 'ぽ', 'ま', 'み', 'む', 'め', 'も', 'ゃ', 'や', 'ゅ', 'ゆ', 'ょ', 'よ', 'ら', 'り', 'る', 'れ', 'ろ', 'ゎ', 'わ', 'ゐ', 'ゑ', 'を', 'ん', 'ァ', 'ア', 'ィ', 'イ', 'ゥ', 'ウ', 'ェ', 'エ', 'ォ', 'オ', 'カ', 'ガ', 'キ', 'ギ', 'ク', 'グ', 'ケ', 'ゲ', 'コ', 'ゴ', 'サ', 'ザ', 'シ', 'ジ', 'ス', 'ズ', 'セ', 'ゼ', 'ソ', 'ゾ', 'タ', 'ダ', 'チ', 'ヂ', 'ッ', 'ツ', 'ヅ', 'テ', 'デ', 'ト', 'ド', 'ナ', 'ニ', 'ヌ', 'ネ', 'ノ', 'ハ', 'バ', 'パ', 'ヒ', 'ビ', 'ピ', 'フ', 'ブ', 'プ', 'ヘ', 'ベ', 'ペ', 'ホ', 'ボ', 'ポ', 'マ', 'ミ', 'ム', 'メ', 'モ', 'ャ', 'ヤ', 'ュ', 'ユ', 'ョ', 'ヨ', 'ラ', 'リ', 'ル', 'レ', 'ロ', 'ヮ', 'ワ', 'ヰ', 'ヱ', 'ヲ', 'ン', 'ヴ', 'ヵ', 'ヶ', '゛', '゜']
+    
     let srcinput = "";
     function HandleInput() {
         var lines = srcinput.split('\n');
@@ -73,14 +75,47 @@
             var line = lines[n];
             var segments = line.split(/;|\|/); // Splits on ; or |
             
-            var kanji = segments[0];
-            kanji = kanji.replace(/\s/g, '');
-            
-            var kana = segments[1] || "";
-            kana = kana.replace(/\s/g, '');
-            
-            var literal = segments[2] || "";
-            literal = literal.replace(/\s/g, '');
+
+            var kanji = "";
+            var kana = "";
+            var literal = "";
+            if(segments.length == 1)
+            {
+                // Check if there are kanji in the word. If there aren't, just fill kana
+                
+                var word = segments[0];
+                var iskana = true;
+                for(var c = 0; c < word.length; c++)
+                {
+                    if(allkana.indexOf(word[c]) == -1)
+                    {
+                        iskana = false;
+                        continue;
+                    }
+                }
+                if(iskana)
+                {
+                    kana = word;
+                } else 
+                {
+                    kanji = word;
+                }
+
+            }
+            else {
+                kanji = segments[0];
+                kanji = kanji.replace(/\s/g, '');
+                
+                kana = segments[1] || "";
+                kana = kana.replace(/\s/g, '');
+                
+                literal = segments[2] || "";
+                literal = literal.replace(/\s/g, '');
+            }
+
+            kanji = kanji.replace("<br>", "");
+            kana = kana.replace("<br>", "");
+            literal = literal.replace("<br>", "");
             
             if(kanji == "" && kana == "" && literal == ""){
                 continue;

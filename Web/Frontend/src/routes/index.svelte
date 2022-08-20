@@ -270,7 +270,8 @@
         try
         {
             //var cookiesrc = document.cookie.substring(8);
-            var cookiesrc = getCookie("storage");
+            //var cookiesrc = getCookie("storage");
+            var cookiesrc = localStorage.getItem("storage") || JSON.stringify({});
             var obj = JSON.parse(cookiesrc);
             return obj;
         } catch (e)
@@ -282,7 +283,8 @@
     function SetCookie()
     {
         var cookiesrc = JSON.stringify(Cookie);
-        document.cookie = "storage=" + cookiesrc + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; SameSite=None; Secure;";
+        //document.cookie = "storage=" + cookiesrc + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; SameSite=None; Secure;";
+        localStorage.setItem("storage", cookiesrc);
     }
     onMount(async () => {
         Cookie = LoadCookies();

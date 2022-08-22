@@ -168,13 +168,11 @@ func CleanEntry(entry *Entry, order *RegexFormatter) {
 	for senseid, sense := range entry.Sense {
 		for posid, pos := range sense.Pos {
 			out_string := pos
-			log.Println(out_string)
 			for _, instruction := range order.Pos {
 				regex := regexp.MustCompile(instruction.Find)
 				newstring := regex.ReplaceAllString(out_string, instruction.Replace)
 				out_string = newstring
 			}
-			log.Println(out_string)
 			entry.Sense[senseid].Pos[posid] = out_string
 		}
 	}

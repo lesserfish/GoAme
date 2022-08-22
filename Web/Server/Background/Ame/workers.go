@@ -62,7 +62,7 @@ func (worker Worker) Work() {
 			msg.Ack(false)
 			continue
 		}
-		worker.AcceptRequest(message.UUID)
+		// worker.AcceptRequest(message.UUID)
 
 		log.Println("[Worker " + strconv.Itoa(int(worker.workerID)) + "] Accepted request: " + message.UUID.String())
 

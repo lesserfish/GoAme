@@ -68,10 +68,16 @@ func (server Server) PostHandler(rw http.ResponseWriter, r *http.Request) {
 	response["Message"] = "OK"
 	response["UUID"] = newid.String()
 
+    server.AcceptRequest(newid)
+
 	byteresponse, _ := json.Marshal(response)
 	rw.Write(byteresponse)
 }
-
+func (server Server) AcceptRequest(id uuid.UUID) {
+	server.RedisClient.HMSet(ctx, id.String(),
+		"Status", "Accepted",
+		"Progress", "0")
+}
 func (server Server) GetHandler(rw http.ResponseWriter, r *http.Request) {
 	reqid := r.FormValue("id")
 	if reqid == "" {

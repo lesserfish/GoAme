@@ -52,6 +52,7 @@ services:
       - "../Data/Storage:/Storage"
       - "./Server/API:/Server"
       - "./Resources:/Resources"
+      - "./healthcheck:/healthcheck"
     restart: always
     healthcheck:
         test: ["CMD", "bash", "/healthcheck/basic.sh"]
@@ -85,3 +86,10 @@ services:
         timeout: 10s
         retries: 2
     command: ["/Ame/AmeWorker", "-amqp", "amqp://rabbitmq", "-redis", "redis", "-storage", "/Storage", "-download", "/Downloads", "-c", "/Resources/configuration.json", "-n", "4"]
+  autoheal:
+    restart: always
+    image: willfarrell/autoheal
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=all
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

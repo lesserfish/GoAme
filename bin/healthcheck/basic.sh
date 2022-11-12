@@ -1,0 +1,1 @@
+curl --fail 'https://amekanji.com/api/post' -X POST -H 'Content-Type: application/json' --data-raw '{"AmeInput":{"Template":{"Fields":["",""],"Tag":""},"Input":[{"kanjiword":"","kanaword":"","literal":""}]}}'

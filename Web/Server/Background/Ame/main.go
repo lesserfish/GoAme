@@ -122,6 +122,7 @@ func main() {
 	cleaner.trashCan = new([]Trash)
 
 	go cleaner.Start()
+
 	// Start workers
 
 	for id := uint(1); id <= workercount; id++ {

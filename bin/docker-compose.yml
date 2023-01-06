@@ -39,6 +39,7 @@ services:
     working_dir: /AudioInterface
     command: bash -c "npm install && node app.js configuration/404.mp3"
   api:
+    container_name: api
     build: ./docker-images/latest-ubuntu/
     depends_on:
       rabbitmq:

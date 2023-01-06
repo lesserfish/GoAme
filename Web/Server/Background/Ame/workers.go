@@ -132,6 +132,18 @@ func (worker Worker) Work() {
 	text := "[Worker " + strconv.Itoa(int(worker.workerID)) + "] " + "Exiting!"
 	fmt.Println(text)
 
+    // Start a new worker
+
+    newworker := Worker{worker.workerID,
+			worker.channel,
+			worker.queueName,
+			worker.redisClient,
+			worker.AmeKanji,
+			worker.cleaner}
+
+	go newworker.Work()
+
+
 }
 
 func (worker Worker) AcceptRequest(id uuid.UUID) {

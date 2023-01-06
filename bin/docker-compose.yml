@@ -34,12 +34,11 @@ services:
       - TMP=/tmp
     volumes:
       - "./Server/AudioInterface:/AudioInterface"
-      - "../Data/Audio:/Storage"
+     - "../Data/Audio:/Storage"
     restart: always
     working_dir: /AudioInterface
     command: bash -c "npm install && node app.js configuration/404.mp3"
   api:
-    container_name: api
     build: ./docker-images/latest-ubuntu/
     depends_on:
       rabbitmq:
@@ -81,11 +80,11 @@ services:
       - "./Resources:/Resources"
       - "./healthcheck:/healthcheck"
     restart: always
-    healthcheck:
-        test: ["CMD", "bash", "/healthcheck/basic.sh"]
-        interval: 10s
-        timeout: 10s
-        retries: 2
+      #healthcheck:
+      #  test: ["CMD", "bash", "/healthcheck/basic.sh"]
+      #  interval: 360s
+      #  timeout: 360s
+      #  retries: 5
     command: ["/Ame/AmeWorker", "-amqp", "amqp://rabbitmq", "-redis", "redis", "-storage", "/Storage", "-download", "/Downloads", "-c", "/Resources/configuration.json", "-n", "4"]
   autoheal:
     restart: always

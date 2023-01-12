@@ -54,11 +54,6 @@ services:
       - "./Resources:/Resources"
       - "./healthcheck:/healthcheck"
     restart: always
-    healthcheck:
-        test: ["CMD", "bash", "/healthcheck/basic.sh"]
-        interval: 10s
-        timeout: 10s
-        retries: 2
     command: ["/Server/API", "-db", "/Resources/Database/KanjiKana.sqlite", "-amqp", "amqp://rabbitmq", "-redis", "redis", "-download", "/Storage", "-addr", "0.0.0.0", "-p", "9000", "-publicdir", "/Resources/public"]
   ameworker:
     build: ./docker-images/latest-ubuntu/
@@ -80,11 +75,6 @@ services:
       - "./Resources:/Resources"
       - "./healthcheck:/healthcheck"
     restart: always
-      #healthcheck:
-      #  test: ["CMD", "bash", "/healthcheck/basic.sh"]
-      #  interval: 360s
-      #  timeout: 360s
-      #  retries: 5
     command: ["/Ame/AmeWorker", "-amqp", "amqp://rabbitmq", "-redis", "redis", "-storage", "/Storage", "-download", "/Downloads", "-c", "/Resources/configuration.json", "-n", "4"]
   autoheal:
     restart: always

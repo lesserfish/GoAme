@@ -12,6 +12,7 @@ server:
 	mkdir -p bin/Server/Workers
 	mkdir -p bin/Server/AudioInterface
 	mkdir -p bin/Resources
+	mkdir -p bin/Resources/public
 	go build -o bin/Server/API/API Web/Server/API/main.go Web/Server/API/api.go Web/Server/API/endpoints.go Web/Server/API/middleware.go
 	go build -o bin/Server/Workers/AmeWorker Web/Server/Background/Ame/main.go Web/Server/Background/Ame/cleaners.go Web/Server/Background/Ame/workers.go
 	cp -r Resources/* bin/Resources

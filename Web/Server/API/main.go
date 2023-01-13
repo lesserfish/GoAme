@@ -4,7 +4,10 @@ import (
 	"context"
 	"flag"
 	"log"
-	"strconv"
+	"github.com/go-redis/redis/v8"
+    "github.com/streadway/amqp"
+    "strconv"
+    "time"
 )
 
 var (
@@ -17,18 +20,105 @@ var (
 	corsmethodpolicy  string
 	corsheaderpolicy  string
 )
+var (
+	address string
+	port uint64
+	database string
+	amqpaddr string
+	amqpport uint64
+	redisaddr string
+	redisport uint64
+	redisproc string
+	queue string
+	publicdir string
+)
 
+var amqpConnection *amqp.Connection;
+var amqpChannel *amqp.Channel;
+
+func generateRabbitInstance() error {
+    log.Println("Generating Rabbit instance")
+    fulladdr := amqpaddr + ":" + strconv.Itoa(int(amqpport))
+
+    var err error = nil
+    amqpConnection, err = amqp.Dial(fulladdr)
+
+    if(err != nil) {
+        return err
+    }
+
+    amqpChannel, err = amqpConnection.Channel()
+    if err != nil {
+        return err
+    }
+
+    err = amqpChannel.Qos(1, 0, false)
+    if err != nil {
+        return err
+    }
+    _, err = amqpChannel.QueueDeclare(
+        queue,
+        false,
+        false,
+        false,
+        false,
+        nil,
+    )
+
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+func getRabbitInstance() *amqp.Channel {
+
+    if(amqpConnection == nil) {
+        err := generateRabbitInstance()
+
+        if(err != nil) {
+            log.Println("ERROR: Could not create AMQP connection... Waiting 10 seconds and trying again.")
+            time.Sleep(10 * time.Second)
+            return getRabbitInstance()
+        }
+
+        return amqpChannel
+    }
+
+    if(amqpConnection.IsClosed()) {
+        err := generateRabbitInstance()
+
+        if(err != nil) {
+            log.Println("ERROR: Could not create AMQP connection... Waiting 10 seconds and trying again.")
+            time.Sleep(10 * time.Second)
+            return getRabbitInstance()
+        }
+
+        return amqpChannel
+    }
+
+    return amqpChannel
+}
+
+var redisClient *redis.Client
+func generateRedisInstance() error {
+    log.Println("Generating Redis instance")
+    redisClient = redis.NewClient(&redis.Options{
+        Addr:     redisaddr + ":" + strconv.Itoa(int(redisport)),
+        Password: "", // no password set
+        DB:       0,  // use default DB
+    })
+    return nil
+}
+
+func getRedisInstance() *redis.Client {
+    if(redisClient == nil){
+        generateRedisInstance()
+    }
+    return redisClient
+}
 func main() {
-	var address string
-	var port uint64
-	var database string
-	var amqpaddr string
-	var amqpport uint64
-	var redisaddr string
-	var redisport uint64
-	var redisproc string
-	var queue string
-	var publicdir string
+
 
 	flag.StringVar(&database, "db", "/tmp/db.sqlite", "path of sqlite3 database")
 	flag.StringVar(&address, "addr", "localhost", "ip address of host")
@@ -54,12 +144,6 @@ func main() {
 	addr := address + ":" + strconv.Itoa(int(port))
 	options := InitOptions{
 		DB:        database,
-		amqpADDR:  amqpaddr,
-		amqpPORT:  strconv.Itoa(int(amqpport)),
-		redisADDR: redisaddr,
-		redisPORT: strconv.Itoa(int(redisport)),
-		redisProc: redisproc,
-		queue:     queue,
 		publicdir: publicdir}
 
 	server, err := CreateServer(options)

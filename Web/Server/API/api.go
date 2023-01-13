@@ -5,21 +5,15 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/microcosm-cc/bluemonday"
-	"github.com/streadway/amqp"
 )
 
 type Server struct {
 	Router         *mux.Router
 	APIRouter      *mux.Router
 	DB             *sql.DB
-	AMQPConnection *amqp.Connection
-	AMQPChannel    *amqp.Channel
-	RedisClient    *redis.Client
-	queueName      string
 	publicdir      string
 	bmondai        *bluemonday.Policy
 }
@@ -40,43 +34,17 @@ func CreateServer(options InitOptions) (*Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	amqpaddr := options.amqpADDR + ":" + options.amqpPORT
-	amqpconnection, err := amqp.Dial(amqpaddr)
-
-	if err != nil {
-		return nil, err
-	}
-
-	amqpchannel, err := amqpconnection.Channel()
-	if err != nil {
-		log.Println(err)
-	}
-
-	amqpchannel.QueueDeclare(
-		options.queue,
-		false,
-		false,
-		false,
-		false,
-		nil)
-
-	redisaddr := options.redisADDR + ":" + options.redisPORT
-	redisclient := redis.NewClient(&redis.Options{
-		Addr:     redisaddr,
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
 
 	router := mux.NewRouter()
 	apirouter := router.PathPrefix("/api/").Subrouter()
+
+    generateRedisInstance()
+    generateRabbitInstance()
 
 	bmonday := bluemonday.UGCPolicy()
 	server := Server{router,
 		apirouter,
 		db,
-		amqpconnection, amqpchannel,
-		redisclient,
-		options.queue,
 		options.publicdir,
 		bmonday,
 	}
@@ -112,5 +80,4 @@ func (server Server) CreateHandlers() {
 }
 func (server Server) Close() {
 	server.DB.Close()
-	server.AMQPConnection.Close()
 }

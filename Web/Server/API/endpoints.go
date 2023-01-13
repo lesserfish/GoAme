@@ -51,7 +51,7 @@ func (server Server) PostHandler(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = server.AMQPChannel.Publish("", server.queueName, false, false, amqp.Publishing{
+	err = getRabbitInstance().Publish("", queue, false, false, amqp.Publishing{
 		ContentType: "application/json",
 		Body:        byteinfo})
 
@@ -74,7 +74,7 @@ func (server Server) PostHandler(rw http.ResponseWriter, r *http.Request) {
 	rw.Write(byteresponse)
 }
 func (server Server) AcceptRequest(id uuid.UUID) {
-	server.RedisClient.HMSet(ctx, id.String(),
+	getRedisInstance().HMSet(ctx, id.String(),
 		"Status", "Accepted",
 		"Progress", "0")
 }
@@ -84,7 +84,7 @@ func (server Server) GetHandler(rw http.ResponseWriter, r *http.Request) {
 		ErrorResponse(rw, "Failed to specify id", http.StatusBadRequest)
 	}
 
-	redisout := server.RedisClient.HGetAll(ctx, reqid)
+	redisout := getRedisInstance().HGetAll(ctx, reqid)
 
 	result, err := redisout.Result()
 

@@ -4,7 +4,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/go-redis/redis/v8"
 	"github.com/google/uuid"
 )
 
@@ -14,7 +13,6 @@ type Trash struct {
 }
 
 type Cleaner struct {
-	redisClient *redis.Client
 	trashCan    *[]Trash
 }
 
@@ -42,7 +40,7 @@ func (cleaner Cleaner) Clean() {
 	}
 }
 func (cleaner Cleaner) ReportDeleted(id uuid.UUID) {
-	cleaner.redisClient.HMSet(ctx, id.String(),
+	getRedisInstance().HMSet(ctx, id.String(),
 		"Status", "Deleted",
 		"Progress", "1")
 }

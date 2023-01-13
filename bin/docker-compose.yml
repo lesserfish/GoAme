@@ -34,7 +34,7 @@ services:
       - TMP=/tmp
     volumes:
       - "./Server/AudioInterface:/AudioInterface"
-     - "../Data/Audio:/Storage"
+      - "../Data/Audio:/Storage"
     restart: always
     working_dir: /AudioInterface
     command: bash -c "npm install && node app.js configuration/404.mp3"

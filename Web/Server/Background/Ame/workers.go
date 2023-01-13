@@ -11,10 +11,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/go-redis/redis/v8"
 	"github.com/google/uuid"
 	ame "github.com/lesserfish/GoAme/Ame"
-	"github.com/streadway/amqp"
 )
 
 type Message struct {
@@ -24,10 +22,7 @@ type Message struct {
 
 type Worker struct {
 	workerID    uint
-	channel     *amqp.Channel
 	queueName   string
-	redisClient *redis.Client
-	AmeKanji    *ame.AmeKanji
 	cleaner     *Cleaner
 }
 
@@ -35,7 +30,7 @@ func (worker Worker) Work() {
 	logmsg := "[Worker " + strconv.Itoa(int(worker.workerID)) + "] Starting work!"
 	log.Println(logmsg)
 
-	msgs, err := worker.channel.Consume(
+	msgs, err := getRabbitInstance().Consume(
 		worker.queueName,
 		strconv.Itoa(int(worker.workerID)),
 		false,
@@ -98,7 +93,7 @@ func (worker Worker) Work() {
 		errfile := new_directory + "log.txt"
 
 		// Invoke AmeKanji
-		worker.AmeKanji.URenderAndSave(message.Input, deckfile, errfile, func(p float64) {
+		getAmeInstance().URenderAndSave(message.Input, deckfile, errfile, func(p float64) {
 			worker.LogProgress(message.UUID, p)
 		})
 
@@ -135,10 +130,7 @@ func (worker Worker) Work() {
     // Start a new worker
 
     newworker := Worker{worker.workerID,
-			worker.channel,
 			worker.queueName,
-			worker.redisClient,
-			worker.AmeKanji,
 			worker.cleaner}
 
 	go newworker.Work()
@@ -147,27 +139,27 @@ func (worker Worker) Work() {
 }
 
 func (worker Worker) AcceptRequest(id uuid.UUID) {
-	worker.redisClient.HMSet(ctx, id.String(),
+	getRedisInstance().HMSet(ctx, id.String(),
 		"Status", "Accepted",
 		"Progress", "0")
 }
 func (worker Worker) LogProgress(id uuid.UUID, progress float64) {
-	worker.redisClient.HMSet(ctx, id.String(),
+	getRedisInstance().HMSet(ctx, id.String(),
 		"Status", "In Progress",
 		"Progress", fmt.Sprint(progress))
 }
 func (worker Worker) ReportError(id uuid.UUID) {
-	worker.redisClient.HMSet(ctx, id.String(),
+	getRedisInstance().HMSet(ctx, id.String(),
 		"Status", "Failed",
 		"Progress", "0")
 }
 func (worker Worker) ReportSuccess(id uuid.UUID) {
-	worker.redisClient.HMSet(ctx, id.String(),
+	getRedisInstance().HMSet(ctx, id.String(),
 		"Status", "Success",
 		"Progress", "1")
 }
 func (worker Worker) ReportDeleted(id uuid.UUID) {
-	worker.redisClient.HMSet(ctx, id.String(),
+	getRedisInstance().HMSet(ctx, id.String(),
 		"Status", "Deleted",
 		"Progress", "1")
 }

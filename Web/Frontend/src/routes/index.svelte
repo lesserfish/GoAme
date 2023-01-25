@@ -73,7 +73,7 @@
         // Fill To Add array
         for(var n = 0; n < lines.length; n++){
             var line = lines[n];
-            var segments = line.split(/;|\|/); // Splits on ; or |
+            var segments = line.split(/;|\||:/); // Splits on ; or |
             
 
             var kanji = "";

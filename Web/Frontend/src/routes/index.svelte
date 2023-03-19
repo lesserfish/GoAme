@@ -63,6 +63,29 @@
 
     const allkana = ['ー', 'ぁ', 'あ', 'ぃ', 'い', 'ぅ', 'う', 'ぇ', 'え', 'ぉ', 'お', 'か', 'が', 'き', 'ぎ', 'く', 'ぐ', 'け', 'げ', 'こ', 'ご', 'さ', 'ざ', 'し', 'じ', 'す', 'ず', 'せ', 'ぜ', 'そ', 'ぞ', 'た', 'だ', 'ち', 'ぢ', 'っ', 'つ', 'づ', 'て', 'で', 'と', 'ど', 'な', 'に', 'ぬ', 'ね', 'の', 'は', 'ば', 'ぱ', 'ひ', 'び', 'ぴ', 'ふ', 'ぶ', 'ぷ', 'へ', 'べ', 'ぺ', 'ほ', 'ぼ', 'ぽ', 'ま', 'み', 'む', 'め', 'も', 'ゃ', 'や', 'ゅ', 'ゆ', 'ょ', 'よ', 'ら', 'り', 'る', 'れ', 'ろ', 'ゎ', 'わ', 'ゐ', 'ゑ', 'を', 'ん', 'ァ', 'ア', 'ィ', 'イ', 'ゥ', 'ウ', 'ェ', 'エ', 'ォ', 'オ', 'カ', 'ガ', 'キ', 'ギ', 'ク', 'グ', 'ケ', 'ゲ', 'コ', 'ゴ', 'サ', 'ザ', 'シ', 'ジ', 'ス', 'ズ', 'セ', 'ゼ', 'ソ', 'ゾ', 'タ', 'ダ', 'チ', 'ヂ', 'ッ', 'ツ', 'ヅ', 'テ', 'デ', 'ト', 'ド', 'ナ', 'ニ', 'ヌ', 'ネ', 'ノ', 'ハ', 'バ', 'パ', 'ヒ', 'ビ', 'ピ', 'フ', 'ブ', 'プ', 'ヘ', 'ベ', 'ペ', 'ホ', 'ボ', 'ポ', 'マ', 'ミ', 'ム', 'メ', 'モ', 'ャ', 'ヤ', 'ュ', 'ユ', 'ョ', 'ヨ', 'ラ', 'リ', 'ル', 'レ', 'ロ', 'ヮ', 'ワ', 'ヰ', 'ヱ', 'ヲ', 'ン', 'ヴ', 'ヵ', 'ヶ', '゛', '゜']
     
+    function is_kanji(chr) {
+        if(chr.charCodeAt(0) >= 0x4E00 && chr.charCodeAt(0) <= 0x9fff) {
+            return true
+        }
+        return false
+    }
+
+    function clean_kanji(input) {
+        var valid = false
+        for(var i = 0; i < input.length; i++)
+        {
+            var chr = input[i]
+            if(is_kanji(chr)) {
+                valid = true
+                break
+            }
+        }
+        if(valid) {
+            return input
+        }
+
+        return ""
+    }
     let srcinput = "";
     function HandleInput() {
         var lines = srcinput.split('\n');
@@ -84,33 +107,28 @@
                 // Check if there are kanji in the word. If there aren't, just fill kana
                 
                 var word = segments[0];
-                var iskana = true;
-                for(var c = 0; c < word.length; c++)
-                {
-                    if(allkana.indexOf(word[c]) == -1)
-                    {
-                        iskana = false;
-                        continue;
-                    }
+                var ver = clean_kanji(word)
+                if(ver == "") {
+                    kanji = ""
+                    kana = word
+                } else {
+                    kanji = word
+                    kana = ""
                 }
-                if(iskana)
-                {
-                    kana = word;
-                } else 
-                {
-                    kanji = word;
-                }
-
             }
             else {
                 kanji = segments[0];
                 kanji = kanji.replace(/\s/g, '');
+                kanji = kanji.replace(/ /g, '');
+                kanji = clean_kanji(kanji)
                 
                 kana = segments[1] || "";
                 kana = kana.replace(/\s/g, '');
+                kana = kana.replace(/ /g, '');
                 
                 literal = segments[2] || "";
                 literal = literal.replace(/\s/g, '');
+                literal = literal.replace(/ /g, '');
             }
 
             kanji = kanji.replace("<br>", "");

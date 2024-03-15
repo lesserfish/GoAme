@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 const dotenv = require('dotenv');
 const fs = require('fs');
 const http = require('http')
@@ -64,7 +65,7 @@ AudioHandler.listen(port, (err) => {
     if(err){
         console.log(err)
     }
-  console.log(`[server]: Server is running at https://localhost:${port}`);
+  console.log(`[server]: Server is running at http://localhost:${port}`);
 });
 
 
@@ -79,8 +80,10 @@ async function GetFilepath(kana, kanji)
     
     console.log("[server]: File not found locally! Attempting third party download.")
     
-    var err = await DownloadFile(kana, kanji, fullpath)
+    var err = await TryDownloadFile(kana, kanji, fullpath)
+
     if(err){
+        console.log("[server]: " + err)
         return ""
     }
     return fullpath
@@ -92,7 +95,7 @@ function GetFilename(kana)
     return out
 }
 
-async function DownloadFile(kana, kanji, fullpath)
+async function TryDownloadFile(kana, kanji, fullpath)
 {
     tmppath = tmpdir + "/" + "ah_tmp_" + String(Math.floor(Math.random() * 10000000)) + ".mp3"
     var URI = ""
@@ -102,17 +105,12 @@ async function DownloadFile(kana, kanji, fullpath)
        URI = `http://assets.languagepod101.com/dictionary/japanese/audiomp3.php?kana=${kana}&kanji=${kanji}`
     }
 
-    var tmpfile = fs.createWriteStream(tmppath)
-    
-    await new Promise((resolve, reject) => {
-        http.get(URI, (response) => {
-            response.pipe(tmpfile)
-            response.on("end", () => {
-                tmpfile.close()
-                resolve()
-            })
-        })
-    })
+
+    var total_size = await downloadFile(URI, tmppath)
+    if(total_size <= 0)
+    {
+        return new Error("[server]: Empty file!")
+    }
 
     isValid = await CheckValidity(tmppath)
 
@@ -121,7 +119,7 @@ async function DownloadFile(kana, kanji, fullpath)
         return null
     }
     else {
-        return new Error("[server]: File does not exist!")
+        return new Error("[server]: File "+ tmppath+" is not valid!")
     }
     
 }
@@ -145,4 +143,33 @@ async function checksumFile(path) {
   }).then(function(output) {
       return output
   })
+}
+
+
+async function downloadFile(URI, tmppath) {
+    console.log("Downloading " + URI);
+
+    const writer = fs.createWriteStream(tmppath);
+
+    const response = await axios({
+        method: 'get',
+        url: URI,
+        responseType: 'stream',
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+        }
+    });
+
+    response.data.pipe(writer);
+
+    return new Promise((resolve, reject) => {
+        writer.on('finish', () => {
+            console.log('File downloaded successfully to ' + tmppath);
+            resolve();
+        });
+
+        writer.on('error', (err) => {
+            reject(err);
+        });
+    });
 }

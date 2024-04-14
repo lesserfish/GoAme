@@ -103,6 +103,15 @@ func (server Server) GetHandler(rw http.ResponseWriter, r *http.Request) {
 	progress := result["Progress"]
 
 	if status == "Success" {
+        
+        _, err := uuid.Parse(reqid)
+
+        if err != nil {
+            ErrorResponse(rw, "Invalid ID", http.StatusBadRequest)
+            log.Println(err)
+            return        
+        }
+
 		filename := DownloadDirectory + "/" + GetZipnameFromID(uuid.MustParse(reqid))
 		rw.Header().Add("content-disposition", "filename=\"out.zip\"")
 		rw.Header().Set("Content-Type", "application/zip")

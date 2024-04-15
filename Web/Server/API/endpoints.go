@@ -81,189 +81,191 @@ func (server Server) AcceptRequest(id uuid.UUID) {
 func (server Server) GetHandler(rw http.ResponseWriter, r *http.Request) {
 	reqid := r.FormValue("id")
 	if reqid == "" {
-		ErrorResponse(rw, "Failed to specify id", http.StatusBadRequest)
-	}
+        ErrorResponse(rw, "Failed to specify id", http.StatusBadRequest)
+    }
 
-	redisout := getRedisInstance().HGetAll(ctx, reqid)
+    _, err := uuid.Parse(reqid)
 
-	result, err := redisout.Result()
+    if err != nil {
+        ErrorResponse(rw, "Invalid ID", http.StatusBadRequest)
+        log.Println(err)
+        return        
+    }
 
-	if err != nil {
-		ErrorResponse(rw, "Internal error", http.StatusInternalServerError)
-		log.Println(err)
-		return
-	}
+    redisout := getRedisInstance().HGetAll(ctx, reqid)
 
-	if len(result) == 0 {
-		ErrorResponse(rw, "ID not found", http.StatusBadRequest)
-		log.Println(err)
-		return
-	}
-	status := result["Status"]
-	progress := result["Progress"]
+    result, err := redisout.Result()
 
-	if status == "Success" {
-        
-        _, err := uuid.Parse(reqid)
+    if err != nil {
+        ErrorResponse(rw, "Internal error", http.StatusInternalServerError)
+        log.Println(err)
+        return
+    }
 
-        if err != nil {
-            ErrorResponse(rw, "Invalid ID", http.StatusBadRequest)
-            log.Println(err)
-            return        
-        }
+    if len(result) == 0 {
+        ErrorResponse(rw, "ID not found", http.StatusBadRequest)
+        log.Println(err)
+        return
+    }
+    status := result["Status"]
+    progress := result["Progress"]
 
-		filename := DownloadDirectory + "/" + GetZipnameFromID(uuid.MustParse(reqid))
-		rw.Header().Add("content-disposition", "filename=\"out.zip\"")
-		rw.Header().Set("Content-Type", "application/zip")
-		rw.WriteHeader(http.StatusOK)
-		http.ServeFile(rw, r, filename)
-	} else {
+    if status == "Success" {
 
-		rw.Header().Set("Content-Type", "application/json")
-		rw.WriteHeader(http.StatusOK)
 
-		response := make(map[string]string)
-		response["Message"] = "OK"
-		response["Status"] = status
-		response["Progress"] = progress
 
-		byteresponse, _ := json.Marshal(response)
-		rw.Write(byteresponse)
-	}
+        filename := DownloadDirectory + "/" + GetZipnameFromID(uuid.MustParse(reqid))
+        rw.Header().Add("content-disposition", "filename=\"out.zip\"")
+        rw.Header().Set("Content-Type", "application/zip")
+        rw.WriteHeader(http.StatusOK)
+        http.ServeFile(rw, r, filename)
+    } else {
+
+        rw.Header().Set("Content-Type", "application/json")
+        rw.WriteHeader(http.StatusOK)
+
+        response := make(map[string]string)
+        response["Message"] = "OK"
+        response["Status"] = status
+        response["Progress"] = progress
+
+        byteresponse, _ := json.Marshal(response)
+        rw.Write(byteresponse)
+    }
 
 }
 
 func (server Server) HelpHandler(rw http.ResponseWriter, r *http.Request) {
-	kanji := r.FormValue("word")
-	if kanji == "" {
-		ErrorResponse(rw, "Failed to specify Kanji", http.StatusBadRequest)
-	}
+    kanji := r.FormValue("word")
+    if kanji == "" {
+        ErrorResponse(rw, "Failed to specify Kanji", http.StatusBadRequest)
+    }
 
-	smtm, err := server.DB.Prepare("SELECT kana FROM kanjikana where kanji == ?;")
+    smtm, err := server.DB.Prepare("SELECT kana FROM kanjikana where kanji == ?;")
 
-	if err != nil {
-		ErrorResponse(rw, "Internal error", http.StatusInternalServerError)
-		log.Println(err)
-		return
-	}
-	KKRow := []string{}
-	rows, err := smtm.Query(kanji)
+    if err != nil {
+        ErrorResponse(rw, "Internal error", http.StatusInternalServerError)
+        log.Println(err)
+        return
+    }
+    KKRow := []string{}
+    rows, err := smtm.Query(kanji)
 
-	if err != nil {
-		ErrorResponse(rw, "Internal Error", http.StatusInternalServerError)
-		return
-	}
+    if err != nil {
+        ErrorResponse(rw, "Internal Error", http.StatusInternalServerError)
+        return
+    }
 
-	for rows.Next() {
-		var kanjireading string
-		rows.Scan(&kanjireading)
+    for rows.Next() {
+        var kanjireading string
+        rows.Scan(&kanjireading)
 
-		KKRow = append(KKRow, kanjireading)
-	}
+        KKRow = append(KKRow, kanjireading)
+    }
 
-	rw.Header().Set("Content-Type", "application/json")
-	rw.WriteHeader(http.StatusOK)
+    rw.Header().Set("Content-Type", "application/json")
+    rw.WriteHeader(http.StatusOK)
 
-	response := struct {
-		Message  string
-		Response struct {
-			Kanji string
-			Kana  []string
-		}
-	}{}
+    response := struct {
+        Message  string
+        Response struct {
+            Kanji string
+            Kana  []string
+        }
+    }{}
 
-	response.Message = "OK"
-	response.Response = struct {
-		Kanji string
-		Kana  []string
-	}{kanji, KKRow}
+    response.Message = "OK"
+    response.Response = struct {
+        Kanji string
+        Kana  []string
+    }{kanji, KKRow}
 
-	byteresponse, _ := json.Marshal(response)
-	rw.Write(byteresponse)
+    byteresponse, _ := json.Marshal(response)
+    rw.Write(byteresponse)
 
 }
 func (server Server) HelpHandler2(rw http.ResponseWriter, r *http.Request) {
 
-	body, err := ioutil.ReadAll(r.Body)
+    body, err := ioutil.ReadAll(r.Body)
 
-	if err != nil {
-		ErrorResponse(rw, "Failed to parse body", http.StatusBadRequest)
-		log.Println(err)
-		return
-	}
+    if err != nil {
+        ErrorResponse(rw, "Failed to parse body", http.StatusBadRequest)
+        log.Println(err)
+        return
+    }
 
-	var RawRequestedWords []string
+    var RawRequestedWords []string
 
-	err = json.Unmarshal(body, &RawRequestedWords)
+    err = json.Unmarshal(body, &RawRequestedWords)
 
-	if err != nil {
-		ErrorResponse(rw, "Failed to parse body", http.StatusBadRequest)
-		log.Println(err)
-		return
-	}
-	RequestedWords := []string{}
+    if err != nil {
+        ErrorResponse(rw, "Failed to parse body", http.StatusBadRequest)
+        log.Println(err)
+        return
+    }
+    RequestedWords := []string{}
 
-	for id, rawword := range RawRequestedWords {
-		if id >= int(maxhelprequests) {
-			break
-		}
+    for id, rawword := range RawRequestedWords {
+        if id >= int(maxhelprequests) {
+            break
+        }
 
-		sanitizedword := "\"" + server.bmondai.Sanitize(rawword) + "\""
-		RequestedWords = append(RequestedWords, sanitizedword)
+        sanitizedword := "\"" + server.bmondai.Sanitize(rawword) + "\""
+        RequestedWords = append(RequestedWords, sanitizedword)
 
-	}
-	RequestArray := strings.Join(RequestedWords, ",")
+    }
+    RequestArray := strings.Join(RequestedWords, ",")
 
-	smtm, err := server.DB.Prepare(fmt.Sprintf("SELECT kanji,kana FROM kanjikana where kanji IN (%s);", RequestArray))
+    smtm, err := server.DB.Prepare(fmt.Sprintf("SELECT kanji,kana FROM kanjikana where kanji IN (%s);", RequestArray))
 
-	if err != nil {
-		ErrorResponse(rw, "Internal error", http.StatusInternalServerError)
-		log.Println(err)
-		return
-	}
+    if err != nil {
+        ErrorResponse(rw, "Internal error", http.StatusInternalServerError)
+        log.Println(err)
+        return
+    }
 
-	rows, err := smtm.Query()
+    rows, err := smtm.Query()
 
-	if err != nil {
-		ErrorResponse(rw, "Internal Error", http.StatusInternalServerError)
-		log.Println(err)
-		return
-	}
-	Output := make(map[string][]string)
+    if err != nil {
+        ErrorResponse(rw, "Internal Error", http.StatusInternalServerError)
+        log.Println(err)
+        return
+    }
+    Output := make(map[string][]string)
 
-	for rows.Next() {
-		var word string
-		var reading string
+    for rows.Next() {
+        var word string
+        var reading string
 
-		err := rows.Scan(&word, &reading)
+        err := rows.Scan(&word, &reading)
 
-		if err != nil {
-			ErrorResponse(rw, "Failed to parse request", http.StatusBadRequest)
-			return
-		}
-		Output[word] = append(Output[word], reading)
-	}
+        if err != nil {
+            ErrorResponse(rw, "Failed to parse request", http.StatusBadRequest)
+            return
+        }
+        Output[word] = append(Output[word], reading)
+    }
 
-	rw.Header().Set("Content-Type", "application/json")
-	rw.WriteHeader(http.StatusOK)
+    rw.Header().Set("Content-Type", "application/json")
+    rw.WriteHeader(http.StatusOK)
 
-	response := struct {
-		Message  string
-		Response map[string][]string
-	}{}
+    response := struct {
+        Message  string
+        Response map[string][]string
+    }{}
 
-	response.Message = "OK"
-	response.Response = Output
+    response.Message = "OK"
+    response.Response = Output
 
-	byteresponse, err := json.Marshal(response)
-	if err != nil {
-		ErrorResponse(rw, "Internal Error", http.StatusInternalServerError)
-		return
-	}
-	rw.Write(byteresponse)
+    byteresponse, err := json.Marshal(response)
+    if err != nil {
+        ErrorResponse(rw, "Internal Error", http.StatusInternalServerError)
+        return
+    }
+    rw.Write(byteresponse)
 
 }
 func GetZipnameFromID(id uuid.UUID) string {
-	out := "out_" + id.String() + ".zip"
-	return out
+    out := "out_" + id.String() + ".zip"
+    return out
 }

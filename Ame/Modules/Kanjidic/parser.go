@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"os"
+    "fmt"
 )
 
 type Kanjidic struct {
@@ -122,50 +123,64 @@ func KeymapFromEntry(characters *[]Character) (out map[string]string, err error)
 
 	kanji_info_ext := "<div class = 'kanji_info'>"
 	kanji_info_basic := "<div class = 'kanji_info'>"
+    kanji_count := 1
+
 	for _, char := range *characters {
-		kanji_info := "<div class = 'kanji_instance'>"
 
-		kanji_info += "<div class = 'literal'>"
-		kanji_info += char.Literal
-		kanji_info += "</div>"
+		instance_info := "<div class = 'kanji_instance'>"
 
-		kanji_info += "<div class = meanings>"
-		kanji_info += "<ol>"
+        literal_info := "<div class = 'literal'>"
+		literal_info += char.Literal
+		literal_info += "</div>"
+
+        instance_info += literal_info
+
+        key := fmt.Sprintf("literal_%d", kanji_count)
+        out[key] = literal_info
+
+		instance_info += "<div class = meanings>"
+		instance_info += "<ol>"
 		for _, meaning := range char.ReadingMeaning.Rmgroup.Meaning {
 
 			if meaning.MLang != "" { // Skip non-english meanings
 				continue
 			}
 			text := "<li>" + meaning.Text + "</li>"
-			kanji_info += text
+			instance_info += text
 		}
-		kanji_info += "</ol>"
-		kanji_info += "</div>"
+		instance_info += "</ol>"
+		instance_info += "</div>"
 
-		kanji_info += "<div class = readings>"
-		kanji_info += "<ul>"
+		instance_info += "<div class = readings>"
+		instance_info += "<ul>"
 		for _, reading := range char.ReadingMeaning.Rmgroup.Reading {
 			if reading.RType != "ja_on" && reading.RType != "ja_kun" {
 				continue
 			}
 			text := "<li>" + reading.Text + "</li>"
-			kanji_info += text
+			instance_info += text
 		}
-		kanji_info += "</ul>"
-		kanji_info += "</div>"
+		instance_info += "</ul>"
+		instance_info += "</div>"
 
-		kanji_info_basic += kanji_info + "</div>"
+		kanji_info_basic += instance_info + "</div>"
+        key = fmt.Sprintf("kanjiinfo_%d", kanji_count)
+        out[key] = instance_info
 
-		kanji_info += "<div class='misc'>"
-		kanji_info += "<div class='grade'> Grade: " + char.Misc.Grade + "</div>"
-		kanji_info += "<div class='strokecount'> Stroke count: " + char.Misc.StrokeCount + "</div>"
-		kanji_info += "<div class='jlpt'> JLPT: " + char.Misc.Jlpt + "</div>"
-		kanji_info += "<div class='freq'> Frequency: " + char.Misc.Freq + "</div>"
-		kanji_info += "</div>"
+		instance_info += "<div class='misc'>"
+		instance_info += "<div class='grade'> Grade: " + char.Misc.Grade + "</div>"
+		instance_info += "<div class='strokecount'> Stroke count: " + char.Misc.StrokeCount + "</div>"
+		instance_info += "<div class='jlpt'> JLPT: " + char.Misc.Jlpt + "</div>"
+		instance_info += "<div class='freq'> Frequency: " + char.Misc.Freq + "</div>"
+		instance_info += "</div>"
 
-		kanji_info += "</div>"
+		instance_info += "</div>"
 
-		kanji_info_ext += kanji_info
+		kanji_info_ext += instance_info
+        key = fmt.Sprintf("kanjiinfoex_%d", kanji_count)
+        out[key] = instance_info
+
+        kanji_count += 1
 	}
 	kanji_info_basic += "</div>"
 	kanji_info_ext += "</div>"

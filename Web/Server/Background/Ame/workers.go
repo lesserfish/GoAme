@@ -97,6 +97,10 @@ func (worker Worker) Work() {
 			worker.LogProgress(message.UUID, p)
 		})
 
+
+        // TODO: Invoke Packager.py to create an .apkg file
+        // TODO: Remember to actually serve everything: anki_deck.txt, Media Files AND the newly created .apkg
+
 		// Create zip file and move it to Download directory
 
 		zipdir := StorageDirectory + "/" + GetZipnameFromID(message.UUID)

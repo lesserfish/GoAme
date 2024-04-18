@@ -17,9 +17,7 @@ import (
 )
 
 type Configuration map[string]map[string]string
-type Input struct {
-	Input    []module.Input
-}
+type Input []module.Input
 
 type AmeKanji struct {
 	modules    []module.Module
@@ -190,32 +188,27 @@ func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string
 		activeModules = append(activeModules, module)
 	}
 
-	for id := range input.Input {
-
-        for key, value := range input.Input[id] {
-            fmt.Printf("%s: %s\n", key, value)
-        }
+	for id := range input {
 
 		var progress float64 = 0.0
-		progress = float64(id) / float64(len(input.Input))
+		progress = float64(id) / float64(len(input))
 
-        // TODO: CHANGE 10 TO A VARIABLE
-		currentCard := module.NewCard(10)
+		currentCard := module.NewCard()
 
 		for _, mod := range activeModules {
-			err := mod.Render(input.Input[id], &currentCard)
+			err := mod.Render(input[id], &currentCard)
 
 			if err != nil {
-				currentinput := CleanInput(input.Input[id])
+				currentinput := CleanInput(input[id])
 				errmsg := fmt.Sprintf("Error rendering card %s.\nError: %s", currentinput, err.Error())
 				errorlog += errmsg + "\n"
 			}
 		}
 		// Anki Module
 
-		err := ameKanji.ankiModule.Render(input.Input[id], &currentCard)
+		err := ameKanji.ankiModule.Render(input[id], &currentCard)
 		if err != nil {
-			currentinput := CleanInput(input.Input[id])
+			currentinput := CleanInput(input[id])
 			errmsg := fmt.Sprintf("Error rendering card %s.\nError: %s", currentinput, err.Error())
 			errorlog += errmsg + "\n"
 		}

@@ -66,7 +66,7 @@ func (parser Kanjidic_Module) Render(input module.Input, card *module.Card) erro
 
     card.AddToFields("Kanjiinfo", keymap["kanjiinfo"])
     card.AddToFields("Kanjiinfoex", keymap["kanjiinfoex"])
-    card.AddToFields("Literal", keymap["literals"])
+    card.AddToFields("Literal", keymap["literal"])
 
     // Not optimal, but cleaner, I think...
     for i := 1; i < 100; i++ {

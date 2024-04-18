@@ -2,7 +2,6 @@ package module
 
 import (
     "strconv"
-    "fmt"
 )
 
 type Input map[string]string
@@ -35,7 +34,7 @@ func PrepareArrays(keyword string, max_selection int) []string {
     }
     return output
 }
-func NewCard(max_selection int) Card {
+func NewCard() Card {
     card := Card{
         Kanaword:     "",
         Kanjiword:    "",
@@ -92,8 +91,7 @@ func StandardizeStrings (input []string, max_selection int) string {
     out := ""
     for i := 0; i < max_selection; i++ {
         if len(input) > i {
-            fmt.Printf(">>> %s", input[i])
-            out += input[i] + ";"
+            out += "\"" + input[i] + "\";"
         } else {
             out += ";"
         }
@@ -101,20 +99,20 @@ func StandardizeStrings (input []string, max_selection int) string {
     return out
 }
 func (card Card) Render(max_selection int) (out string) {
-    out += card.Kanaword + ";"
-    out += card.Kanjiword + ";"
-    out += card.Audio + ";"
-    out += card.Sense + ";"
-    out += card.Kanjiinfo + ";"
+    out += "\"" + card.Kanaword + "\";"
+    out += "\"" + card.Kanjiword + "\";"
+    out += "\"" + card.Audio + "\";"
+    out += "\"" + card.Sense + "\";"
+    out += "\"" + card.Kanjiinfo + "\";"
     out += StandardizeStrings(card.Kanjisinfo, max_selection)
-    out += card.Kanjiinfoex + ";"
+    out += "\"" + card.Kanjiinfoex + "\";"
     out += StandardizeStrings(card.Kanjisinfoex, max_selection)
-    out += card.Stroke + ";"
+    out += "\"" + card.Stroke + "\";"
     out += StandardizeStrings(card.Strokes, max_selection)
-    out += card.Literal + ";"
+    out += "\"" + card.Literal + "\";"
     out += StandardizeStrings(card.Literals, max_selection)
     out += StandardizeStrings(card.Examples, max_selection)
-    out += card.Tag
+    out += "\"" + card.Tag + "\""
     return out
 }
 

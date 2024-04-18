@@ -1,87 +1,149 @@
 package module
 
+import (
+    "strconv"
+    "fmt"
+)
+
 type Input map[string]string
 
 type Card struct {
-	Fields []string
+    Kanaword string
+    Kanjiword string
+    Audio string
+    Sense string
+    Kanjiinfo string
+    Kanjisinfo []string
+    Kanjiinfoex string
+    Kanjisinfoex []string
+    Stroke string
+    Strokes []string
+    Literal string
+    Literals []string
+    Examples []string
 	Tag    string
 }
+
 type Module interface {
-	Demo()
 	Render(Input, *Card) error
-	CSS() string
-	Active([]string) bool
 }
 
-func (card Card) Parse(keymap map[string]string, clear_unused bool) {
-	for id, field := range card.Fields {
-
-		rendered := ParseString(field, keymap, clear_unused)
-		card.Fields[id] = rendered
-	}
-
-	tag := ParseString(card.Tag, keymap, clear_unused)
-
-	card.Tag = tag
+func PrepareArrays(keyword string, max_selection int) []string {
+    var output []string
+    for i := 1; i <= max_selection; i++ {
+        output = append(output, "@{" + keyword + "_" + strconv.Itoa(i) + "}")
+    }
+    return output
 }
-func (card Card) AddToFields(content string) {
-	for id, field := range card.Fields {
-		newfield := field + content
-		card.Fields[id] = newfield
-	}
+func NewCard(max_selection int) Card {
+    card := Card{
+        Kanaword:     "",
+        Kanjiword:    "",
+        Audio:        "",
+        Sense:        "",
+        Kanjiinfo:    "",
+        Kanjisinfo:   make([]string, 0),
+        Kanjiinfoex:  "",
+        Kanjisinfoex: make([]string, 0),
+        Stroke:       "",
+        Strokes:      make([]string, 0),
+        Literal:      "",
+        Literals:     make([]string, 0),
+        Examples:     make([]string, 0),
+        Tag:          "",
+    }
+    return card
 }
 
-func (card Card) Render() (out string) {
-	for _, field := range card.Fields {
-		out += "\"" + field + "\"" + ";"
-	}
-	out += card.Tag
-
-	return out
+func (card *Card) AddToFields(field string, content string) {
+    switch field {
+    case "Kanaword":
+        card.Kanaword = content
+    case "Kanjiword":
+        card.Kanjiword = content
+    case "Audio":
+        card.Audio = content
+    case "Sense":
+        card.Sense = content
+    case "Kanjiinfo":
+        card.Kanjiinfo = content
+    case "Kanjisinfo":
+        card.Kanjisinfo = append(card.Kanjisinfo, content)
+    case "Kanjiinfoex":
+        card.Kanjiinfoex = content
+    case "Kanjisinfoex":
+        card.Kanjisinfoex = append(card.Kanjisinfoex, content)
+    case "Stroke":
+        card.Stroke = content
+    case "Strokes":
+        card.Strokes = append(card.Strokes, content)
+    case "Literal":
+        card.Literal = content
+    case "Literals":
+        card.Literals = append(card.Literals, content)
+    case "Examples":
+        card.Examples = append(card.Examples, content)
+    case "Tag":
+        card.Tag = content
+    }
 }
 
-func (card Card) Copy() Card {
-	newcard := Card{}
-	for _, field := range card.Fields {
-		newcard.Fields = append(newcard.Fields, field)
-	}
-	newcard.Tag = card.Tag
-	return newcard
+func StandardizeStrings (input []string, max_selection int) string {
+    out := ""
+    for i := 0; i < max_selection; i++ {
+        if len(input) > i {
+            fmt.Printf(">>> %s", input[i])
+            out += input[i] + ";"
+        } else {
+            out += ";"
+        }
+    }
+    return out
 }
-func ParseString(input string, keymap map[string]string, clear_unused bool) string {
-	for i, c := range input {
-		if c == '}' {
-			end := i
-
-			for start := end; start >= 0; start-- {
-				if start+1 >= len(input) {
-					continue
-				}
-				if input[start+1] == '{' && input[start] == '@' {
-					lowsegment := input[0:start]
-					highsegment := ""
-
-					if end+1 < len(input) {
-						highsegment = input[end+1:]
-					}
-
-					key := input[start+2 : end]
-
-					value, ok := keymap[key]
-
-					if !ok {
-						if !clear_unused {
-							break
-						}
-						value = ""
-					}
-
-					translation := lowsegment + value + highsegment
-					return ParseString(translation, keymap, clear_unused)
-				}
-			}
-		}
-	}
-
-	return input
+func (card Card) Render(max_selection int) (out string) {
+    out += card.Kanaword + ";"
+    out += card.Kanjiword + ";"
+    out += card.Audio + ";"
+    out += card.Sense + ";"
+    out += card.Kanjiinfo + ";"
+    out += StandardizeStrings(card.Kanjisinfo, max_selection)
+    out += card.Kanjiinfoex + ";"
+    out += StandardizeStrings(card.Kanjisinfoex, max_selection)
+    out += card.Stroke + ";"
+    out += StandardizeStrings(card.Strokes, max_selection)
+    out += card.Literal + ";"
+    out += StandardizeStrings(card.Literals, max_selection)
+    out += StandardizeStrings(card.Examples, max_selection)
+    out += card.Tag
+    return out
 }
+
+func (original Card) Copy() Card {
+    // Create a new Card instance
+    copiedCard := Card{
+        Kanaword:     original.Kanaword,
+        Kanjiword:    original.Kanjiword,
+        Audio:        original.Audio,
+        Sense:        original.Sense,
+        Kanjiinfo:    original.Kanjiinfo,
+        Kanjisinfo:   make([]string, len(original.Kanjisinfo)),
+        Kanjiinfoex:  original.Kanjiinfoex,
+        Kanjisinfoex: make([]string, len(original.Kanjisinfoex)),
+        Stroke:       original.Stroke,
+        Strokes:      make([]string, len(original.Strokes)),
+        Literal:      original.Literal,
+        Literals:     make([]string, len(original.Literals)),
+        Examples:     make([]string, len(original.Literals)),
+        Tag:          original.Tag,
+    }
+
+    // Copy slices to avoid modifying the original card's slices
+    copy(copiedCard.Kanjisinfo, original.Kanjisinfo)
+    copy(copiedCard.Kanjisinfoex, original.Kanjisinfoex)
+    copy(copiedCard.Strokes, original.Strokes)
+    copy(copiedCard.Literals, original.Literals)
+    copy(copiedCard.Examples, original.Examples)
+
+    return copiedCard
+}
+

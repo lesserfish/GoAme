@@ -21,20 +21,10 @@ func Initialize(options InitOptions) (*AnkiModule, error) {
 
 func (ankiModule AnkiModule) Close() {
 }
-func (ankiModule AnkiModule) Demo() {
-}
 func (ankiModule AnkiModule) Render(input module.Input, card *module.Card) (err error) {
 
-	for id, field := range card.Fields {
-		updated_field := strings.ReplaceAll(field, "\"", "\"\"")
-		card.Fields[id] = updated_field
-	}
-
-	updated_tag := strings.ReplaceAll(card.Tag, "\"", "\"\"")
-	card.Tag = updated_tag
-
-	out := make(map[string]string)
-	card.Parse(out, true)
+    // TODO: Do the rest
+	card.Tag = strings.ReplaceAll(card.Tag, "\"", "\"\"")
 	return nil
 }
 func (ankiModule AnkiModule) CSS() string {

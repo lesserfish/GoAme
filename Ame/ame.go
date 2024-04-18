@@ -18,7 +18,6 @@ import (
 
 type Configuration map[string]map[string]string
 type Input struct {
-	Template module.Card
 	Input    []module.Input
 }
 
@@ -182,27 +181,29 @@ func CleanInput(input map[string]string) string {
 	delete(copy, "savepath")
 	return fmt.Sprint(copy)
 }
+
 func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string, errorlog string) {
 
 	activeModules := []module.Module{}
 
 	for _, module := range ameKanji.modules {
-		if module.Active(input.Template.Fields) {
-			activeModules = append(activeModules, module)
-		}
+		activeModules = append(activeModules, module)
 	}
 
 	for id := range input.Input {
 
+        for key, value := range input.Input[id] {
+            fmt.Printf("%s: %s\n", key, value)
+        }
+
 		var progress float64 = 0.0
 		progress = float64(id) / float64(len(input.Input))
 
-		currentCard := input.Template.Copy()
-		currentCSS := ""
+        // TODO: CHANGE 10 TO A VARIABLE
+		currentCard := module.NewCard(10)
 
 		for _, mod := range activeModules {
 			err := mod.Render(input.Input[id], &currentCard)
-			currentCSS += mod.CSS()
 
 			if err != nil {
 				currentinput := CleanInput(input.Input[id])
@@ -210,11 +211,6 @@ func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string
 				errorlog += errmsg + "\n"
 			}
 		}
-		// Render CSS
-		CSSMap := make(map[string]string)
-		CSSMap["CSS"] = currentCSS
-		currentCard.Parse(CSSMap, false)
-
 		// Anki Module
 
 		err := ameKanji.ankiModule.Render(input.Input[id], &currentCard)
@@ -224,7 +220,8 @@ func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string
 			errorlog += errmsg + "\n"
 		}
 
-		out += currentCard.Render() + "\n"
+        // TODO: CHANGE 10 TO A VARIABLE
+		out += currentCard.Render(10) + "\n"
 
 		updatefunc(progress)
 	}

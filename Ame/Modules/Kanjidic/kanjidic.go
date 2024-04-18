@@ -45,9 +45,6 @@ func Initialize(options InitOptions) (*Kanjidic_Module, error) {
 func (parser Kanjidic_Module) Close() {
 
 }
-func (parser Kanjidic_Module) Demo() {
-
-}
 func (parser Kanjidic_Module) Render(input module.Input, card *module.Card) error {
 	if input["literal"] == "" {
 		return errors.New("No input given to Kanjidic module!")
@@ -67,33 +64,49 @@ func (parser Kanjidic_Module) Render(input module.Input, card *module.Card) erro
 		return err
 	}
 
-	card.Parse(keymap, false)
+    card.AddToFields("Kanjiinfo", keymap["kanjiinfo"])
+    card.AddToFields("Kanjiinfoex", keymap["kanjiinfoex"])
+    card.AddToFields("Literal", keymap["literals"])
+
+    // Not optimal, but cleaner, I think...
+    for i := 1; i < 100; i++ {
+
+        key := fmt.Sprintf("literal_%d", i)
+        value, exists := keymap[key]
+
+        if !exists {
+            break
+        }
+
+        card.AddToFields("Literals", value)
+    }
+    for i := 1; i < 100; i++ {
+
+        key := fmt.Sprintf("kanjiinfo_%d", i)
+        value, exists := keymap[key]
+
+        if !exists {
+            break
+        }
+
+        card.AddToFields("Kanjisinfo", value)
+    }
+
+    for i := 1; i < 100; i++ {
+
+        key := fmt.Sprintf("kanjiinfoex_%d", i)
+        value, exists := keymap[key]
+
+        if !exists {
+            break
+        }
+
+        card.AddToFields("Kanjisinfoex", value)
+    }
 
 	if err != nil {
 		return err
 	}
 
 	return nil
-}
-func (parser Kanjidic_Module) CSS() string {
-	return parser.CSSContent
-}
-func (parser Kanjidic_Module) Active(Fields []string) (out bool) {
-	keywords := []string{"kanjiinfo", "kanjiinfoex", "literal"}
-
-	out = false
-keyword_search:
-	for _, keyword := range keywords {
-		key := fmt.Sprintf("@{%s}", keyword)
-
-		for _, field := range Fields {
-			if strings.Contains(field, key) {
-				out = true
-				break keyword_search
-			}
-		}
-	}
-
-	return out
-
 }

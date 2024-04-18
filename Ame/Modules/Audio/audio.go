@@ -3,7 +3,6 @@ package audio
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -46,9 +45,6 @@ func Initialize(options InitOptions) (*AudioModule, error) {
 }
 
 func (audioModule AudioModule) Close() {
-}
-func (audioModule AudioModule) Demo() {
-
 }
 func (audioModule AudioModule) Render(input module.Input, card *module.Card) (err error) {
 
@@ -112,32 +108,11 @@ func (audioModule AudioModule) Render(input module.Input, card *module.Card) (er
 		return err
 	}
 
-	card.Parse(KeymapFromEntry(kanji, kana), false)
+    keymap := KeymapFromEntry(kanji, kana)
+    card.AddToFields("Audio", keymap["audio"])
 
 	return nil
 
-}
-func (audioModule AudioModule) Active(Fields []string) (out bool) {
-	keywords := []string{"audio"}
-
-	out = false
-keyword_search:
-	for _, keyword := range keywords {
-		key := fmt.Sprintf("@{%s}", keyword)
-
-		for _, field := range Fields {
-			if strings.Contains(field, key) {
-				out = true
-				break keyword_search
-			}
-		}
-	}
-
-	return out
-
-}
-func (audioModule AudioModule) CSS() string {
-	return audioModule.CSSContent
 }
 func SetHeaders(header *http.Header) {
 	header.Set("charset", "utf-8")

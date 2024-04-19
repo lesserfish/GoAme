@@ -13,9 +13,8 @@ import (
 	"github.com/streadway/amqp"
 )
 
-type PostStruct struct {
-	AmeInput ame.Input
-}
+type PostStruct = ame.Input 
+
 type Message struct {
 	UUID  uuid.UUID
 	Input ame.Input
@@ -41,7 +40,7 @@ func (server Server) PostHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	newid := uuid.New()
-	message := Message{newid, postStruct.AmeInput}
+	message := Message{newid, postStruct}
 
 	byteinfo, err := json.Marshal(message)
 

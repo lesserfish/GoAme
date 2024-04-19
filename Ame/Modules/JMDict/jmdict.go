@@ -2,7 +2,6 @@ package jmdict
 
 import (
 	"bytes"
-	"errors"
 	"io/ioutil"
 	"log"
 	"strings"
@@ -68,7 +67,7 @@ func (parser JMdictModule) Render(input module.Input, card *module.Card) error {
 	}
 
 	if ignore_kana && ignore_kanji {
-		return errors.New("No input given to JMdic module!")
+		return nil
 	}
 
 	kanji := input["kanjiword"]

@@ -25,6 +25,7 @@ var (
     IDshift           uint
     configuration     string
     DownloadDirectory string
+    ToolsDirectory string
     StorageDirectory  string
     PersistenceTime   float64
     CleanTime         float64
@@ -158,6 +159,7 @@ func main() {
     flag.UintVar(&IDshift, "idshift", 0, "Value of the starting ID of the workers")
     flag.StringVar(&configuration, "c", "", "Configuration file for Ame")
     flag.StringVar(&DownloadDirectory, "download", "/tmp", "Directory for storage of temporary files.")
+    flag.StringVar(&ToolsDirectory, "tools", "/tmp", "Directory for storage of resources.")
     flag.StringVar(&StorageDirectory, "storage", "/tmp", "Directory for storage of download files.")
     flag.Float64Var(&PersistenceTime, "persistence", 30, "Time zip files will stick around in minutes")
     flag.Float64Var(&CleanTime, "cleanperiod", 10, "Period for files to be deleted")

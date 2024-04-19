@@ -1,7 +1,7 @@
 <script>
     import { fly } from 'svelte/transition';
     import { onMount } from 'svelte';
-    const APIURI = "https://amekanji.com/api/"
+    const APIURI = window.location.origin + "/api/";
     const Pages = {
         Home: 'Home',
         Template: 'Template',
@@ -240,12 +240,7 @@
             InputForm.push(entry);
         }
 
-        var Request = {
-            "AmeInput" : {
-                "Template" : TemplateForm,
-                "Input" : InputForm
-            }
-        }
+        var Request = InputForm;
 
         var uri = APIURI + "post"
 

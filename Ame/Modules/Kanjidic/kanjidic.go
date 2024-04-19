@@ -2,7 +2,6 @@ package kanjidic
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -47,7 +46,7 @@ func (parser Kanjidic_Module) Close() {
 }
 func (parser Kanjidic_Module) Render(input module.Input, card *module.Card) error {
 	if input["literal"] == "" {
-		return errors.New("No input given to Kanjidic module!")
+		return nil
 	}
 
 	literal := input["literal"]

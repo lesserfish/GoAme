@@ -19,7 +19,7 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - "../Data/Redis:/Data"
+      - "/AmeData/Redis:/Data"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 1m
@@ -34,7 +34,7 @@ services:
       - TMP=/tmp
     volumes:
       - "./Server/AudioInterface:/AudioInterface"
-      - "../Data/Audio:/Storage"
+      - "/AmeData/Audio:/Storage"
     restart: always
     working_dir: /AudioInterface
     command: bash -c "npm install && node app.js configuration/404.mp3"
@@ -49,7 +49,7 @@ services:
     ports:
       - 9000:9000
     volumes:
-      - "../Data/Storage:/Storage"
+      - "/AmeData/Storage:/Storage"
       - "./Server/API:/Server"
       - "./Resources:/Resources"
       - "./healthcheck:/healthcheck"
@@ -69,10 +69,10 @@ services:
       - Resources=/Resources
       - AudioURI=http://audiointerface:9003/?
     volumes:
-      - "../Data/Storage:/Storage"
-      - "../Data/Workers/Ame/Downloads:/Downloads"
+      - "/AmeData/Storage:/Storage"
+      - "/AmeData/Workers/Ame/Downloads:/Downloads"
       - "./Server/Workers/:/Ame"
       - "./Resources:/Resources"
       - "./healthcheck:/healthcheck"
     restart: always
-    command: ["/Ame/AmeWorker", "-amqp", "amqp://rabbitmq", "-redis", "redis", "-storage", "/Storage", "-download", "/Downloads", "-c", "/Resources/configuration.json", "-n", "4"]
+    command: ["/Ame/AmeWorker", "-amqp", "amqp://rabbitmq", "-redis", "redis", "-storage", "/Storage", "-tools", "/Ame", "-download", "/Downloads", "-c", "/Resources/configuration.json", "-n", "4"]

@@ -126,12 +126,12 @@ func (server Server) CheckPostValidity(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		if len(request.AmeInput.Input) == 0 {
+		if len(request) == 0 {
 			ErrorResponse(rw, "Empty Request", http.StatusBadRequest)
 			return
 		}
 
-		if len(request.AmeInput.Input) > int(maxrequests) {
+		if len(request) > int(maxrequests) {
 			ErrorResponse(rw, "Request too large", http.StatusBadRequest)
 			return
 		}
@@ -174,7 +174,7 @@ func (server Server) RegisterRequest(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		reqsize := len(request.AmeInput.Input)
+		reqsize := len(request)
 
 		r.Body = ioutil.NopCloser(bytes.NewReader(body))
 

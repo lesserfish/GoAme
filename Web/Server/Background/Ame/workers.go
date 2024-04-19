@@ -4,12 +4,14 @@ import (
 	"archive/zip"
 	"encoding/json"
 	"fmt"
+    "bytes"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 	"strconv"
 	"time"
+    "os/exec"
 
 	"github.com/google/uuid"
 	ame "github.com/lesserfish/GoAme/Ame"
@@ -81,12 +83,12 @@ func (worker Worker) Work() {
 		if err1 != nil || err2 != nil {
 			msg.Ack(false)
 			worker.ReportError(message.UUID)
-			log.Println("Failed creating directory " + new_directory + ". Error: " + err.Error())
+			log.Println("Failed to create directory " + new_directory + ". Error: " + err.Error())
 			continue
 		}
 
-		for i := range message.Input.Input {
-			message.Input.Input[i]["savepath"] = new_media_directory
+		for i := range message.Input {
+			message.Input[i]["savepath"] = new_media_directory
 		}
 
 		deckfile := new_directory + "anki_deck.txt"
@@ -98,8 +100,18 @@ func (worker Worker) Work() {
 		})
 
 
-        // TODO: Invoke Packager.py to create an .apkg file
-        // TODO: Remember to actually serve everything: anki_deck.txt, Media Files AND the newly created .apkg
+        // Create .apkg
+        packager_path := ToolsDirectory + "/packager.py"
+        log.Println("Packager Path: " + packager_path)
+        pycmd := exec.Command("python3", packager_path, "-p", new_directory)
+        var stdout bytes.Buffer
+        pycmd.Stdout = &stdout
+        err = pycmd.Run()
+
+		if err != nil {
+            log.Println("Could not create .apkg file. Serving anyway. Error: " + err.Error())
+            log.Println("Stdout: " + stdout.String())
+		}
 
 		// Create zip file and move it to Download directory
 

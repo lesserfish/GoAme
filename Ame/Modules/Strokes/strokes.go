@@ -63,14 +63,19 @@ func Initialize(options InitOptions) (*StrokeModule, error) {
 func (strokeModule StrokeModule) Close() {
 }
 func (strokeModule StrokeModule) Render(input module.Input, card *module.Card) (err error) {
+    
+    if input["literal"] == "" {
+		return nil
+	}
+    if input["savepath"] == "" {
+		return errors.New("Unspecified output file path!")
+	}
+
+
 	literals := input["literal"]
 	savepath := input["savepath"]
 
 	output := []StrokeOutput{}
-
-	if savepath == "" {
-		return errors.New("Unspecified output file path!")
-	}
 
 	characters, err := kanjidic.FindEntry(&strokeModule.kanjimod.Dictionary, literals)
 

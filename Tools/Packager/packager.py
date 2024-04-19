@@ -1,6 +1,8 @@
 import genanki
 import csv
 import os
+import sys
+import argparse
 
 
 MODEL_ID = 1443365057
@@ -95,20 +97,22 @@ model = genanki.Model(
 
 
 def SafeCheck(PATH):
-    return True
+    if not os.path.isdir(PATH): sys.exit(2)
+    if not os.path.isdir(PATH + "/Media"): sys.exit(3)
+    if not os.path.isfile(PATH + "/anki_deck.txt"): sys.exit(4)
 
 def ListDirectory(dir):
     return [file for file in os.listdir(dir) if os.path.isfile(os.path.join(dir, file))]
 
 def Package(PATH):
-    deckfile = PATH + "/anki_deck.txt"
+    SafeCheck(PATH)
     deck = genanki.Deck(
         DECK_ID,
         "AmeKanji")
 
-    with open(deckfile, "r") as file:
+    # Add cards
+    with open(PATH + "/anki_deck.txt", "r") as file:
         csvfile = csv.reader(file, delimiter=';')
-        # Add cards
         for row in csvfile:
             cfields = row[:-1]
             ctags = row[-1:]
@@ -117,7 +121,28 @@ def Package(PATH):
                     fields=cfields,
                     tags=ctags)
             deck.add_note(note)
-        # Add media
-    genanki.Package(deck).write_to_file('anki_deck.apkg')
+    # Add media
+    package = genanki.Package(deck)
+    package.media_files = ListDirectory(PATH + "/Media")
+    genanki.Package(deck).write_to_file(PATH + '/anki_deck.apkg')
 
-Package(".")
+def main():
+    # Create ArgumentParser object
+    parser = argparse.ArgumentParser(description="Combines the output of GoAme to a .apkg file")
+
+    # Add arguments
+    parser.add_argument("-p", type=str, help="Path to the directory where the files are contained")
+    # Add more arguments as needed
+
+    # Parse the command-line arguments
+    args = parser.parse_args()
+    PATH = args.p
+
+    if PATH is None:
+        sys.exit(1)
+
+    Package(PATH)
+    sys.exit(0)
+
+if __name__ == "__main__":
+    main()

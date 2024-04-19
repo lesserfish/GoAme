@@ -7,16 +7,16 @@ out_file = "../../Resources/Database/API.sqlite"
 conn = sqlite3.connect(out_file)
 print("Creating tables...")
 try:
-    conn.execute("CREATE TABLE kanjikana (kanji TEXT UNIQUE, kana TEXT);")
+    conn.execute("CREATE TABLE kanjikana (kanji TEXT NOT NULL, kana TEXT NOT NULL);")
 except sqlite3.OperationalError:
     conn.execute("DROP TABLE kanjikana")
-    conn.execute("CREATE TABLE kanjikana (kanji TEXT, kana TEXT);")
+    conn.execute("CREATE TABLE kanjikana (kanji TEXT NOT NULL, kana TEXT NOT NULL);")
 
 try:
 	conn.execute("CREATE TABLE clients (ip TEXT NOT NULL, date TEXT, reqsize INTEGER);")
 except sqlite3.OperationalError:
     conn.execute("DROP TABLE clients")
-	conn.execute("CREATE TABLE clients (ip TEXT NOT NULL, date TEXT, reqsize INTEGER);")
+    conn.execute("CREATE TABLE clients (ip TEXT NOT NULL, date TEXT, reqsize INTEGER);")
 
 print("OK!")
 

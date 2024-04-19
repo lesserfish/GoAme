@@ -1,21 +1,8 @@
-{
-    "Template" : {
-        "Fields":["@{kanjiword} @{kanaword} @{sense}","@{example}", "@{audio}", "@{kanjiinfoex}", "@{stroke}"],
-        "Tag":"tag"
-    },
-    "Input" : [
-        {
-            "kanjiword" : "",
-            "kanaword" : "けど",
-            "literal" : "",
-            "savepath" : "/tmp"
-        },
-        {
-            "kanjiword" : "仕事",
-            "kanaword" : "",
-            "literal" : "",
-            "savepath" : "/tmp"
-        }
-
-    ]
-}
+[
+    {
+        "kanjiword": "食べる",
+        "kanaword": "",
+        "literal": "",
+        "savepath": "/tmp"
+    }
+]

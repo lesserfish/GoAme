@@ -2,7 +2,7 @@ import xml.etree.cElementTree as ET
 import sqlite3
 
 dict_file = "../../Resources/Repository/Vocabulary/JMdict_e_examp.xml"
-out_file = "../../Resources/Database/KanjiKana.sqlite"
+out_file = "../../Resources/Database/API.sqlite"
 
 conn = sqlite3.connect(out_file)
 print("Creating table...")

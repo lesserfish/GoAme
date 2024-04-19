@@ -54,7 +54,7 @@ services:
       - "./Resources:/Resources"
       - "./healthcheck:/healthcheck"
     restart: always
-    command: ["/Server/API", "-db", "/Resources/Database/KanjiKana.sqlite", "-amqp", "amqp://rabbitmq", "-redis", "redis", "-download", "/Storage", "-addr", "0.0.0.0", "-p", "9000", "-publicdir", "/Resources/public"]
+    command: ["/Server/API", "-db", "/Resources/Database/API.sqlite", "-amqp", "amqp://rabbitmq", "-redis", "redis", "-download", "/Storage", "-addr", "0.0.0.0", "-p", "9000", "-publicdir", "/Resources/public"]
   ameworker:
     build: ./docker-images/latest-ubuntu/
     depends_on:

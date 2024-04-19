@@ -1,9 +1,7 @@
 package examples
 
 import (
-	"bytes"
 	"database/sql"
-	"io/ioutil"
 	"log"
 	"math/rand"
 	"strconv"
@@ -18,7 +16,6 @@ type InitOptions struct {
 	DBPath      string
 	Shuffle     bool
 	Seed        int64
-	CSSPath     string
 	MaxExamples uint64
 }
 
@@ -30,7 +27,6 @@ type ExampleModule struct {
 	DB          *sql.DB
 	Shuffle     bool
 	Seed        int64
-	CSSContent  string
 	MaxExamples uint64
 }
 
@@ -50,13 +46,10 @@ func Initialize(options InitOptions) (*ExampleModule, error) {
 		newModule.Seed = time.Now().UnixMicro()
 	}
 
-	CSSdata, err := ioutil.ReadFile(options.CSSPath)
-
 	if err != nil {
 		return newModule, err
 	}
 
-	newModule.CSSContent = strings.ReplaceAll(bytes.NewBuffer(CSSdata).String(), "\n", "")
 	log.Println("Example Module initialized!")
 	return newModule, nil
 }

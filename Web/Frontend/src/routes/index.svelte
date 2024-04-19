@@ -200,19 +200,7 @@
         window.$('#loadingModal').modal(option);
     }
     function SendForm() {
-        var chosentemplate = []
-        
-        if(template == Templates.JPENG){
-                chosentemplate = ["@{kanjiword} @{CSS}","@{kanaword}<br>@{sense}<br>@{audio}<br><br>@{example}@{CSS}"]
-        }else if(template ==  Templates.ENGJP){
-                chosentemplate = ["@{sense} @{CSS}","@{kanjiword}<br>@{kanaword}<br>@{sense}<br><br>@{audio}@{example}@{CSS}"]
-        }else if(template == Templates.Kanji){
-                chosentemplate = ["@{literal} @{CSS}","@{kanjiinfoex}<br>@{stroke}@{CSS}"]
-        } else if(template ==  Templates.Custom){
-                chosentemplate = customtemplate;
-        }
-        
-        var TemplateForm = {"Fields" : chosentemplate, "Tag" : tag};
+
         var InputForm = [];
 
         for(var i = 0; i < inputarray.length; i++) {
@@ -291,7 +279,6 @@
     }
     onMount(async () => {
         Cookie = LoadCookies();
-        customtemplate = Cookie.ctemplate || ["@{kanjiword} <br> @{kanaword} <br> @{audio} @{CSS}", "@{sense} @{kaniinfoex} @{stroke} @{CSS}"];
         inputarray = Cookie.input || [];
 
         // Check that no duplicate ids exist.
@@ -303,7 +290,6 @@
     function UpdateCookie()
     {
         Cookie.input = inputarray;
-        Cookie.ctemplate = customtemplate;
         SetCookie();
     }
     

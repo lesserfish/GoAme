@@ -53,9 +53,6 @@ func (ankiModule AnkiModule) Render(input module.Input, card *module.Card) (err 
 	card.Tag = FormatField(card.Tag)
 	return nil
 }
-func (ankiModule AnkiModule) CSS() string {
-	return ""
-}
 func (ankiModule AnkiModule) Active(Fields []string) (out bool) {
 	return true
 }

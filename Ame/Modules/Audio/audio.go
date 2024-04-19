@@ -1,10 +1,8 @@
 package audio
 
 import (
-	"bytes"
 	"errors"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -18,27 +16,17 @@ import (
 type InitOptions struct {
 	URI       string
 	JMdictMod *jmdict.JMdictModule
-	CSSPath   string
 }
 
 type AudioModule struct {
 	URI        string
 	JMdictMod  *jmdict.JMdictModule
-	CSSContent string
 }
 
 func Initialize(options InitOptions) (*AudioModule, error) {
 	newModule := new(AudioModule)
 	newModule.URI = options.URI
 	newModule.JMdictMod = options.JMdictMod
-
-	CSSdata, err := ioutil.ReadFile(options.CSSPath)
-
-	if err != nil {
-		return newModule, err
-	}
-
-	newModule.CSSContent = strings.ReplaceAll(bytes.NewBuffer(CSSdata).String(), "\n", "")
 
 	log.Println("Audio Module initialized!")
 	return newModule, nil

@@ -72,7 +72,6 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 		jmdict_init := jmdict.InitOptions{}
 		jmdict_init.DictionaryPath = config["JMdict"]["DictionaryPath"]
 		jmdict_init.FormatterPath = config["JMdict"]["FormatterPath"]
-		jmdict_init.CSSPath = config["JMdict"]["CSSPath"]
 
 		jmdict_mod, err := jmdict.Initialize(jmdict_init)
 
@@ -88,7 +87,6 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 				audio_init := audio.InitOptions{}
 				audio_init.URI = config["Audio"]["URI"]
 				audio_init.JMdictMod = jmdict_mod
-				audio_init.CSSPath = config["Audio"]["CSSPath"]
 
 				audio_mod, err := audio.Initialize(audio_init)
 
@@ -107,7 +105,6 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 	if kanjidic_ok {
 		kanjidic_init := kanjidic.InitOptions{}
 		kanjidic_init.DictionaryPath = config["Kanjidic"]["DictionaryPath"]
-		kanjidic_init.CSSPath = config["Kanjidic"]["CSSPath"]
 
 		kanjidic_mod, err := kanjidic.Initialize(kanjidic_init)
 
@@ -123,7 +120,6 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 				strokes_init := strokes.InitOptions{}
 				strokes_init.StrokePath = config["Strokes"]["StrokePath"]
 				strokes_init.Kanjimod = kanjidic_mod
-				strokes_init.CSSPath = config["Strokes"]["CSSPath"]
 				strokes_init.PreferJIS, _ = strconv.ParseBool(config["Strokes"]["PreferJIS"])
 
 				strokes_mod, err := strokes.Initialize(strokes_init)
@@ -143,7 +139,6 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 	if examples_ok {
 		examples_init := examples.InitOptions{}
 		examples_init.DBPath = config["Examples"]["DBPath"]
-		examples_init.CSSPath = config["Examples"]["CSSPath"]
 		examples_init.Seed, _ = strconv.ParseInt(config["Examples"]["Seed"], 10, 64)
 		examples_init.Shuffle, _ = strconv.ParseBool(config["Examples"]["Shuffle"])
 		examples_init.MaxExamples, _ = strconv.ParseUint(config["Examples"]["MaxExamples"], 10, 64)

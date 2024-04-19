@@ -53,7 +53,7 @@ func (audioModule AudioModule) Render(input module.Input, card *module.Card) (er
 	path := input["savepath"]
 
 	if kana == "" && kanji == "" {
-		return errors.New("no input given to JMdic module")
+		return nil
 	}
 	if kana == "" {
 		kana, err = GetKana(kanji, &audioModule.JMdictMod.Dictionary)

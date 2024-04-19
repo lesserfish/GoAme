@@ -123,8 +123,9 @@ def Package(PATH):
             deck.add_note(note)
     # Add media
     package = genanki.Package(deck)
-    package.media_files = ListDirectory(PATH + "/Media")
-    genanki.Package(deck).write_to_file(PATH + '/anki_deck.apkg')
+    files = [PATH + "/Media/" + filename for filename in ListDirectory(PATH + "/Media")]
+    package.media_files = files
+    package.write_to_file(PATH + '/anki_deck.apkg')
 
 def main():
     # Create ArgumentParser object

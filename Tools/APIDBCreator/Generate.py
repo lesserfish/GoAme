@@ -5,14 +5,20 @@ dict_file = "../../Resources/Repository/Vocabulary/JMdict_e_examp.xml"
 out_file = "../../Resources/Database/API.sqlite"
 
 conn = sqlite3.connect(out_file)
-print("Creating table...")
+print("Creating tables...")
 try:
     conn.execute("CREATE TABLE kanjikana (kanji TEXT UNIQUE, kana TEXT);")
-    print("Success!")
 except sqlite3.OperationalError:
     conn.execute("DROP TABLE kanjikana")
     conn.execute("CREATE TABLE kanjikana (kanji TEXT, kana TEXT);")
-    print("Table already exists. Recreated!")
+
+try:
+	conn.execute("CREATE TABLE clients (ip TEXT NOT NULL, date TEXT, reqsize INTEGER);")
+except sqlite3.OperationalError:
+    conn.execute("DROP TABLE clients")
+	conn.execute("CREATE TABLE clients (ip TEXT NOT NULL, date TEXT, reqsize INTEGER);")
+
+print("OK!")
 
 tree = ET.parse(dict_file)
 root = tree.getroot()

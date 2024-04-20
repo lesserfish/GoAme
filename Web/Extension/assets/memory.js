@@ -12,7 +12,7 @@ class Storage {
 
     #EntryToString(entry)
     {
-        var output = entry['w'] + ":" + entry['k'];
+        var output = entry['w'] + ":" + entry['k'] + ":" + entry['l'];
         return output;
     }
 
@@ -26,14 +26,19 @@ class Storage {
             }
             var w = "";
             var k = "";
+            var l = "";
             var components = entry.split(':');
             w = components[0];
             if(components.length > 1){
                 k = components[1];
             }
+            if(components.length > 2){
+                l = components[2];
+            }
             var word = {
               w: w,
               k: k,
+              l: l
             }
             memory.push(word)
         }

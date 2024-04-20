@@ -39,6 +39,7 @@ class AmeExtension {
 
         var aWord = [];
         var aKana = [];
+        var aLiteral = [];
 
         $(jObject).find(".concept_light-readings").find(".text").contents().each(function(index, element){
             var content = $(this).text().replace(/\s/g, "");
@@ -49,13 +50,15 @@ class AmeExtension {
             else {
                 aWord.push(content);
                 aKana.push(furigana.shift() || "");
+                aLiteral.push(content);
             }
         });
 
         var word = aWord.join("");
         var kana = aKana.join("");
+        var literal = aLiteral.join("");
 
-        return({w: word, k: kana});
+        return({w: word, k: kana, l: literal});
     }
 
     async #InjectFunctionality(inMemory, eState){
@@ -91,7 +94,6 @@ class AmeExtension {
         var reading = this.#GetReadings(entry);
         this.memory.push(reading);
         this.storage.SaveMemory(this.memory);
-        console.log(this.memory);
     }
 
     async #RemoveFromMemory(eState) {
@@ -101,7 +103,6 @@ class AmeExtension {
             return !(entry.w == reading.w && entry.k == reading.k);
         });
         this.storage.SaveMemory(this.memory);
-        console.log(this.memory);
     }
 
     async #CreateObserver(){

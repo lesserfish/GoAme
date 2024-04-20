@@ -45,7 +45,7 @@ def SplitMixed(words):
 def ParseDownload(response):
     content = response["Response"]
     content_group = [(key, content[key]) for key in list(content.keys())]
-    output = [(key, reading[Rank]) for (key, reading) in content_group if len(content_group) > Rank]
+    output = [(key, reading[Rank]) for (key, reading) in content_group if len(reading) > Rank]
     return output
 
 def DownloadReadings(mixed):
@@ -83,7 +83,14 @@ def DownloadWord(Kana, Kanji, ID):
 
     if os.path.exists(filepath) and not FORCE_DOWNLOAD:
         print(",", end="")
-        return 1
+        sys.stdout.flush()
+        return 0
+
+    missing_filepath = "Audio/Missing/" + GetName(Kana, Kanji)
+    if os.path.exists(missing_filepath) and not FORCE_DOWNLOAD:
+        print(",", end="")
+        sys.stdout.flush()
+        return 0
 
     URI = ConstructURI(Kana, Kanji)
     headers = {
@@ -93,11 +100,13 @@ def DownloadWord(Kana, Kanji, ID):
     response = requests.get(URI, headers=headers, stream=True)
 
     if response.status_code != 200:
-        #print("Could not download audio for ({}, {}). HTTP Response was {}".format(Kana, Kanji, response.status_code))
+        with open(missing_filepath, "wb") as file:
+            file.write(b"")
         return 0
 
     if not ValidateAudio(response.content):
-        #print("Could not download audio for ({}, {}). File does not exist.".format(Kana, Kanji))
+        with open(missing_filepath, "wb") as file:
+            file.write(b"")
         return 0
 
     with open(filepath, "wb") as file:
@@ -126,7 +135,7 @@ def Main(IDD):
     return total_downloads
 
 
-for i in range(58, 86):
+for i in range(0, 86):
     print("Downloading file {}".format(i))
     downloads = Main(i)
     print("Downloaded {} files.".format(downloads))

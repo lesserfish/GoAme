@@ -85,7 +85,7 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 			_, audio_ok := config["Audio"]
 			if audio_ok {
 				audio_init := audio.InitOptions{}
-				audio_init.URI = config["Audio"]["URI"]
+				audio_init.AudioPath = config["Audio"]["Path"]
 				audio_init.JMdictMod = jmdict_mod
 
 				audio_mod, err := audio.Initialize(audio_init)
@@ -166,6 +166,18 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 
 type UpdateFunc func(float64)
 
+func CharIsHiragana(c rune) bool {
+	return '\u3040' <= c && c <= '\u309F'
+}
+
+func CharIsKatakana(c rune) bool {
+	return '\u30A0' <= c && c <= '\u30FF'
+}
+
+func CharIsKanji (c rune) bool {
+	return ('\u4E00' <= c && c <= '\u9FaF') || ('\u3400' <= c && c <= '\u4DBf')
+}
+
 func CleanInput(input map[string]string) string {
 	copy := make(map[string]string)
 	for key, value := range input {
@@ -175,6 +187,36 @@ func CleanInput(input map[string]string) string {
 	return fmt.Sprint(copy)
 }
 
+func ValidateString(input string) bool {
+    for _, r := range input {
+        if !CharIsHiragana(r) && !CharIsKatakana(r) && !CharIsKanji(r) {
+            return false
+        }
+    }
+    return true
+}
+func ValidateInput(input map[string] string) bool {
+    
+    literal, exists := input["literal"]
+    if exists {
+        if !ValidateString(literal) {
+            return false
+        }
+    }
+    kanaword, exists := input["kanaword"]
+    if exists {
+        if !ValidateString(kanaword) {
+            return false
+        }
+    }
+    kanjiword, exists := input["kanjiword"]
+    if exists {
+        if !ValidateString(kanjiword) {
+            return false
+        }
+    }
+    return true
+}
 func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string, errorlog string) {
 
 	activeModules := []module.Module{}
@@ -184,6 +226,10 @@ func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string
 	}
 
 	for id := range input {
+        if !ValidateInput(input[id]){
+            continue
+        }
+
 
 		var progress float64 = 0.0
 		progress = float64(id) / float64(len(input))

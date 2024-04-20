@@ -1,33 +1,84 @@
 body {
+    height: 500px;
     width: 500px;
-    height: 580px;
-    overflow-x: hidden;
+    margin: 0 auto;
+    position: relative;
 }
-.container
-{
-    align-items: center;
+
+
+.header {
+    position: relative;
     text-align: center;
+    font-size: 28px;
+    margin-top: 10px;
+    height: 10%;
 }
 
-.content-holder {
-        left: 50%;
-        margin: auto;
-        height: 18em;
-        width: 80%; 
-        overflow-x: hidden;
-        overflow-y: auto;
-        text-align: center;
-        outline: 3px solid rgb(209, 209, 209);
-        box-shadow: 0 10px rgb(221, 221, 221);
-}
-.controls{
-    margin-top: 50px;
+.warning {
+    top: 25%;
+    font-size: 14px;
+    position: relative;
 }
 
-.cinput {
-    margin-top: 25px;
+.hidden {
+    display: none !important; /* Hide the warning message */
 }
-.fuckcss {
-    margin-left: 20%;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 80px); /* Adjust for margin-top of header */
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.menu {
+    display: flex;
+    align-items: center; /* Vertically center content */
+    flex: 0 0 10%;
+    background-color: #f4f4f4; /* Just for visualization */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds container height */
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.menu input[type="checkbox"] {
+  flex: 0 0 5%; /* 5% of the container width */
+  accent-color: #0e1137;
+}
+
+.entries {
+    flex: 1 1 80%;
+    background-color: white; /* Just for visualization */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds container height */
+}
+
+.input {
+    flex: 0 0 10%;
+    background-color: #f2f2f2; /* Just for visualization */
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  border: 1px solid #fafafa;
+  border-radius: 0px;
+  margin-top: 1px;
+}
+
+.entry input[type="checkbox"] {
+  flex: 0 0 5%; /* 5% of the container width */
+  accent-color: #0e1137;
+}
+
+.entry > div {
+  flex: 1; /* Fill remaining space */
+  margin: 0 10px; /* Adjust the margin for separation */
+  text-align: center; /* Center align text */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  font-family: 'Noto Sans JP', sans-serif;
 }
 

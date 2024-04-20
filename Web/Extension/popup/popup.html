@@ -1,51 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-        <link href="./popup.css" rel="stylesheet">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Empty Website</title>
+        <link rel="stylesheet" type="text/css" href="popup.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
     </head>
     <body>
-        <section class="section">
-            <div class="container">
-                <h1 id="Warning"></h1>
-                <div class="content-holder">
-                    <div id="content">
-                    </div>
+
+        <div class="header">
+            <div class="warning hidden">27 entries selected</div>
+            <div class="logo">雨</div>
+        </div>
+        <div class="container">
+            <div class="menu">
+                <input type="checkbox">
+            </div>
+            <div class="entries">
+                <div class="entry">
+                    <input type="checkbox">
+                    <div class="word">雨</div>
+                    <div class="reading">あめ</div>
                 </div>
-                <div class="controls">
-                    <button id="deleteall" class="button is-danger">Delete all</button>
-                    <div id="dropdown" class="dropdown">
-                        <div class="dropdown-trigger">
-                            <button id="dropdownclick" class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
-                                <span>Download</span>
-                                <span class="icon is-small">
-                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
-                                </span>
-                            </button>
-                        </div>
-                        <div class="dropdown-menu" id="dropdown-menu3" role="menu">
-                            <div class="dropdown-content">
-                                <a id='txtclick' href="#" class="dropdown-item"> TXT </a>
-                                <a id='jsonclick' href="#" class="dropdown-item"> Json </a>
-                                <a id='ameclick' href="#" class="dropdown-item"> Anki </a>
-                            </div>
-                        </div>
-                    </div>
+                <div class="entry">
+                    <input type="checkbox">
+                    <div class="word">減る</div>
+                    <div class="reading">へる</div>
                 </div>
-                <div class="field has-addons fuckcss">
-                    <div class="control">
-                        <textarea class="textarea cinput" id="custom_input" placeholder="食べる:たべる" rows="1"></textarea>
-                    </div>
-                    <div class="control">
-                        <a class="button is-info cinput" id="btn_input">
-                            Add
-                        </a>
-                    </div>
+                <div class="entry">
+                    <input type="checkbox"/>
+                    <div class="word">食べる</div>
+                    <div class="reading">たべる</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox">
+                    <div class="word">雨</div>
+                    <div class="reading">あめ</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox">
+                    <div class="word">減る</div>
+                    <div class="reading">へる</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox"/>
+                    <div class="word">食べる</div>
+                    <div class="reading">たべる</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox">
+                    <div class="word">雨</div>
+                    <div class="reading">あめ</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox">
+                    <div class="word">減る</div>
+                    <div class="reading">へる</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox"/>
+                    <div class="word">食べる</div>
+                    <div class="reading">たべる</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox">
+                    <div class="word">雨</div>
+                    <div class="reading">あめ</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox">
+                    <div class="word">減る</div>
+                    <div class="reading">へる</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox"/>
+                    <div class="word">食べる</div>
+                    <div class="reading">たべる</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox">
+                    <div class="word">雨</div>
+                    <div class="reading">あめ</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox">
+                    <div class="word">減る</div>
+                    <div class="reading">へる</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox"/>
+                    <div class="word">食べる</div>
+                    <div class="reading">たべる</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox">
+                    <div class="word">雨</div>
+                    <div class="reading">あめ</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox">
+                    <div class="word">減る</div>
+                    <div class="reading">へる</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox"/>
+                    <div class="word">食べる</div>
+                    <div class="reading">たべる</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox">
+                    <div class="word">雨</div>
+                    <div class="reading">あめ</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox">
+                    <div class="word">減る</div>
+                    <div class="reading">へる</div>
+                </div>
+                <div class="entry">
+                    <input type="checkbox"/>
+                    <div class="word">食べる</div>
+                    <div class="reading">たべる</div>
                 </div>
             </div>
-        </section>
-        <script src="./popup.js"></script>
+            <div class="input"></div>
+        </div>
     </body>
 </html>

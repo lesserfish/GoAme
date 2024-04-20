@@ -1,9 +1,12 @@
 import requests
+import os
 import sys
 import json
 import hashlib
 
 APIHelper = "https://www.amekanji.com/api/help"
+Rank = 0
+FORCE_DOWNLOAD = False
 
 def calculate_hash(file_contents):
     sha256_hash = hashlib.sha256()
@@ -42,7 +45,7 @@ def SplitMixed(words):
 def ParseDownload(response):
     content = response["Response"]
     content_group = [(key, content[key]) for key in list(content.keys())]
-    output = [(key, reading[0]) for (key, reading) in content_group if len(content_group) > 0]
+    output = [(key, reading[Rank]) for (key, reading) in content_group if len(content_group) > Rank]
     return output
 
 def DownloadReadings(mixed):
@@ -76,6 +79,12 @@ def GetName(Kana, Kanji):
     return Name
 
 def DownloadWord(Kana, Kanji, ID):
+    filepath = "Audio/{:02d}/".format(ID) + GetName(Kana, Kanji)
+
+    if os.path.exists(filepath) and not FORCE_DOWNLOAD:
+        print(",", end="")
+        return 1
+
     URI = ConstructURI(Kana, Kanji)
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
@@ -91,7 +100,6 @@ def DownloadWord(Kana, Kanji, ID):
         #print("Could not download audio for ({}, {}). File does not exist.".format(Kana, Kanji))
         return 0
 
-    filepath = "Audio/{:02d}/".format(ID) + GetName(Kana, Kanji)
     with open(filepath, "wb") as file:
         file.write(response.content)
     print(".", end="") 
@@ -118,7 +126,7 @@ def Main(IDD):
     return total_downloads
 
 
-for i in range(35, 86):
+for i in range(58, 86):
     print("Downloading file {}".format(i))
     downloads = Main(i)
     print("Downloaded {} files.".format(downloads))

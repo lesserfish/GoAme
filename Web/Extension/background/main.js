@@ -63,12 +63,12 @@ class AmeExtension {
 
     async #InjectFunctionality(inMemory, eState){
         if(inMemory) {
-            var newLink = $("<a href='#' class=''>Remove from memory</a>");
+            var newLink = $("<a href='#' class='concept_light-status_link helper'>Remove from memory</a>");
             newLink.click((e) => this.#DeregisterElement(e, newLink));
             eState.append(newLink);
         }
         else {
-            var newLink = $("<a href='#' class=''>Add to memory</a>");
+            var newLink = $("<a href='#' class='concept_light-status_link helper'>Add to memory</a>");
             newLink.click((e) => this.#RegisterElement(e, newLink));
             eState.append(newLink);
         }

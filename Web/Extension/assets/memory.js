@@ -10,7 +10,7 @@ class Storage {
         return "chunk_" + chunk_id.toString();
     }
 
-    #EntryToString(entry)
+    EntryToString(entry)
     {
         var output = entry['w'] + ":" + entry['k'] + ":" + entry['l'];
         return output;
@@ -77,7 +77,7 @@ class Storage {
         var current_chunk = ""
         for(var i = 0; i < memory.length; i++)
         {
-            var entry = this.#EntryToString(memory[i])
+            var entry = this.EntryToString(memory[i])
             if(this.#ByteSize(current_chunk) + this.#ByteSize("\n") + this.#ByteSize(entry) > MAX_SEG_SIZE)
             {
                 this.#SaveChunk(current_chunk, chunk_count);

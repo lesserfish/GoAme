@@ -1,4 +1,4 @@
-var MAX_SEG_SIZE = 8000
+var MAX_SEG_SIZE = 7500
 
 class Storage {
     #ByteSize(str)

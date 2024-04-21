@@ -163,9 +163,7 @@ class Popup {
         }
         else {
             var entries = content.split(/[\r\n;]+/);
-            console.log(entries);
             for(var i = 0; i < entries.length; i++){
-                console.log(entries[i]);
                 var segments = entries[i].split(/[:：]/);;
                 var w = segments[0] || "";
                 w = w.replace(/\s/g, "");
@@ -304,7 +302,17 @@ class Popup {
         var xmlHttpRequest = new XMLHttpRequest();
         xmlHttpRequest.open('POST', URI, false);
         xmlHttpRequest.setRequestHeader('Content-Type', 'application/json')
-        var requestbody = JSON.stringify(Request);
+
+        var request = [];
+        for(var i = 0; i < selected.length; i++){
+            var kanjiword = selected[i].w || "";
+            var kanaword = selected[i].k || "";
+            var literal = selected[i].l || "";
+
+            var card = {kanjiword : kanjiword, kanaword : kanaword, literal : literal};
+            request.push(card);
+        }
+        var requestbody = JSON.stringify(request);
         xmlHttpRequest.send(requestbody);
 
         if(xmlHttpRequest.status != 200){

@@ -33,30 +33,33 @@ class AmeExtension {
     {
         var furigana = [];
 
-        $(jObject).find(".concept_light-readings").find(".furigana").find(".kanji").each(function(index, element){
-            furigana.push($(this).text());
+        $(jObject).find(".concept_light-readings").find(".furigana").contents().each(function(index, element){
+            if(this.nodeName.toLowerCase() == "span"){
+                furigana.push($(this).text());
+            }
         });
 
-        var aWord = [];
-        var aKana = [];
-        var aLiteral = [];
 
-        $(jObject).find(".concept_light-readings").find(".text").contents().each(function(index, element){
-            var content = $(this).text().replace(/\s/g, "");
-            if(this.nodeName.toLowerCase() == "span"){
-                aWord.push(content);
-                aKana.push(content);
+        var word = $(jObject).find(".concept_light-readings").find(".text").text().replace(/\s+/g, '');
+
+        var kana = "";
+        var literal = "";
+        
+        var counter = 0;
+        for(var i = 0; i < furigana.length; i++){
+            var f = furigana[i];
+            if(f == ""){
+                if(word[i]){
+                    kana += word[i];
+                }
             }
             else {
-                aWord.push(content);
-                aKana.push(furigana.shift() || "");
-                aLiteral.push(content);
+                if(word[i]){
+                    literal += word[i];
+                }
+                kana += f;
             }
-        });
-
-        var word = aWord.join("");
-        var kana = aKana.join("");
-        var literal = aLiteral.join("");
+        }
 
         return({w: word, k: kana, l: literal});
     }

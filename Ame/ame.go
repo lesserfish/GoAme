@@ -178,11 +178,34 @@ func CharIsKanji (c rune) bool {
 	return ('\u4E00' <= c && c <= '\u9FaF') || ('\u3400' <= c && c <= '\u4DBf')
 }
 
-func CleanInput(input map[string]string) string {
+func CleanKanji(input string) string {
+    for _, c:= range input {
+        if CharIsKanji(c) {
+            return input
+        }
+    }
+    return ""
+}
+
+func CleanInput (input map[string]string) {
+    kanjiword, exists := input["kanjiword"]
+    if exists {
+        input["kanjiword"] = CleanKanji(kanjiword)
+    }
+}
+func CleanRender(input map[string]string) string {
 	copy := make(map[string]string)
 	for key, value := range input {
 		copy[key] = value
 	}
+
+    kanjiword, exists := input["kanjiword"]
+    if exists {
+        newkw := CleanKanji(kanjiword)
+        fmt.Printf("Changed %s to %s\n", kanjiword, newkw);
+        copy["kanjiword"] = CleanKanji(kanjiword)
+        fmt.Printf("Entry after update: %s\n", copy["kanjiword"])
+    }
 	delete(copy, "savepath")
 	return fmt.Sprint(copy)
 }
@@ -226,7 +249,11 @@ func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string
 	}
 
 	for id := range input {
-        if !ValidateInput(input[id]){
+
+        entry := input[id]
+        CleanInput(entry);
+
+        if !ValidateInput(entry){
             continue
         }
 
@@ -237,19 +264,20 @@ func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string
 		currentCard := module.NewCard()
 
 		for _, mod := range activeModules {
-			err := mod.Render(input[id], &currentCard)
+
+			err := mod.Render(entry, &currentCard)
 
 			if err != nil {
-				currentinput := CleanInput(input[id])
+				currentinput := CleanRender(entry)
 				errmsg := fmt.Sprintf("Error rendering card %s.\nError: %s", currentinput, err.Error())
 				errorlog += errmsg + "\n"
 			}
 		}
 		// Anki Module
 
-		err := ameKanji.ankiModule.Render(input[id], &currentCard)
+		err := ameKanji.ankiModule.Render(entry, &currentCard)
 		if err != nil {
-			currentinput := CleanInput(input[id])
+			currentinput := CleanRender(entry)
 			errmsg := fmt.Sprintf("Error rendering card %s.\nError: %s", currentinput, err.Error())
 			errorlog += errmsg + "\n"
 		}

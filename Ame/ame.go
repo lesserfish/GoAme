@@ -199,13 +199,6 @@ func CleanRender(input map[string]string) string {
 		copy[key] = value
 	}
 
-    kanjiword, exists := input["kanjiword"]
-    if exists {
-        newkw := CleanKanji(kanjiword)
-        fmt.Printf("Changed %s to %s\n", kanjiword, newkw);
-        copy["kanjiword"] = CleanKanji(kanjiword)
-        fmt.Printf("Entry after update: %s\n", copy["kanjiword"])
-    }
 	delete(copy, "savepath")
 	return fmt.Sprint(copy)
 }

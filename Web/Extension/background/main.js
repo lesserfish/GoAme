@@ -40,26 +40,38 @@ class AmeExtension {
         });
 
 
-        var word = $(jObject).find(".concept_light-readings").find(".text").text().replace(/\s+/g, '');
+        var text = [];
+        $(jObject).find(".concept_light-readings").find(".text").contents().each(function(index, element){
+            if(this.nodeName.toLowerCase() == "span"){
+                text.push($(this).text().replace(/\s/g, ''));
+            }
+        });
+
+        var word = $(jObject).find(".concept_light-readings").find(".text").text().replace(/\s/g, '');
 
         var kana = "";
-        var literal = "";
-        
         var counter = 0;
         for(var i = 0; i < furigana.length; i++){
             var f = furigana[i];
             if(f == ""){
-                if(word[i]){
-                    kana += word[i];
+                if(text[counter]){
+                    kana += text[counter];
+                    counter += 1;
                 }
             }
             else {
-                if(word[i]){
-                    literal += word[i];
-                }
                 kana += f;
             }
         }
+
+        var literal = "";
+
+        $(jObject).find(".concept_light-readings").find(".text").contents().each(function(index, element){
+            var content = $(this).text().replace(/\s/g, "");
+            if(this.nodeName.toLowerCase() != "span"){
+                literal += content;
+            }
+        });
 
         return({w: word, k: kana, l: literal});
     }

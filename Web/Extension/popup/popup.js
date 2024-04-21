@@ -171,7 +171,10 @@ class Popup {
                 k = k.replace(/\s/g, "");
                 var l = segments[2] || "";
                 l = l.replace(/\s/g, "");
-                object.push({w: w, k:k, l:l});
+
+                if(w != "" || k != ""){
+                    object.push({w: w, k:k, l:l});
+                }
             }
         }
         return object;

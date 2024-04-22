@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Empty Website</title>
+        <link rel="stylesheet" type="text/css" href="popup.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+        <script src="../assets/jquery-3.7.1.min.js"></script> 
+        <script src="../assets/memory.js"></script> 
+        <script src="./popup.js"></script>
+    </head>
+    <body>
+        <div class="header">
+            <div class="warning hidden">27 entries selected</div>
+            <div class="logo">雨</div>
+        </div>
+        <div class="container">
+            <div class="menu">
+                <input id="menu-checkbox" type="checkbox">
+                <div class="menu-right">
+                    <button id="trash-button" class="trash-icon disabled">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                    <div class="dropdown">
+                        <button id="download-button" class="download-icon disabled" onhover>
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <div class="download-options">
+                                <button id="download-txt" class="download-option">TXT File</button>
+                                <button id="download-json" class="download-option">Json File</button>
+                                <button id="download-anki" class="download-option">Anki deck</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="entries">
+            </div>
+            <div class="input">
+                <input type="text" class="manual-entry" id="manual-input">
+            </div>
+        </div>
+    </body>
+</html>

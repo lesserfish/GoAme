@@ -1,13 +1,7 @@
 package jmdict
 
 import (
-	"bytes"
-	"errors"
-	"fmt"
-	"io/ioutil"
 	"log"
-	"strings"
-
 	module "github.com/lesserfish/GoAme/Ame/Modules"
 )
 
@@ -16,12 +10,10 @@ type JMdictModule struct {
 	FormatterPath  string
 	Dictionary     JMdict
 	Formatter      RegexFormatter
-	CSSContent     string
 }
 type InitOptions struct {
 	DictionaryPath string
 	FormatterPath  string
-	CSSPath        string
 }
 
 func Initialize(options InitOptions) (*JMdictModule, error) {
@@ -44,20 +36,11 @@ func Initialize(options InitOptions) (*JMdictModule, error) {
 
 	}
 
-	CSSdata, err := ioutil.ReadFile(options.CSSPath)
-	if err != nil {
-		return newModule, err
-	}
-
-	newModule.CSSContent = strings.ReplaceAll(bytes.NewBuffer(CSSdata).String(), "\n", "")
-
 	log.Println("JMdict Module initialized!")
 	return newModule, nil
 }
 func (parser JMdictModule) Close() {
 
-}
-func (parser JMdictModule) Demo() {
 }
 func (parser JMdictModule) Render(input module.Input, card *module.Card) error {
 	ignore_kanji := false
@@ -71,7 +54,7 @@ func (parser JMdictModule) Render(input module.Input, card *module.Card) error {
 	}
 
 	if ignore_kana && ignore_kanji {
-		return errors.New("No input given to JMdic module!")
+		return nil
 	}
 
 	kanji := input["kanjiword"]
@@ -95,7 +78,9 @@ func (parser JMdictModule) Render(input module.Input, card *module.Card) error {
 		return err
 	}
 
-	card.Parse(keymap, false)
+    card.AddToFields("Kanjiword", keymap["kanjiword"])
+    card.AddToFields("Kanaword", keymap["kanaword"])
+    card.AddToFields("Sense", keymap["sense"])
 
 	if err != nil {
 		return err
@@ -103,25 +88,4 @@ func (parser JMdictModule) Render(input module.Input, card *module.Card) error {
 
 	return nil
 }
-func (parser JMdictModule) CSS() string {
-	return parser.CSSContent
-}
-func (parser JMdictModule) Active(Fields []string) (out bool) {
-	keywords := []string{"kanjiword", "kanaword", "sense"}
 
-	out = false
-keyword_search:
-	for _, keyword := range keywords {
-		key := fmt.Sprintf("@{%s}", keyword)
-
-		for _, field := range Fields {
-			if strings.Contains(field, key) {
-				out = true
-				break keyword_search
-			}
-		}
-	}
-
-	return out
-
-}

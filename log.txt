@@ -1,8 +1,0 @@
-Error rendering card map[kanaword:けど kanjiword: literal:].
-Error: Get "kana=%E3%81%91%E3%81%A9&kanji=": unsupported protocol scheme ""
-Error rendering card map[kanaword:けど kanjiword: literal:].
-Error: Failed to find any literal in .
-Error rendering card map[kanaword: kanjiword:仕事 literal:].
-Error: Get "kana=%E3%81%97%E3%81%94%E3%81%A8&kanji=%E4%BB%95%E4%BA%8B": unsupported protocol scheme ""
-Error rendering card map[kanaword: kanjiword:仕事 literal:].
-Error: Failed to find any literal in .

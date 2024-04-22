@@ -1,11 +1,9 @@
 package strokes
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
@@ -19,19 +17,18 @@ type InitOptions struct {
 	StrokePath string
 	Kanjimod   *kanjidic.Kanjidic_Module
 	PreferJIS  bool
-	CSSPath    string
 }
 
 type StrokeModule struct {
 	Path       string
 	kanjimod   *kanjidic.Kanjidic_Module
 	PreferJIS  bool
-	CSSContent string
 }
 
 type StrokeOutput struct {
 	Path string
 	Type string
+    ID int
 }
 
 func Initialize(options InitOptions) (*StrokeModule, error) {
@@ -46,14 +43,6 @@ func Initialize(options InitOptions) (*StrokeModule, error) {
 		return newModule, err
 	}
 
-	CSSdata, err := ioutil.ReadFile(options.CSSPath)
-
-	if err != nil {
-		return newModule, err
-	}
-
-	newModule.CSSContent = strings.ReplaceAll(bytes.NewBuffer(CSSdata).String(), "\n", "")
-
 	log.Println("Stroke Module initialized!")
 
 	return newModule, nil
@@ -61,18 +50,20 @@ func Initialize(options InitOptions) (*StrokeModule, error) {
 
 func (strokeModule StrokeModule) Close() {
 }
-func (strokeModule StrokeModule) Demo() {
-
-}
 func (strokeModule StrokeModule) Render(input module.Input, card *module.Card) (err error) {
+    
+    if input["literal"] == "" {
+		return nil
+	}
+    if input["savepath"] == "" {
+		return errors.New("Unspecified output file path!")
+	}
+
+
 	literals := input["literal"]
 	savepath := input["savepath"]
 
 	output := []StrokeOutput{}
-
-	if savepath == "" {
-		return errors.New("Unspecified output file path!")
-	}
 
 	characters, err := kanjidic.FindEntry(&strokeModule.kanjimod.Dictionary, literals)
 
@@ -80,7 +71,7 @@ func (strokeModule StrokeModule) Render(input module.Input, card *module.Card) (
 		return err
 	}
 
-	for _, character := range characters {
+	for id, character := range characters {
 		currentstroke := StrokeOutput{}
 		ANDAS := ""
 		JIS := ""
@@ -143,6 +134,8 @@ func (strokeModule StrokeModule) Render(input module.Input, card *module.Card) (
 			continue
 		}
 
+        currentstroke.ID = id
+
 		output = append(output, currentstroke)
 
 	}
@@ -152,30 +145,20 @@ func (strokeModule StrokeModule) Render(input module.Input, card *module.Card) (
 	if err != nil {
 		return err
 	}
-	card.Parse(KeymapFromEntry(output), false)
+
+    keymap := KeymapFromEntry(output)
+    card.AddToFields("Stroke", keymap["stroke"])
+    
+    for i := 1; i < 10; i++ {
+
+        key := fmt.Sprintf("stroke_%d", i)
+        value, exists := keymap[key]
+        if exists {
+            card.AddToFields("Strokes", value)
+        }
+    }
+
 	return nil
-}
-func (strokeModule StrokeModule) CSS() string {
-	return strokeModule.CSSContent
-}
-func (strokeModule StrokeModule) Active(Fields []string) (out bool) {
-	keywords := []string{"stroke"}
-
-	out = false
-keyword_search:
-	for _, keyword := range keywords {
-		key := fmt.Sprintf("@{%s}", keyword)
-
-		for _, field := range Fields {
-			if strings.Contains(field, key) {
-				out = true
-				break keyword_search
-			}
-		}
-	}
-
-	return out
-
 }
 func CopyOutput(output []StrokeOutput, inpath string, outpath string) (out error) {
 	for _, file := range output {
@@ -209,14 +192,18 @@ func CopyOutput(output []StrokeOutput, inpath string, outpath string) (out error
 	}
 	return out
 }
-func KeymapFromEntry(output []StrokeOutput) (out map[string]string) {
-	out = make(map[string]string)
+func KeymapFromEntry(stroke_output []StrokeOutput) (output map[string]string) {
+	output = make(map[string]string)
 
 	value := "<div class = 'stroke_set'>"
-	for _, out := range output {
-		value += "<div class = 'stroke " + out.Type + "'>" + "<img src='" + out.Path + "'>" + "</div>"
-	}
+	for _, stroke := range stroke_output {
+        instance := "<div class = 'stroke " + stroke.Type + "'>" + "<img src='" + stroke.Path + "'>" + "</div>"
+		value += instance
+
+        key := fmt.Sprintf("stroke_%d", stroke.ID)
+        output[key] = instance
+    }
 	value += "</div>"
-	out["stroke"] = value
-	return out
+	output["stroke"] = value
+	return output
 }

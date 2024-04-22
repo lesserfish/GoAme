@@ -13,9 +13,8 @@ import (
 	"github.com/streadway/amqp"
 )
 
-type PostStruct struct {
-	AmeInput ame.Input
-}
+type PostStruct = ame.Input 
+
 type Message struct {
 	UUID  uuid.UUID
 	Input ame.Input
@@ -41,7 +40,7 @@ func (server Server) PostHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	newid := uuid.New()
-	message := Message{newid, postStruct.AmeInput}
+	message := Message{newid, postStruct}
 
 	byteinfo, err := json.Marshal(message)
 
@@ -141,7 +140,7 @@ func (server Server) HelpHandler(rw http.ResponseWriter, r *http.Request) {
         ErrorResponse(rw, "Failed to specify Kanji", http.StatusBadRequest)
     }
 
-    smtm, err := server.DB.Prepare("SELECT kana FROM kanjikana where kanji == ?;")
+    smtm, err := server.DB.Prepare("SELECT kana FROM readings where kanji == ?;")
 
     if err != nil {
         ErrorResponse(rw, "Internal error", http.StatusInternalServerError)
@@ -216,7 +215,7 @@ func (server Server) HelpHandler2(rw http.ResponseWriter, r *http.Request) {
     }
     RequestArray := strings.Join(RequestedWords, ",")
 
-    smtm, err := server.DB.Prepare(fmt.Sprintf("SELECT kanji,kana FROM kanjikana where kanji IN (%s);", RequestArray))
+    smtm, err := server.DB.Prepare(fmt.Sprintf("SELECT kanji,kana FROM readings where kanji IN (%s);", RequestArray))
 
     if err != nil {
         ErrorResponse(rw, "Internal error", http.StatusInternalServerError)

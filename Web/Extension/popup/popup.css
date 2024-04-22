@@ -1,0 +1,242 @@
+body {
+    height: 500px;
+    width: 700px;
+    margin: 0 auto;
+    position: relative;
+}
+
+
+.header {
+    position: relative;
+    text-align: center;
+    font-size: 28px;
+    margin-top: 10px;
+    height: 10%;
+}
+
+.warning {
+    top: 25%;
+    font-size: 14px;
+    position: relative;
+}
+
+.hidden {
+    display: none !important; /* Hide the warning message */
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 80px); /* Adjust for margin-top of header */
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.menu {
+    display: flex;
+    align-items: center; /* Vertically center content */
+    flex: 0 0 10%;
+    background-color: #f4f4f4; /* Just for visualization */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds container height */
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    overflow: hidden;
+}
+
+.menu input[type="checkbox"] {
+    flex: 0 0 5%; /* 5% of the container width */
+    accent-color: #0e1137;
+}
+
+.menu-right {
+    margin-left: auto;
+    height: 100%;
+    align-items: center;
+    display:flex;
+    margin-right: 20px;
+}
+
+.entries {
+    flex: 1 1 80%;
+    background-color: white; /* Just for visualization */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds container height */
+}
+
+.input {
+    flex: 0 0 10%;
+    background-color: #f2f2f2; /* Just for visualization */
+}
+
+.entry {
+    display: flex;
+    align-items: center;
+    border: 1px solid #fafafa;
+    border-radius: 0px;
+    margin-top: 1px;
+}
+
+.entry input[type="checkbox"] {
+    flex: 0 0 5%; /* 5% of the container width */
+    accent-color: #0e1137;
+}
+
+.entry > div {
+    flex: 1; /* Fill remaining space */
+    margin: 0 10px; /* Adjust the margin for separation */
+    text-align: center; /* Center align text */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 16px;
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+/* Trash Icon CSS*/
+
+@keyframes TrashAnimation{
+    0% {
+        background-color: #d60619;
+        font-size: 16px;
+        border: 1px solid white;
+    }
+    100% {
+        background-color: white;
+        font-size: 19px;
+        color: red;
+        border: 1px solid red;
+    }
+}
+
+
+.trash-icon {
+    font-size: 13px;
+    background-color: #d60619;
+    border-radius: 7px;
+    border: 1px solid #ff2e43;
+    padding: 6px;
+    cursor: pointer;
+    color: white;
+    box-shadow: 0;
+    margin-right: 10px;
+    padding: 6px;
+}
+
+.trash-icon:not(.disabled).active {
+    animation: TrashAnimation 2.0s forwards;
+    animation-timing-function: ease-out;
+}
+
+.trash-icon:hover {
+    background-color: darkred;
+}
+
+.trash-icon.disabled {
+    font-size: 13px;
+    background-color: grey;
+    border: none;
+    border-radius: 7px;
+    padding: 6px;
+    color: white;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.trash-icon i {
+    color: inherit;
+}
+
+
+/*Download Icon CSS*/
+
+
+.download-icon{
+    font-size: 13px;
+    border-radius: 7px;
+    border: 1px solid grey;
+    padding: 6px;
+    cursor: pointer;
+    box-shadow: 0;
+    margin-right: 10px;
+    background-color: white;
+    color: black;
+    padding: 6px;
+
+}
+
+.download-icon:not(.disabled):hover {
+    background-color: grey;
+}
+
+.download-icon.disabled {
+    font-size: 13px;
+    border: none;
+    border-radius: 7px;
+    padding: 6px;
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: grey;
+    color: white;
+}
+
+.download-icon i {
+    color: inherit;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.download-icon:not(.disabled):hover + .dropdown-content {
+    display: block;
+}
+
+.dropdown-content {
+    position: fixed;
+    top: auto;
+    z-index: 9999;
+    display: none;
+}
+
+.dropdown-content:hover {
+    display: block;
+}
+
+.download-options {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    box-shadow: 10px 5px 5px lightgrey;
+}
+
+.download-option {
+  display: block;
+  width: 100%;
+  padding: 10px 0;
+  text-align: center;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  border: none;
+}
+
+.download-option:hover {
+    background-color: lightgrey;
+}
+
+.input {
+   align-items: center; 
+   display:flex;
+}
+
+.manual-entry {
+    height: 40%;
+    width: 98%; /* Take full width */
+    padding: 10px; /* Add padding for better appearance */
+    box-sizing: border-box;
+    margin-left: 2%;
+    margin-right: 2%;
+}

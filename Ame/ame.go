@@ -17,10 +17,7 @@ import (
 )
 
 type Configuration map[string]map[string]string
-type Input struct {
-	Template module.Card
-	Input    []module.Input
-}
+type Input []module.Input
 
 type AmeKanji struct {
 	modules    []module.Module
@@ -75,7 +72,6 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 		jmdict_init := jmdict.InitOptions{}
 		jmdict_init.DictionaryPath = config["JMdict"]["DictionaryPath"]
 		jmdict_init.FormatterPath = config["JMdict"]["FormatterPath"]
-		jmdict_init.CSSPath = config["JMdict"]["CSSPath"]
 
 		jmdict_mod, err := jmdict.Initialize(jmdict_init)
 
@@ -89,9 +85,8 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 			_, audio_ok := config["Audio"]
 			if audio_ok {
 				audio_init := audio.InitOptions{}
-				audio_init.URI = config["Audio"]["URI"]
+				audio_init.AudioPath = config["Audio"]["Path"]
 				audio_init.JMdictMod = jmdict_mod
-				audio_init.CSSPath = config["Audio"]["CSSPath"]
 
 				audio_mod, err := audio.Initialize(audio_init)
 
@@ -110,7 +105,6 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 	if kanjidic_ok {
 		kanjidic_init := kanjidic.InitOptions{}
 		kanjidic_init.DictionaryPath = config["Kanjidic"]["DictionaryPath"]
-		kanjidic_init.CSSPath = config["Kanjidic"]["CSSPath"]
 
 		kanjidic_mod, err := kanjidic.Initialize(kanjidic_init)
 
@@ -126,7 +120,6 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 				strokes_init := strokes.InitOptions{}
 				strokes_init.StrokePath = config["Strokes"]["StrokePath"]
 				strokes_init.Kanjimod = kanjidic_mod
-				strokes_init.CSSPath = config["Strokes"]["CSSPath"]
 				strokes_init.PreferJIS, _ = strconv.ParseBool(config["Strokes"]["PreferJIS"])
 
 				strokes_mod, err := strokes.Initialize(strokes_init)
@@ -146,7 +139,6 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 	if examples_ok {
 		examples_init := examples.InitOptions{}
 		examples_init.DBPath = config["Examples"]["DBPath"]
-		examples_init.CSSPath = config["Examples"]["CSSPath"]
 		examples_init.Seed, _ = strconv.ParseInt(config["Examples"]["Seed"], 10, 64)
 		examples_init.Shuffle, _ = strconv.ParseBool(config["Examples"]["Shuffle"])
 		examples_init.MaxExamples, _ = strconv.ParseUint(config["Examples"]["MaxExamples"], 10, 64)
@@ -174,57 +166,117 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 
 type UpdateFunc func(float64)
 
-func CleanInput(input map[string]string) string {
+func CharIsHiragana(c rune) bool {
+	return '\u3040' <= c && c <= '\u309F'
+}
+
+func CharIsKatakana(c rune) bool {
+	return '\u30A0' <= c && c <= '\u30FF'
+}
+
+func CharIsKanji (c rune) bool {
+	return ('\u4E00' <= c && c <= '\u9FaF') || ('\u3400' <= c && c <= '\u4DBf')
+}
+
+func CleanKanji(input string) string {
+    for _, c:= range input {
+        if CharIsKanji(c) {
+            return input
+        }
+    }
+    return ""
+}
+
+func CleanInput (input map[string]string) {
+    kanjiword, exists := input["kanjiword"]
+    if exists {
+        input["kanjiword"] = CleanKanji(kanjiword)
+    }
+}
+func CleanRender(input map[string]string) string {
 	copy := make(map[string]string)
 	for key, value := range input {
 		copy[key] = value
 	}
+
 	delete(copy, "savepath")
 	return fmt.Sprint(copy)
+}
+
+func ValidateString(input string) bool {
+    for _, r := range input {
+        if !CharIsHiragana(r) && !CharIsKatakana(r) && !CharIsKanji(r) {
+            return false
+        }
+    }
+    return true
+}
+func ValidateInput(input map[string] string) bool {
+    
+    literal, exists := input["literal"]
+    if exists {
+        if !ValidateString(literal) {
+            return false
+        }
+    }
+    kanaword, exists := input["kanaword"]
+    if exists {
+        if !ValidateString(kanaword) {
+            return false
+        }
+    }
+    kanjiword, exists := input["kanjiword"]
+    if exists {
+        if !ValidateString(kanjiword) {
+            return false
+        }
+    }
+    return true
 }
 func (ameKanji AmeKanji) URender(input Input, updatefunc UpdateFunc) (out string, errorlog string) {
 
 	activeModules := []module.Module{}
 
 	for _, module := range ameKanji.modules {
-		if module.Active(input.Template.Fields) {
-			activeModules = append(activeModules, module)
-		}
+		activeModules = append(activeModules, module)
 	}
 
-	for id := range input.Input {
+	for id := range input {
+
+        entry := input[id]
+        CleanInput(entry);
+
+        if !ValidateInput(entry){
+            continue
+        }
+
 
 		var progress float64 = 0.0
-		progress = float64(id) / float64(len(input.Input))
+		progress = float64(id) / float64(len(input))
 
-		currentCard := input.Template.Copy()
-		currentCSS := ""
+		currentCard := module.NewCard()
 
 		for _, mod := range activeModules {
-			err := mod.Render(input.Input[id], &currentCard)
-			currentCSS += mod.CSS()
+
+			err := mod.Render(entry, &currentCard)
 
 			if err != nil {
-				currentinput := CleanInput(input.Input[id])
+				currentinput := CleanRender(entry)
 				errmsg := fmt.Sprintf("Error rendering card %s.\nError: %s", currentinput, err.Error())
 				errorlog += errmsg + "\n"
 			}
 		}
-		// Render CSS
-		CSSMap := make(map[string]string)
-		CSSMap["CSS"] = currentCSS
-		currentCard.Parse(CSSMap, false)
-
 		// Anki Module
 
-		err := ameKanji.ankiModule.Render(input.Input[id], &currentCard)
+		err := ameKanji.ankiModule.Render(entry, &currentCard)
 		if err != nil {
-			currentinput := CleanInput(input.Input[id])
+			currentinput := CleanRender(entry)
 			errmsg := fmt.Sprintf("Error rendering card %s.\nError: %s", currentinput, err.Error())
 			errorlog += errmsg + "\n"
 		}
 
-		out += currentCard.Render() + "\n"
+        // TODO: CHANGE 10 TO A VARIABLE
+		out += currentCard.Render(10) + "\n"
 
 		updatefunc(progress)
 	}

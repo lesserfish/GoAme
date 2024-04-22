@@ -18,6 +18,7 @@ server:
 	go build -o bin/Server/Workers/AmeWorker Web/Server/Background/Ame/main.go Web/Server/Background/Ame/cleaners.go Web/Server/Background/Ame/workers.go
 	cp -r Resources/* bin/Resources
 	cp -r Tools/AudioHandler/app.js Tools/AudioHandler/package.json Tools/AudioHandler/configuration Tools/AudioHandler/.gitignore bin/Server/AudioInterface
+	cp Tools/Packager/packager.py bin/Server/Workers/packager.py
 
 
 clean:

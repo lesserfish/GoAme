@@ -166,6 +166,9 @@ func Initialize(config Configuration) (*AmeKanji, error) {
 
 type UpdateFunc func(float64)
 
+func CharIsNumeral(c rune) bool {
+    return '\uFF10' <= c && c <= '\uFF19'
+}
 func CharIsHiragana(c rune) bool {
 	return '\u3040' <= c && c <= '\u309F'
 }
@@ -205,7 +208,7 @@ func CleanRender(input map[string]string) string {
 
 func ValidateString(input string) bool {
     for _, r := range input {
-        if !CharIsHiragana(r) && !CharIsKatakana(r) && !CharIsKanji(r) {
+        if !CharIsHiragana(r) && !CharIsKatakana(r) && !CharIsKanji(r) && !CharIsNumeral(r) {
             return false
         }
     }
